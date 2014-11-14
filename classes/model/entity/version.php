@@ -33,6 +33,24 @@ class version extends entity {
 
     public function hydrate(array $data) {
         parent::hydrate($data);
+
+        if (!isset($data['documentid'])) {
+            throw new BadMethodCallException('Mising documentid parameter');
+        }
+        if (!isset($data['versionindice'])) {
+            throw new BadMethodCallException('Mising versionindice parameter');
+        }
+        if (!isset($data['creationtime'])) {
+            throw new BadMethodCallException('Mising creationtime parameter');
+        }
+        if (!isset($data['fileslocation'])) {
+            throw new BadMethodCallException('Mising fileslocation parameter');
+        }
+
+        $this->set_documentid($data['documentid']);
+        $this->set_versionindice($data['versionindice']);
+        $this->set_creationtime($data['creationtime']);
+        $this->set_fileslocation($data['fileslocation']);
     }
 
     public function get_html() {

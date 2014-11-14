@@ -33,6 +33,24 @@ class feedback extends entity {
 
     public function hydrate(array $data) {
         parent::hydrate($data);
+
+        if (!isset($data['versionid'])) {
+            throw new BadMethodCallException('Missing versionid parameter');
+        }
+        if (!isset($data['authorid'])) {
+            throw new BadMethodCallException('Missing authorid parameter');
+        }
+        if (!isset($data['content'])) {
+            throw new BadMethodCallException('Missing content parameter');
+        }
+        if (!isset($data['fileslocation'])) {
+            throw new BadMethodCallException('Missing fileslocation parameter');
+        }
+
+        $this->set_versionid($data['versionid']);
+        $this->set_authorid($data['authorid']);
+        $this->set_content($data['content']);
+        $this->set_fileslocation($data['fileslocation']);
     }
 
     public function get_html() {

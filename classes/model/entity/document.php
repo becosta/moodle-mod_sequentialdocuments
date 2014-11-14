@@ -35,6 +35,32 @@ class document extends entity {
 
     protected function hydrate(array $data) {
         parent::hydrate($data);
+
+        if (!is_set($data['authorid'])) {
+            throw new BadMethodCallException('Missing authorid parameter');
+        }
+        if (!is_set($data['title'])) {
+            throw new BadMethodCallException('Missing title parameter');
+        }
+        if (!is_set($data['documentindice'])) {
+            throw new BadMethodCallException('Missing documentindice parameter');
+        }
+        if (!is_set($data['currentversionid'])) {
+            throw new BadMethodCallException('Missing currentversionid parameter');
+        }
+        if (!is_set($data['creationtime'])) {
+            throw new BadMethodCallException('Missing creationtime parameter');
+        }
+        if (!is_set($data['modificationtime'])) {
+            throw new BadMethodCallException('Missing modificationtime parameter');
+        }
+
+        $this->set_authorid($data['authorid']);
+        $this->set_title($data['title']);
+        $this->set_documentindice($data['documentindice']);
+        $this->set_currentversionid($data['currentversionid']);
+        $this->set_creationtime($data['creationtime']);
+        $this->set_modificationtime($data['modificationtime']);
     }
 
     public function get_html() {

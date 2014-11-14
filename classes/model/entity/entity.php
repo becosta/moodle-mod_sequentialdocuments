@@ -39,15 +39,15 @@ abstract class entity {
 
     protected function hydrate(array $data) {
 
-        if (isset($data['id'])) {
-            $this->set_id($data['id']);
+        if (!isset($data['id'])) {
+            throw new BadMethodCallException('Missing id parameter');
+        }
+        if (!isset($data['instanceid'])) {
+            throw new BadMethodCallException('Missing instanceid parameter');
         }
 
-        if (isset($data['instanceid'])) {
-            $this->set_instanceid($data['instanceid']);
-        } else {
-            throw new BadMethodCallException('Missing "instanceid" parameter.');
-        }
+        $this->set_id($data['id']);
+        $this->set_instanceid($data['instanceid']);
     }
 
     protected function check_numeric_id($id) {

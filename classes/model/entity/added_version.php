@@ -30,6 +30,12 @@ class added_version extends interaction {
 
     protected function hydrate(array $data) {
         parent::hydrate($data);
+
+        if (!isset($data['versionid'])) {
+            throw new BadMethodCallException('Missing versionid parameter');
+        }
+
+        $this->set_versionid($data['versionid']);
     }
 
     public function get_html() {
