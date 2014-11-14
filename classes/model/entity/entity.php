@@ -39,22 +39,52 @@ abstract class entity {
 
     protected function hydrate(array $data) {
 
+        if (isset($data['id'])) {
+            $this->set_id($data['id']);
+        }
+
+        if (isset($data['instanceid'])) {
+            $this->set_instanceid($data['instanceid']);
+        } else {
+            throw new BadMethodCallException('Missing "instanceid" parameter.');
+        }
+    }
+
+    protected function check_numeric_id($id) {
+        if (!is_int($id)) {
+            throw new InvalidArgumentException();
+        } else if (!($id > 0)) {
+            throw new BadMethodCallException('Received invalid numeric id: '.$id);
+        }
+        return true;
+    }
+
+    protected function is_valid_timestamp($timestamp) {
+
+        if (is_numeric($timestamp) && (int)$timestamp === $timestamp) {
+            return $timestamp <= PHP_INT_MAX && $timestamp >= ~PHP_INT_MAX;
+        } else if (is_string ($timestamp) && (string)(int)$timestamp === $timestamp) {
+            return $this->is_valid_timestamp((int)$timestamp);
+        }
+        return false;
     }
 
     public function get_id() {
-
+        return $this->id;
     }
 
     public function get_instance_id() {
-
+        return $this->instanceid;
     }
 
     protected function set_id($id) {
-
+        $this->check_numeric_id($id);
+        $this->id = $id;
     }
 
     protected function set_instanceid($id) {
-        
+        $this->check_numeric_id($id);
+        $this->instanceid = $id;
     }
 }
 

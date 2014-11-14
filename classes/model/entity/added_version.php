@@ -33,15 +33,16 @@ class added_version extends interaction {
     }
 
     public function get_html() {
-
+        return '';
     }
 
     public function get_versionid() {
-
+        return $this->versionid;
     }
 
     protected function set_versionid($id) {
-
+        $this->check_numeric_id($id);
+        $this->versionid = $id;
     }
 }
 

@@ -25,7 +25,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 class document extends entity {
-    
+
     protected $authorid = 0;
     protected $title = '';
     protected $documentindice = 0;
@@ -38,55 +38,74 @@ class document extends entity {
     }
 
     public function get_html() {
-
+        return '';
     }
 
     public function get_authorid() {
-
+        return $this->authorid;
     }
 
     public function get_title() {
-
+        return $this->title;
     }
 
     public function get_documentindice() {
-
+        return $this->documentindice;
     }
 
     public function get_currentversionid() {
-
+        return $this->currentversionid;
     }
 
     public function get_creationtime() {
-
+        return $this->creationtime;
     }
 
     public function get_modificationtime() {
-
+        return $this->modificationtime;
     }
 
     protected function set_authorid($id) {
-
+        $this->check_numeric_id($id);
+        $this->authorid = $id;
     }
 
     protected function set_title(string $title) {
-
+        if (!is_string($title)) {
+            throw new InvalidArgumentException();
+        }
+        $this->title = $title;
     }
 
     protected function set_documentindice($i) {
-
+        if (!is_int($i)) {
+            throw new InvalidArgumentException();
+        } else if ($i < 1) {
+            throw new BadFunctionCallException(
+                    'Received invalid documentindice parameter: "'.$i.
+                    '". Document indice should be a positive integer.'
+            );
+        }
+        $this->documentindice = $i;
     }
 
     protected function set_currentversionid($id) {
-
+        $this->check_numeric_id($id);
+        $this->currentversionid = $id;
     }
 
-    protected function set_creationtime($date) {
-
+    protected function set_creationtime($timestamp) {
+        if (!$this->is_valid_timestamp($timestamp)) {
+            throw new InvalidArgumentException('Received invalid timestamp parameter: "'.$timestamp.'"');
+        }
+        $this->creationtime = $timestamp;
     }
 
-    protected function set_modificationtime($date) {
-
+    protected function set_modificationtime($timestamp) {
+        if (!$this->is_valid_timestamp($timestamp)) {
+            throw new InvalidArgumentException('Received invalid timestamp parameter: "'.$timestamp.'"');
+        }
+        $this->modificationtime = $timestamp;
     }
 }
 

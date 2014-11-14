@@ -33,15 +33,16 @@ class added_feedback extends interaction {
     }
 
     public function get_html() {
-
+        return '';
     }
 
     public function get_feedbackid() {
-
+        return $this->feedbackid;
     }
 
     protected function set_feedbackid($id) {
-
+        $this->check_numeric_id($id);
+        $this->feedbackid = $id;
     }
 }
 

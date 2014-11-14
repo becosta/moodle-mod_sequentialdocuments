@@ -34,19 +34,23 @@ abstract class interaction extends entity {
     }
 
     public function get_userid() {
-
+        return $this->userid;
     }
 
     public function get_date() {
-
+        return $this->date;
     }
 
     protected function set_userid($id) {
-
+        $this->check_numeric_id($id);
+        $this->id = $id;
     }
 
-    protected function set_date($date) {
-
+    protected function set_date($timestamp) {
+        if(!$this->is_valid_timestamp($timestamp)) {
+            throw new InvalidArgumentException('Received invalid timestamp parameter: "'.$timestamp.'"');
+        }
+        $this->date = $timestamp;
     }
 }
 

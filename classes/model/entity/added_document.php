@@ -33,15 +33,16 @@ class added_document extends interaction {
     }
 
     public function get_html() {
-
+        return '';
     }
 
     public function get_documentid() {
-
+        return $this->documentid;
     }
 
     protected function set_documentid($id) {
-
+        $this->check_numeric_id($id);
+        $this->documentid = $id;
     }
 }
 
