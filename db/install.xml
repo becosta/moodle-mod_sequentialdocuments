@@ -12,8 +12,8 @@
         <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="Name field for moodle instances"/>
         <FIELD NAME="intro" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="General introduction of the sequentialdocuments activity"/>
         <FIELD NAME="introformat" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Format of the intro field (MOODLE, HTML, MARKDOWN...)"/>
-        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Unix timestamp time where this activity instance was created."/>
-        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Unix timestamp time where this activity was lastly modified."/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Unix timestamp specifying when this activity instance was created."/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Unix timestamp specifying when this document was modified for the last time."/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
@@ -24,6 +24,89 @@
         <INDEX NAME="course" UNIQUE="false" FIELDS="course"/>
         <INDEX NAME="assignment" UNIQUE="false" FIELDS="assignment"/>
       </INDEXES>
+    </TABLE>
+    <TABLE NAME="sequentialdocuments_document">
+        <FIELDS>
+            <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" UNIQUE="true" COMMENT="Unique entity id."/>
+            <FIELD NAME="instanceid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" UNIQUE="false" COMMENT="Instance id this entity belongs to."/>
+            <FIELD NAME="authorid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" UNIQUE="false" COMMENT="User id this document belongs to."/>
+            <FIELD NAME="title" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="Document's title." />
+            <FIELD NAME="documentindice" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" UNIQUE="false" COMMENT="For a given document in a given instance, this field specifies the number of documents (+1) created before this one." />
+            <FIELD NAME="currentversionid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" UNIQUE="true" COMMENT="Specifies which of the versions composing this document is the latest." />
+            <FIELD NAME="creationtime" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Unix timestamp specifying when this document was created." />
+            <FIELD NAME="modificationtime" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Unix timestamp specifying when this document was modified for the last time." />
+        </FIELDS>
+        <KEYS>
+            <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+            <KEY NAME="instanceid" TYPE="foreign" FIELDS="instanceid" REFTABLE="sequentialdocuments" REFFIELDS="id" />
+            <KEY NAME="authorid" TYPE="foreign" FIELDS="authorid" REFTABLE="user" REFFIELDS="id" />
+            <KEY NAME="currentversionid" TYPE="foreign" FIELDS="currentversionid" REFTABLE="sequentialdocuments_version" REFFIELDS="id" />
+        </KEYS>
+        <INDEXES>
+            <INDEX NAME="instanceid" UNIQUE="false" FIELDS="instanceid"/>
+            <INDEX NAME="authorid" UNIQUE="false" FIELDS="authorid"/>
+        </INDEXES>
+    <TABLE NAME="sequentialdocuments_version">
+        <FIELDS>
+            <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" UNIQUE="true" COMMENT="Unique entity id."/>
+            <FIELD NAME="instanceid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" UNIQUE="false" COMMENT="Instance id this entity belongs to."/>
+            <FIELD NAME="documentid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" UNIQUE="false" COMMENT="Document id this version belongs to."/>
+            <FIELD NAME="versionindice" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" UNIQUE="false" COMMENT="For a given version in a given document, this field specifies the number of versions (+1) created before this one." />
+            <FIELD NAME="creationtime" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Unix timestamp specifying when this version was created." />
+            <FIELD NAME="fileslocation" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Filepath of each files that belongs to this version." />
+        </FIELDS>
+        <KEYS>
+            <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+            <KEY NAME="instanceid" TYPE="foreign" FIELDS="instanceid" REFTABLE="sequentialdocuments" REFFIELDS="id" />
+            <KEY NAME="documentid" TYPE="foreign" FIELDS="documentid" REFTABLE="sequentialdocuments_document" REFFIELDS="id" />
+        </KEYS>
+        <INDEXES>
+            <INDEX NAME="instanceid" UNIQUE="false" FIELDS="instanceid"/>
+            <INDEX NAME="documentid" UNIQUE="false" FIELDS="documentid"/>
+        </INDEXES>
+    </TABLE>
+    <TABLE NAME="sequentialdocuments_feedback">
+        <FIELDS>
+            <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" UNIQUE="true" COMMENT="Unique entity id."/>
+            <FIELD NAME="instanceid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" UNIQUE="false" COMMENT="Instance id this entity belongs to."/>
+            <FIELD NAME="versionid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" UNIQUE="false" COMMENT="Version id this feedback belongs to."/>
+            <FIELD NAME="authorid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" UNIQUE="false" COMMENT="User id this feedback belongs to."/>
+            <FIELD NAME="content" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Feedback's textual content." />
+            <FIELD NAME="fileslocation" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Filepath of each files that belongs to this feedback." />
+        </FIELDS>
+        <KEYS>
+            <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+            <KEY NAME="instanceid" TYPE="foreign" FIELDS="instanceid" REFTABLE="sequentialdocuments" REFFIELDS="id" />
+            <KEY NAME="versionid" TYPE="foreign" FIELDS="versionid" REFTABLE="sequentialdocuments_version" REFFIELDS="id" />
+            <KEY NAME="authorid" TYPE="foreign" FIELDS="authorid" REFTABLE="user" REFFIELDS="id" />
+        </KEYS>
+        <INDEXES>
+            <INDEX NAME="instanceid" UNIQUE="false" FIELDS="instanceid"/>
+            <INDEX NAME="versionid" UNIQUE="false" FIELDS="versionid"/>
+        </INDEXES>
+    </TABLE>
+    <TABLE NAME="sequentialdocuments_interaction">
+        <FIELDS>
+            <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" UNIQUE="true" COMMENT="Unique entity id."/>
+            <FIELD NAME="instanceid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" UNIQUE="false" COMMENT="Instance id this entity belongs to."/>
+            <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" UNIQUE="false" COMMENT="User id this interaction belongs to."/>
+            <FIELD NAME="date" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Unix timestamp specifying when this interaction happened." />
+            <FIELD NAME="documentid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" UNIQUE="false" COMMENT="Document id this interaction relates to."/>
+            <FIELD NAME="versionid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" UNIQUE="false" COMMENT="Version id this interaction relates to."/>
+            <FIELD NAME="feedbackid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" UNIQUE="false" COMMENT="Feedback id this interaction relates to."/>
+        </FIELDS>
+        <KEYS>
+            <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+            <KEY NAME="instanceid" TYPE="foreign" FIELDS="instanceid" REFTABLE="sequentialdocuments" REFFIELDS="id" />
+            <KEY NAME="userid" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id" />
+            <KEY NAME="documentid" TYPE="foreign" FIELDS="documentid" REFTABLE="sequentialdocuments_document" REFFIELDS="id" />
+            <KEY NAME="versionid" TYPE="foreign" FIELDS="versionid" REFTABLE="sequentialdocuments_version" REFFIELDS="id" />
+            <KEY NAME="feedbackid" TYPE="foreign" FIELDS="feedbackid" REFTABLE="sequentialdocuments_feedback" REFFIELDS="id" />
+        </KEYS>
+        <INDEXES>
+            <INDEX NAME="instanceid" UNIQUE="false" FIELDS="instanceid"/>
+            <INDEX NAME="userid" UNIQUE="false" FIELDS="userid"/>
+        </INDEXES>
     </TABLE>
   </TABLES>
 </XMLDB>
