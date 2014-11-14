@@ -162,6 +162,12 @@ abstract class data_access_object {
             );
         }
     }
+
+    protected function check_entity_class($entity, $classname) {
+        if (!is_a($entity, $classname)) {
+            throw new InvalidArgumentException();
+        }
+    }
 }
 
 
