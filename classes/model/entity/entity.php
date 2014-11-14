@@ -31,6 +31,15 @@ abstract class entity {
 
     public abstract function get_html();
 
+    public static function check_numeric_id($id) {
+        if (!is_int($id)) {
+            throw new InvalidArgumentException();
+        } else if ($id < 0) {
+            throw new BadMethodCallException('Received invalid numeric id: "'.$id.'"');
+        }
+        return true;
+    }
+
     public function __construct(array $data = null) {
         if ($data !== null) {
             $this->hydrate($data);
@@ -48,15 +57,6 @@ abstract class entity {
 
         $this->set_id($data['id']);
         $this->set_instanceid($data['instanceid']);
-    }
-
-    protected function check_numeric_id($id) {
-        if (!is_int($id)) {
-            throw new InvalidArgumentException();
-        } else if ($id < 0) {
-            throw new BadMethodCallException('Received invalid numeric id: '.$id);
-        }
-        return true;
     }
 
     protected function is_valid_timestamp($timestamp) {
