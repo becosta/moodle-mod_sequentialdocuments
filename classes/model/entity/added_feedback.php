@@ -26,7 +26,7 @@ defined('MOODLE_INTERNAL') || die();
 
 class added_feedback extends interaction {
 
-    protected $feedbackid = 0;
+    protected $feedbackid = -1;
 
     protected function hydrate(array $data) {
         parent::hydrate($data);

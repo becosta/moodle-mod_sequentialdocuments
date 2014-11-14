@@ -26,7 +26,7 @@ defined('MOODLE_INTERNAL') || die();
 
 class added_version extends interaction {
 
-    protected $versionid = 0;
+    protected $versionid = -1;
 
     protected function hydrate(array $data) {
         parent::hydrate($data);

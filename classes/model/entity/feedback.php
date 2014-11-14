@@ -26,8 +26,8 @@ defined('MOODLE_INTERNAL') || die();
 
 class feedback extends entity {
 
-    protected $versionid = 0;
-    protected $authorid = 0;
+    protected $versionid = -1;
+    protected $authorid = -1;
     protected $content = '';
     protected $fileslocation = array();
 

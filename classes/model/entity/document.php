@@ -26,12 +26,12 @@ defined('MOODLE_INTERNAL') || die();
 
 class document extends entity {
 
-    protected $authorid = 0;
+    protected $authorid = -1;
     protected $title = '';
-    protected $documentindice = 0;
-    protected $currentversionid = 0;
-    protected $creationtime = 0;
-    protected $modificationtime = 0;
+    protected $documentindice = -1;
+    protected $currentversionid = -1;
+    protected $creationtime = -1;
+    protected $modificationtime = -1;
 
     protected function hydrate(array $data) {
         parent::hydrate($data);

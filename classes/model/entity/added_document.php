@@ -26,7 +26,7 @@ defined('MOODLE_INTERNAL') || die();
 
 class added_document extends interaction {
 
-    protected $documentid = 0;
+    protected $documentid = -1;
 
     protected function hydrate(array $data) {
         parent::hydrate($data);

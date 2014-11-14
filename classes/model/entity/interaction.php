@@ -26,8 +26,8 @@ defined('MOODLE_INTERNAL') || die();
 
 abstract class interaction extends entity {
 
-    protected $userid = 0;
-    protected $date = 0;
+    protected $userid = -1;
+    protected $date = -1;
 
     public function hydrate(array $data) {
         parent::hydrate($data);

@@ -26,8 +26,8 @@ defined('MOODLE_INTERNAL') || die();
 
 abstract class entity {
 
-    protected $id = 0;
-    protected $instanceid = 0;
+    protected $id = -1;
+    protected $instanceid = -1;
 
     public abstract function get_html();
 
@@ -53,7 +53,7 @@ abstract class entity {
     protected function check_numeric_id($id) {
         if (!is_int($id)) {
             throw new InvalidArgumentException();
-        } else if (!($id > 0)) {
+        } else if ($id < 0) {
             throw new BadMethodCallException('Received invalid numeric id: '.$id);
         }
         return true;

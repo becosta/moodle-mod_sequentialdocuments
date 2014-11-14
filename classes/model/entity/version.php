@@ -26,9 +26,9 @@ defined('MOODLE_INTERNAL') || die();
 
 class version extends entity {
 
-    protected $documentid = 0;
-    protected $versionindice = 0;
-    protected $creationtime = 0;
+    protected $documentid = -1;
+    protected $versionindice = -1;
+    protected $creationtime = -1;
     protected $fileslocation = array();
 
     public function hydrate(array $data) {
