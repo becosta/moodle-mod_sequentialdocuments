@@ -73,6 +73,26 @@ abstract class entity {
         return false;
     }
 
+    public function to_public_array() {
+        $vars = get_object_vars($this);
+        $arr = array();
+
+        foreach($vars as $property => $value) {
+          $arr[$property] = $value;
+        }
+        return $arr;
+    }
+
+    public function to_public_stdClass() {
+        $arr = $this->to_public_array();
+        $o = new stdClass();
+
+        foreach($arr as $property => $value) {
+          $o->$property = $value;
+        }
+        return $o;
+    }
+
     public function get_id() {
         return $this->id;
     }
