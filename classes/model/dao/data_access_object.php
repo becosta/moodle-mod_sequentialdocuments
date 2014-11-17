@@ -28,22 +28,101 @@ abstract class data_access_object {
 
     protected $instanceid = -1;
 
-    abstract protected function get_getentity_method($DB, $instanceid, $id);
+    public function __construct($instanceid, array $data = null) {
 
-    abstract protected function get_getentitywhere_method($DB, $instanceid, array $conditions);
+        if (!defined('static::ENTITY_TABLE')) {
+            throw new Exception('Constant ENTITY_TABLE is not defined on subclass '.get_class($this));
+        }
 
-    abstract protected function get_getallentitieswhere_method($DB, $instanceid, array $conditions);
+        if (!defined('static::ENTITY_CLASS_NAME')) {
+            throw new Exception('Constant ENTITY_CLASS_NAME is not defined on subclass '.get_class($this));
+        }
 
-    abstract protected function get_insert_method($DB, $instanceid, $entity);
-
-    abstract protected function get_update_method($DB, $instanceid, $entity);
-
-    abstract protected function get_delete_method($DB, $instanceid, $entity);
-
-    public function __construct($instanceid) {
         entity::check_numeric_id($id);
         $this->instanceid = $instanceid;
+
+        if ($data !== null) {
+            $this->hydrate($date);
+        }
     }
+
+    protected function hydrate() {
+        foreach ($data as $property => $value) {
+            $setter = 'set_'.$property;
+            if (is_callable(array($this, $setter))) {
+                $this->$setter($value);
+            }
+        }
+    }
+
+    protected function get_getentity_method($DB, $id) {
+        return $this->get_getentitywhere_method($DB, array('id' => $id));
+    }
+
+    protected function get_getentitywhere_method($DB, array $conditions) {
+        $table = static::ENTITY_TABLE;
+        $class = static::ENTITY_CLASS_NAME;
+
+        return function() use ($DB, $conditions, $table, $class) {
+            $record = $DB->get_records($table, $conditions);
+            $data = current($record);
+
+            if ($data === false || count($record != 1)) {
+                return false;
+            }
+            return new $class((array)$data);
+        };
+    }
+
+    protected function get_getallentitieswhere_method($DB, array $conditions) {
+        $table = static::ENTITY_TABLE;
+        $class = static::ENTITY_CLASS_NAME;
+
+        return function() use ($DB, $conditions, $table, $class) {
+            $records = $DB->get_records($table, $conditions);
+            $count = count($records);
+            $entities = array();
+
+            if ($count == 0 || ($count == 1 && current($records) === false)) {
+                return false;
+            }
+
+            foreach ($records as $record) {
+                if ($record !== false) {
+                    $entities[] = new $class((array)$record);
+                }
+            }
+            return $entities;
+        };
+    }
+
+    protected function get_insert_method($DB, $entity) {
+        $this->check_entity_class($entity, static::ENTITY_CLASS_NAME);
+        $table = static::ENTITY_TABLE;
+
+        return function() use ($DB, $entity, $table) {
+            return $DB->insert_record($table, $entity->to_public_stdClass());
+        };
+    }
+
+    protected function get_update_method($DB, $entity) {
+        $this->check_entity_class($entity, static::ENTITY_CLASS_NAME);
+        $table = static::ENTITY_TABLE;
+
+        return function() use ($DB, $entity, $table) {
+            return $DB->update_record($table, $entity->to_public_stdClass());
+        };
+    }
+
+     protected function get_delete_method($DB, $entity) {
+        $this->check_entity_class($entity, static::ENTITY_CLASS_NAME);
+        $table = static::ENTITY_TABLE;
+        $condition = array('id' => $entity->get_id());
+
+        return function() use ($DB, $table, $condition) {
+            return $DB->delete_records($table, $condition);
+        };
+     }
 
     public function get_entity($id) {
         entity::check_numeric_id($id);
@@ -51,10 +130,10 @@ abstract class data_access_object {
         global $DB;
         try {
 
-            $lambda = $this->get_getentity_method();
+            $lambda = $this->get_getentity_method($DB, $id);
             $this->check_lambda_method($lambda);
 
-            $entity = $lambda($DB, $this->instanceid, $id);
+            $entity = $lambda();
 
         } catch (dml_exception $e) {
             return false;
@@ -70,10 +149,10 @@ abstract class data_access_object {
         global $DB;
         try {
 
-            $lambda = $this->get_getentitywhere_method();
+            $lambda = $this->get_getentitywhere_method($DB, $conditions);
             $this->check_lambda_method($lambda);
 
-            $entity = $lambda($DB, $this->instanceid, $conditions);
+            $entity = $lambda();
 
         } catch (dml_exception $e) {
             return false;
@@ -89,10 +168,10 @@ abstract class data_access_object {
         global $DB;
         try {
 
-            $lambda = $this->get_getallentitieswhere_method();
+            $lambda = $this->get_getallentitieswhere_method($DB, $conditions);
             $this->check_lambda_method($lambda);
 
-            $entities = $lambda($DB, $this->instanceid, $conditions);
+            $entities = $lambda();
 
         } catch (dml_exception $e) {
             return false;
@@ -108,10 +187,10 @@ abstract class data_access_object {
         global $DB;
         try {
 
-            $lambda = $this->get_insert_method();
+            $lambda = $this->get_insert_method($DB, $entity);
             $this->check_lambda_method($lambda);
 
-            return $lambda($DB, $this->instanceid, $entity);
+            return $lambda();
 
         } catch (dml_exception $e) {
             return false;
@@ -126,10 +205,10 @@ abstract class data_access_object {
         global $DB;
         try {
 
-            $lamda = $this->get_update_method();
+            $lamda = $this->get_update_method($DB, $entity);
             $this->check_lambda_method($lambda);
 
-            return $lamda($DB, $this->instanceid, $entity);
+            return $lamda();
 
         } catch (dml_exception $e) {
             return false;
@@ -144,10 +223,10 @@ abstract class data_access_object {
         global $DB;
         try {
 
-            $lambda = $this->get_delete_method();
+            $lambda = $this->get_delete_method($DB, $entity);
             $this->check_lambda_method($lambda);
 
-            return $lambda($DB, $this->instanceid, $entity);
+            return $lambda();
 
         } catch (dml_exception $e) {
             return false;
