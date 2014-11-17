@@ -24,31 +24,74 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-class interaction_dao extends data_access_object {
-    
-    protected function get_getentity_method() {
+abstract class interaction_dao extends data_access_object {
 
+    const ENTITY_TABLE = 'sequentialdocuments_interaction';
+
+    public function __construct($instanceid, array $data = null) {
+
+        if (!defined('static::SPECIFIC_PROPERTY')) {
+            throw new Exception('Constant SPECIFIC_PROPERTY is not defined on subclass '.get_class($this));
+        }
+
+        parent::__construct($instanceid, $data);
     }
 
-    protected function get_getentitywhere_method() {
+    protected function get_getentitywhere_method($DB, array $conditions) {
+        $table = static::ENTITY_TABLE;
+        $specific = static::SPECIFIC_PROPERTY;
+        $class = static::ENTITY_CLASS_NAME;
 
+        return function() use ($DB, $conditions, $table, $specific, $class) {
+            $record = $DB->get_records($table, $conditions);
+            $data = current($record);
+
+            if ($data === false || count($record != 1)) {
+                return false;
+            } else if ($data->$specific === null) {
+                return false;
+            }
+            return new $class((array)$data);
+        };
     }
 
-    protected function get_getallentitieswhere_method() {
+    protected function get_getallentitieswhere_method($DB, array $conditions) {
+        $table = static::ENTITY_TABLE;
+        $specific = static::SPECIFIC_PROPERTY;
+        $class = static::ENTITY_CLASS_NAME;
 
+        return function() use ($DB, $conditions, $table, $specific, $class) {
+            $records = $DB->get_records($table, $conditions);
+            $count = count($records);
+            $entities = array();
+
+            if ($count == 0 || ($count == 1 && current($records) === false)) {
+                return false;
+            }
+
+            foreach ($records as $record) {
+                if ($record !== false && $record->$specific !== null) {
+                    $entities[] = new $class((array)$record);
+                }
+            }
+            return $entities;
+        };
     }
+}
 
-    protected function get_insert_method() {
+class added_document_interaction_dao extends interaction_dao {
+    const ENTITY_CLASS_NAME = 'added_document';
+    const SPECIFIC_PROPERTY = 'documentid';
+}
 
-    }
+class added_version_interaction_dao extends interaction_dao {
+    const ENTITY_CLASS_NAME = 'added_version';
+    const SPECIFIC_PROPERTY = 'versionid';
+}
 
-    protected function get_update_method() {
-
-    }
-
-    protected function get_delete_method() {
-
-    }
+class added_feedback_interaction_dao extends interaction_dao {
+    const ENTITY_CLASS_NAME = 'added_feedback';
+    const SPECIFIC_PROPERTY = 'feedbackid';
 }
 
 

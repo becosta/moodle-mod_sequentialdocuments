@@ -25,30 +25,9 @@
 defined('MOODLE_INTERNAL') || die();
 
 class feedback_dao extends data_access_object {
-    
-    protected function get_getentity_method() {
 
-    }
-
-    protected function get_getentitywhere_method() {
-
-    }
-
-    protected function get_getallentitieswhere_method() {
-
-    }
-
-    protected function get_insert_method() {
-
-    }
-
-    protected function get_update_method() {
-
-    }
-
-    protected function get_delete_method() {
-
-    }
+    const ENTITY_TABLE = 'sequentialdocuments_feedback';
+    const ENTITY_CLASS_NAME = 'feedback';
 }
 
 
