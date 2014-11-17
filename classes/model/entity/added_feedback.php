@@ -29,13 +29,12 @@ class added_feedback extends interaction {
     protected $feedbackid = -1;
 
     protected function hydrate(array $data) {
-        parent::hydrate($data);
 
         if (!isset($data['feedbackid'])) {
             throw new BadMethodCallException('Missing feedbackid parameter');
         }
 
-        $this->set_feedbackid($data['feedbackid']);
+        parent::hydrate($data);
     }
 
     public function get_html() {

@@ -34,8 +34,7 @@ class document extends entity {
     protected $modificationtime = -1;
 
     protected function hydrate(array $data) {
-        parent::hydrate($data);
-
+        
         if (!is_set($data['authorid'])) {
             throw new BadMethodCallException('Missing authorid parameter');
         }
@@ -55,12 +54,7 @@ class document extends entity {
             throw new BadMethodCallException('Missing modificationtime parameter');
         }
 
-        $this->set_authorid($data['authorid']);
-        $this->set_title($data['title']);
-        $this->set_documentindice($data['documentindice']);
-        $this->set_currentversionid($data['currentversionid']);
-        $this->set_creationtime($data['creationtime']);
-        $this->set_modificationtime($data['modificationtime']);
+        parent::hydrate($data);
     }
 
     public function get_html() {

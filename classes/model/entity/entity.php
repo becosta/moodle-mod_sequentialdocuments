@@ -55,8 +55,12 @@ abstract class entity {
             throw new BadMethodCallException('Missing instanceid parameter');
         }
 
-        $this->set_id($data['id']);
-        $this->set_instanceid($data['instanceid']);
+        foreach ($data as $property => $value) {
+            $setter = 'set_'.$property;
+            if (is_callable(array($this, $setter))) {
+                $this->$setter($value);
+            }
+        }
     }
 
     protected function is_valid_timestamp($timestamp) {
@@ -73,7 +77,7 @@ abstract class entity {
         return $this->id;
     }
 
-    public function get_instance_id() {
+    public function get_instanceid() {
         return $this->instanceid;
     }
 

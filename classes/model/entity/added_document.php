@@ -29,13 +29,12 @@ class added_document extends interaction {
     protected $documentid = -1;
 
     protected function hydrate(array $data) {
-        parent::hydrate($data);
 
         if (!isset($data['documentid'])) {
             throw new BadMethodCallException('Missing documentid parameter');
         }
 
-        $this->set_documentid($data['documentid']);
+        parent::hydrate($data);
     }
 
     public function get_html() {

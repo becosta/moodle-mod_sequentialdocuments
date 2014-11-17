@@ -32,7 +32,6 @@ class feedback extends entity {
     protected $fileslocation = array();
 
     public function hydrate(array $data) {
-        parent::hydrate($data);
 
         if (!isset($data['versionid'])) {
             throw new BadMethodCallException('Missing versionid parameter');
@@ -47,10 +46,7 @@ class feedback extends entity {
             throw new BadMethodCallException('Missing fileslocation parameter');
         }
 
-        $this->set_versionid($data['versionid']);
-        $this->set_authorid($data['authorid']);
-        $this->set_content($data['content']);
-        $this->set_fileslocation($data['fileslocation']);
+        parent::hydrate($data);
     }
 
     public function get_html() {

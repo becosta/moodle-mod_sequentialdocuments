@@ -32,8 +32,7 @@ class version extends entity {
     protected $fileslocation = array();
 
     public function hydrate(array $data) {
-        parent::hydrate($data);
-
+        
         if (!isset($data['documentid'])) {
             throw new BadMethodCallException('Mising documentid parameter');
         }
@@ -47,10 +46,7 @@ class version extends entity {
             throw new BadMethodCallException('Mising fileslocation parameter');
         }
 
-        $this->set_documentid($data['documentid']);
-        $this->set_versionindice($data['versionindice']);
-        $this->set_creationtime($data['creationtime']);
-        $this->set_fileslocation($data['fileslocation']);
+        parent::hydrate($data);
     }
 
     public function get_html() {

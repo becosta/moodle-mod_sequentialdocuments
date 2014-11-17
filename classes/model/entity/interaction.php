@@ -30,7 +30,6 @@ abstract class interaction extends entity {
     protected $date = -1;
 
     public function hydrate(array $data) {
-        parent::hydrate($data);
 
         if (!isset($data['userid'])) {
             throw new BadMethodCallException('Missing userid parameter');
@@ -39,8 +38,7 @@ abstract class interaction extends entity {
             throw new BadMethodCallException('Missing date parameter');
         }
 
-        $this->set_userid($data['userid']);
-        $this->set_date($data['date']);
+        parent::hydrate($data);
     }
 
     public function get_userid() {
