@@ -55,8 +55,80 @@ abstract class data_access_object {
         }
     }
 
-    protected function get_getentity_method($DB, $id) {
-        return $this->get_getentitywhere_method($DB, array('id' => $id));
+    public function get_entity($id) {
+        entity::check_numeric_id($id);
+        return $this->read_access('get_getentity_method', array('id' => $id));
+    }
+
+    public function get_entity_where(array $conditions) {
+        return $this->read_access('get_getentitywhere_method', $conditions);
+    }
+
+    public function get_all_entities_where(array $conditions) {
+        return $this->read_access('get_getallentitieswhere_method', $conditions);
+    }
+
+    public function insert(entity $entity) {
+        $this->write_access('get_insert_method', $entity);
+    }
+
+    public function update(entity $entity) {
+        $this->write_access('get_update_method', $entity);
+    }
+
+    public function delete(entity $entity) {
+        $this->write_access('get_delete_method', $entity);
+    }
+
+    protected function read_access(string $method_getter, array $conditions) {
+
+        if (!is_callable(array($this, $method_getter))) {
+            throw new InvalidArgumentException();
+        }
+
+        if ($conditions === null) {
+            throw new InvalidArgumentException();
+        }
+
+        global $DB;
+        try {
+
+            $lambda = $this->$method_getter($DB, $conditions);
+            $this->check_lambda_method($lambda);
+
+            $result = $lambda();
+
+        } catch (dml_exception $e) {
+            return false;
+        }
+        return $result;
+    }
+
+    protected function write_access(string $method_getter, entity $entity) {
+
+        if (!is_callable(array($this, $method_getter))) {
+            throw new InvalidArgumentException();
+        }
+
+        if ($entity === null) {
+            throw new InvalidArgumentException();
+        }
+
+        global $DB;
+        try {
+
+            $lambda = $this->$method_getter($DB, $entity);
+            $this->check_lambda_method($lambda);
+
+            return $lambda();
+
+        } catch (dml_exception $e) {
+            return false;
+        }
+    }
+
+    protected function get_getentity_method($DB, array $id) {
+        return $this->get_getentitywhere_method($DB, $id);
     }
 
     protected function get_getentitywhere_method($DB, array $conditions) {
@@ -114,7 +186,7 @@ abstract class data_access_object {
         };
     }
 
-     protected function get_delete_method($DB, $entity) {
+    protected function get_delete_method($DB, $entity) {
         $this->check_entity_class($entity, static::ENTITY_CLASS_NAME);
         $table = static::ENTITY_TABLE;
         $condition = array('id' => $entity->get_id());
@@ -122,115 +194,6 @@ abstract class data_access_object {
         return function() use ($DB, $table, $condition) {
             return $DB->delete_records($table, $condition);
         };
-     }
-
-    public function get_entity($id) {
-        entity::check_numeric_id($id);
-
-        global $DB;
-        try {
-
-            $lambda = $this->get_getentity_method($DB, $id);
-            $this->check_lambda_method($lambda);
-
-            $entity = $lambda();
-
-        } catch (dml_exception $e) {
-            return false;
-        }
-        return $entity;
-    }
-
-    public function get_entity_where(array $conditions) {
-        if ($conditions === null) {
-            throw new InvalidArgumentException();
-        }
-
-        global $DB;
-        try {
-
-            $lambda = $this->get_getentitywhere_method($DB, $conditions);
-            $this->check_lambda_method($lambda);
-
-            $entity = $lambda();
-
-        } catch (dml_exception $e) {
-            return false;
-        }
-        return $entity;
-    }
-
-    public function get_all_entities_where(array $conditions) {
-        if ($conditions === null) {
-            throw new InvalidArgumentException();
-        }
-
-        global $DB;
-        try {
-
-            $lambda = $this->get_getallentitieswhere_method($DB, $conditions);
-            $this->check_lambda_method($lambda);
-
-            $entities = $lambda();
-
-        } catch (dml_exception $e) {
-            return false;
-        }
-        return $entities;
-    }
-
-    public function insert(entity $entity) {
-        if ($entity === null) {
-            throw new InvalidArgumentException();
-        }
-
-        global $DB;
-        try {
-
-            $lambda = $this->get_insert_method($DB, $entity);
-            $this->check_lambda_method($lambda);
-
-            return $lambda();
-
-        } catch (dml_exception $e) {
-            return false;
-        }
-    }
-
-    public function update(entity $entity) {
-        if ($entity === null) {
-            throw new InvalidArgumentException();
-        }
-
-        global $DB;
-        try {
-
-            $lamda = $this->get_update_method($DB, $entity);
-            $this->check_lambda_method($lambda);
-
-            return $lamda();
-
-        } catch (dml_exception $e) {
-            return false;
-        }
-    }
-
-    public function delete(entity $entity) {
-        if ($entity === null) {
-            throw new InvalidArgumentException();
-        }
-
-        global $DB;
-        try {
-
-            $lambda = $this->get_delete_method($DB, $entity);
-            $this->check_lambda_method($lambda);
-
-            return $lambda();
-
-        } catch (dml_exception $e) {
-            return false;
-        }
     }
 
     protected function check_lambda_method($lambda) {
