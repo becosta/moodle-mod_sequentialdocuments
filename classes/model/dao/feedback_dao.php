@@ -25,6 +25,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 include_once __DIR__.'/data_access_object.php';
+include_once __DIR__.'/../entity/feedback.php';
 
 class feedback_dao extends data_access_object {
 

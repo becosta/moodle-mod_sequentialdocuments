@@ -25,6 +25,10 @@
 defined('MOODLE_INTERNAL') || die();
 
 include_once __DIR__.'/data_access_object.php';
+include_once __DIR__.'/../entity/interaction.php';
+include_once __DIR__.'/../entity/added_document.php';
+include_once __DIR__.'/../entity/added_version.php';
+include_once __DIR__.'/../entity/added_feedback.php';
 
 abstract class interaction_dao extends data_access_object {
 
