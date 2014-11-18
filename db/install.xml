@@ -25,7 +25,7 @@
         <INDEX NAME="assignment" UNIQUE="false" FIELDS="assignment"/>
       </INDEXES>
     </TABLE>
-    <TABLE NAME="sequentialdocuments_document">
+    <TABLE NAME="sequentialdocuments_document" COMMENT="Sequencial Documents documents table.">
         <FIELDS>
             <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" UNIQUE="true" COMMENT="Unique entity id."/>
             <FIELD NAME="instanceid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" UNIQUE="false" COMMENT="Instance id this entity belongs to."/>
@@ -46,7 +46,8 @@
             <INDEX NAME="instanceid" UNIQUE="false" FIELDS="instanceid"/>
             <INDEX NAME="authorid" UNIQUE="false" FIELDS="authorid"/>
         </INDEXES>
-    <TABLE NAME="sequentialdocuments_version">
+    </TABLE>
+    <TABLE NAME="sequentialdocuments_version" COMMENT="Sequencial Documents versions table.">
         <FIELDS>
             <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" UNIQUE="true" COMMENT="Unique entity id."/>
             <FIELD NAME="instanceid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" UNIQUE="false" COMMENT="Instance id this entity belongs to."/>
@@ -65,7 +66,7 @@
             <INDEX NAME="documentid" UNIQUE="false" FIELDS="documentid"/>
         </INDEXES>
     </TABLE>
-    <TABLE NAME="sequentialdocuments_feedback">
+    <TABLE NAME="sequentialdocuments_feedback" COMMENT="Sequencial Documents feedbacks table.">
         <FIELDS>
             <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" UNIQUE="true" COMMENT="Unique entity id."/>
             <FIELD NAME="instanceid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" UNIQUE="false" COMMENT="Instance id this entity belongs to."/>
@@ -85,7 +86,7 @@
             <INDEX NAME="versionid" UNIQUE="false" FIELDS="versionid"/>
         </INDEXES>
     </TABLE>
-    <TABLE NAME="sequentialdocuments_interaction">
+    <TABLE NAME="sequentialdocuments_interact" COMMENT="Sequencial Documents interactions table.">
         <FIELDS>
             <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" UNIQUE="true" COMMENT="Unique entity id."/>
             <FIELD NAME="instanceid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" UNIQUE="false" COMMENT="Instance id this entity belongs to."/>

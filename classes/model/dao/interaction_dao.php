@@ -26,7 +26,7 @@ defined('MOODLE_INTERNAL') || die();
 
 abstract class interaction_dao extends data_access_object {
 
-    const ENTITY_TABLE = 'sequentialdocuments_interaction';
+    const ENTITY_TABLE = 'sequentialdocuments_interact';
 
     public function __construct($instanceid, array $data = null) {
 
