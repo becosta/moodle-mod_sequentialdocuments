@@ -24,6 +24,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+include_once __DIR__.'/entity.php';
+
 abstract class interaction extends entity {
 
     protected $userid = -1;

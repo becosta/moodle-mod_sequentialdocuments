@@ -24,6 +24,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+include_once __DIR__.'/entity.php';
+
 class feedback extends entity {
 
     protected $versionid = -1;

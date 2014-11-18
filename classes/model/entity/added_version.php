@@ -24,6 +24,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+include_once __DIR__.'/interaction.php';
+
 class added_version extends interaction {
 
     protected $versionid = -1;

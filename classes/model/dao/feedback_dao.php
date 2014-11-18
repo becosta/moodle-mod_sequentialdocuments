@@ -24,6 +24,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+include_once __DIR__.'/data_access_object.php';
+
 class feedback_dao extends data_access_object {
 
     const ENTITY_TABLE = 'sequentialdocuments_feedback';

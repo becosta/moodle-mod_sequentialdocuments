@@ -24,6 +24,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+include_once __DIR__.'/../entity/entity.php';
+
 abstract class data_access_object {
 
     protected $instanceid = -1;
@@ -38,7 +40,7 @@ abstract class data_access_object {
             throw new Exception('Constant ENTITY_CLASS_NAME is not defined on subclass '.get_class($this));
         }
 
-        entity::check_numeric_id($id);
+        entity::check_numeric_id($instanceid);
         $this->instanceid = $instanceid;
 
         if ($data !== null) {

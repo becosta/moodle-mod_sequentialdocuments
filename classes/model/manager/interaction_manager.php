@@ -24,6 +24,9 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+include_once __DIR__.'/../dao/interaction_dao.php';
+include_once __DIR__.'/../entity/entity.php';
+
 class interaction_manager {
 
     protected $instanceid;

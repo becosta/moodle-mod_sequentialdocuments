@@ -24,6 +24,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+include_once __DIR__.'/entity.php';
+
 class document extends entity {
 
     protected $authorid = -1;
@@ -34,7 +36,7 @@ class document extends entity {
     protected $modificationtime = -1;
 
     protected function hydrate(array $data) {
-        
+
         if (!is_set($data['authorid'])) {
             throw new BadMethodCallException('Missing authorid parameter');
         }

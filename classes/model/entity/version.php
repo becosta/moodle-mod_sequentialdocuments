@@ -24,6 +24,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+include_once __DIR__.'/entity.php';
+
 class version extends entity {
 
     protected $documentid = -1;
@@ -32,7 +34,7 @@ class version extends entity {
     protected $fileslocation = array();
 
     public function hydrate(array $data) {
-        
+
         if (!isset($data['documentid'])) {
             throw new BadMethodCallException('Mising documentid parameter');
         }
