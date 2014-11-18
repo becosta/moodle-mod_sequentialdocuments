@@ -71,12 +71,12 @@ class version extends entity {
         return $this->fileslocation;
     }
 
-    protected function set_documentid($id) {
+    public function set_documentid($id) {
         $this->check_numeric_id($id);
         $this->documentid = $id;
     }
 
-    protected function set_versionindice($i) {
+    public function set_versionindice($i) {
         if (!is_int($$i)) {
             throw new InvalidArgumentException();
         } else if ($i < 1) {
@@ -88,14 +88,14 @@ class version extends entity {
         $this->versionindice = $i;
     }
 
-    protected function set_creationtime($timestamp) {
+    public function set_creationtime($timestamp) {
         if(!$this->is_valid_timestamp($timestamp)) {
             throw new InvalidArgumentException('Received invalid timestamp parameter: "'.$timestamp.'"');
         }
         $this->creationtime = $timestamp;
     }
 
-    protected function set_fileslocation(array $files) {
+    public function set_fileslocation(array $files) {
         $this->fileslocation = $files;
     }
 }

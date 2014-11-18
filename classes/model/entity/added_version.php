@@ -47,7 +47,7 @@ class added_version extends interaction {
         return $this->versionid;
     }
 
-    protected function set_versionid($id) {
+    public function set_versionid($id) {
         $this->check_numeric_id($id);
         $this->versionid = $id;
     }

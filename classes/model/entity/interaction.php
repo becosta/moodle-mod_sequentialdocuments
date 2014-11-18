@@ -51,12 +51,12 @@ abstract class interaction extends entity {
         return $this->date;
     }
 
-    protected function set_userid($id) {
+    public function set_userid($id) {
         $this->check_numeric_id($id);
         $this->id = $id;
     }
 
-    protected function set_date($timestamp) {
+    public function set_date($timestamp) {
         if(!$this->is_valid_timestamp($timestamp)) {
             throw new InvalidArgumentException('Received invalid timestamp parameter: "'.$timestamp.'"');
         }

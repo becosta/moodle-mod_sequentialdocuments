@@ -47,7 +47,7 @@ class added_document extends interaction {
         return $this->documentid;
     }
 
-    protected function set_documentid($id) {
+    public function set_documentid($id) {
         $this->check_numeric_id($id);
         $this->documentid = $id;
     }

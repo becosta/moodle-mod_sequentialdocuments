@@ -71,21 +71,24 @@ class feedback extends entity {
         return $this->fileslocation;
     }
 
-    protected function set_versionid($id) {
+    public function set_versionid($id) {
         $this->check_numeric_id($id);
         $this->versionid = $id;
     }
 
-    protected function set_authorid($id) {
+    public function set_authorid($id) {
         $this->check_numeric_id($id);
         $this->authorid = $id;
     }
 
-    protected function set_content(string $content) {
+    public function set_content($content) {
+        if (!is_string($content)) {
+            throw new InvalidArgumentException();
+        }
         $this->content = $content;
     }
 
-    protected function set_fileslocation(array $files) {
+    public function set_fileslocation(array $files) {
         $this->fileslocation = $files;
     }
 }

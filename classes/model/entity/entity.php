@@ -101,12 +101,12 @@ abstract class entity {
         return $this->instanceid;
     }
 
-    protected function set_id($id) {
+    public function set_id($id) {
         $this->check_numeric_id($id);
         $this->id = $id;
     }
 
-    protected function set_instanceid($id) {
+    public function set_instanceid($id) {
         $this->check_numeric_id($id);
         $this->instanceid = $id;
     }

@@ -82,7 +82,7 @@ abstract class data_access_object {
         $this->write_access('get_delete_method', $entity);
     }
 
-    protected function read_access(string $method_getter, array $conditions) {
+    protected function read_access($method_getter, array $conditions) {
 
         if (!is_callable(array($this, $method_getter))) {
             throw new InvalidArgumentException();
@@ -106,7 +106,7 @@ abstract class data_access_object {
         return $result;
     }
 
-    protected function write_access(string $method_getter, entity $entity) {
+    protected function write_access($method_getter, entity $entity) {
 
         if (!is_callable(array($this, $method_getter))) {
             throw new InvalidArgumentException();
