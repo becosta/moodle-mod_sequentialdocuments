@@ -31,7 +31,7 @@ abstract class interaction extends entity {
     protected $userid = -1;
     protected $date = -1;
 
-    public function hydrate(array $data) {
+    protected function hydrate(array $data) {
 
         if (!isset($data['userid'])) {
             throw new BadMethodCallException('Missing userid parameter');

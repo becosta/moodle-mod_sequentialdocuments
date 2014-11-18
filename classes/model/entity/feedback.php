@@ -33,7 +33,7 @@ class feedback extends entity {
     protected $content = '';
     protected $fileslocation = array();
 
-    public function hydrate(array $data) {
+    protected function hydrate(array $data) {
 
         if (!isset($data['versionid'])) {
             throw new BadMethodCallException('Missing versionid parameter');

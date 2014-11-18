@@ -33,7 +33,7 @@ class version extends entity {
     protected $creationtime = -1;
     protected $fileslocation = array();
 
-    public function hydrate(array $data) {
+    protected function hydrate(array $data) {
 
         if (!isset($data['documentid'])) {
             throw new BadMethodCallException('Mising documentid parameter');
