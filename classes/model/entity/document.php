@@ -30,6 +30,7 @@ class document extends entity {
 
     protected $authorid = -1;
     protected $title = '';
+    protected $description = '';
     protected $documentindice = -1;
     protected $currentversionid = -1;
     protected $creationtime = -1;
@@ -71,6 +72,10 @@ class document extends entity {
         return $this->title;
     }
 
+    public function get_description() {
+        
+    }
+
     public function get_documentindice() {
         return $this->documentindice;
     }
@@ -97,6 +102,13 @@ class document extends entity {
             throw new InvalidArgumentException();
         }
         $this->title = $title;
+    }
+
+    protected function set_description(string $description) {
+        if (!is_string($description)) {
+            throw new InvalidArgumentException();
+        }
+        $this->description = $description;
     }
 
     protected function set_documentindice($i) {

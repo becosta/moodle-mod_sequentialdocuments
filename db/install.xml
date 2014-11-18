@@ -31,6 +31,7 @@
             <FIELD NAME="instanceid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" UNIQUE="false" COMMENT="Instance id this entity belongs to."/>
             <FIELD NAME="authorid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" UNIQUE="false" COMMENT="User id this document belongs to."/>
             <FIELD NAME="title" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="Document's title." />
+            <FIELD NAME="description" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Document's detailed description." />
             <FIELD NAME="documentindice" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" UNIQUE="false" COMMENT="For a given document in a given instance, this field specifies the number of documents (+1) created before this one." />
             <FIELD NAME="currentversionid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" UNIQUE="true" COMMENT="Specifies which of the versions composing this document is the latest." />
             <FIELD NAME="creationtime" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Unix timestamp specifying when this document was created." />
