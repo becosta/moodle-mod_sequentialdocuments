@@ -99,13 +99,11 @@ abstract class entity {
     }
 
     public function set_id($id) {
-        $this->check_numeric_id($id);
-        $this->id = $id;
+        $this->id = $this->check_numeric_id($id);
     }
 
     public function set_instanceid($id) {
-        $this->check_numeric_id($id);
-        $this->instanceid = $id;
+        $this->instanceid = $this->check_numeric_id($id);
     }
 }
 

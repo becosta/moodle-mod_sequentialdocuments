@@ -83,20 +83,11 @@ class version extends entity {
     }
 
     public function set_documentid($id) {
-        $this->check_numeric_id($id);
-        $this->documentid = $id;
+        $this->documentid = $this->check_numeric_id($id);
     }
 
     public function set_versionindice($i) {
-        if (!is_int($i)) {
-            throw new InvalidArgumentException();
-        } else if ($i < 1) {
-            throw new BadFunctionCallException(
-                    'Received invalid versionindice parameter: "'.$i.
-                    '". Version indice should be a positive integer.'
-            );
-        }
-        $this->versionindice = $i;
+        $this->versionindice = $this->check_numeric_id($i);
     }
 
     public function set_creationtime($timestamp) {

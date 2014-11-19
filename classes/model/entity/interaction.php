@@ -52,8 +52,7 @@ abstract class interaction extends entity {
     }
 
     public function set_userid($id) {
-        $this->check_numeric_id($id);
-        $this->id = $id;
+        $this->id = $this->check_numeric_id($id);
     }
 
     public function set_date($timestamp) {

@@ -93,8 +93,7 @@ class document extends entity {
     }
 
     public function set_authorid($id) {
-        $this->check_numeric_id($id);
-        $this->authorid = $id;
+        $this->authorid = $this->check_numeric_id($id);
     }
 
     public function set_title($title) {
@@ -112,20 +111,11 @@ class document extends entity {
     }
 
     public function set_documentindice($i) {
-        if (!is_int($i)) {
-            throw new InvalidArgumentException();
-        } else if ($i < 1) {
-            throw new BadFunctionCallException(
-                    'Received invalid documentindice parameter: "'.$i.
-                    '". Document indice should be a positive integer.'
-            );
-        }
-        $this->documentindice = $i;
+        $this->documentindice = $this->check_numeric_id($i);
     }
 
     public function set_currentversionid($id) {
-        $this->check_numeric_id($id);
-        $this->currentversionid = $id;
+        $this->currentversionid = $this->check_numeric_id($id);
     }
 
     public function set_creationtime($timestamp) {

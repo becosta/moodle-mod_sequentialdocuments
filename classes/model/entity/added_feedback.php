@@ -48,8 +48,7 @@ class added_feedback extends interaction {
     }
 
     public function set_feedbackid($id) {
-        $this->check_numeric_id($id);
-        $this->feedbackid = $id;
+        $this->feedbackid = $this->check_numeric_id($id);
     }
 }
 

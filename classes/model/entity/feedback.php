@@ -83,13 +83,11 @@ class feedback extends entity {
     }
 
     public function set_versionid($id) {
-        $this->check_numeric_id($id);
-        $this->versionid = $id;
+        $this->versionid = $this->check_numeric_id($id);
     }
 
     public function set_authorid($id) {
-        $this->check_numeric_id($id);
-        $this->authorid = $id;
+        $this->authorid = $this->check_numeric_id($id);
     }
 
     public function set_content($content) {

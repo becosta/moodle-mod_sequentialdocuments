@@ -48,8 +48,7 @@ class added_version extends interaction {
     }
 
     public function set_versionid($id) {
-        $this->check_numeric_id($id);
-        $this->versionid = $id;
+        $this->versionid = $this->check_numeric_id($id);
     }
 }
 
