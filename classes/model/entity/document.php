@@ -73,7 +73,7 @@ class document extends entity {
     }
 
     public function get_description() {
-
+        return $this->description;
     }
 
     public function get_documentindice() {
