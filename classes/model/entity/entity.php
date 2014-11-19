@@ -32,12 +32,15 @@ abstract class entity {
     public abstract function get_html();
 
     public static function check_numeric_id($id) {
+
         if (!is_int($id)) {
-            throw new InvalidArgumentException();
-        } else if ($id < 0) {
+            $id = (int)$id;
+        }
+        if ($id < 0) {
             throw new BadMethodCallException('Received invalid numeric id: "'.$id.'"');
         }
-        return true;
+
+        return $id;
     }
 
     public function __construct(array $data = null) {
