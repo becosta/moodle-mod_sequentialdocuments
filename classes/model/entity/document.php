@@ -38,22 +38,22 @@ class document extends entity {
 
     protected function hydrate(array $data) {
 
-        if (!is_set($data['authorid'])) {
+        if (!isset($data['authorid'])) {
             throw new BadMethodCallException('Missing authorid parameter');
         }
-        if (!is_set($data['title'])) {
+        if (!isset($data['title'])) {
             throw new BadMethodCallException('Missing title parameter');
         }
-        if (!is_set($data['documentindice'])) {
+        if (!isset($data['documentindice'])) {
             throw new BadMethodCallException('Missing documentindice parameter');
         }
-        if (!is_set($data['currentversionid'])) {
+        if (!isset($data['currentversionid'])) {
             throw new BadMethodCallException('Missing currentversionid parameter');
         }
-        if (!is_set($data['creationtime'])) {
+        if (!isset($data['creationtime'])) {
             throw new BadMethodCallException('Missing creationtime parameter');
         }
-        if (!is_set($data['modificationtime'])) {
+        if (!isset($data['modificationtime'])) {
             throw new BadMethodCallException('Missing modificationtime parameter');
         }
 
