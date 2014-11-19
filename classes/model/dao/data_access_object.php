@@ -71,15 +71,15 @@ abstract class data_access_object {
     }
 
     public function insert(entity $entity) {
-        $this->write_access('get_insert_method', $entity);
+        return $this->write_access('get_insert_method', $entity);
     }
 
     public function update(entity $entity) {
-        $this->write_access('get_update_method', $entity);
+        return $this->write_access('get_update_method', $entity);
     }
 
     public function delete(entity $entity) {
-        $this->write_access('get_delete_method', $entity);
+        return $this->write_access('get_delete_method', $entity);
     }
 
     protected function read_access($method_getter, array $conditions) {
