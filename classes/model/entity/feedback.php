@@ -49,6 +49,17 @@ class feedback extends entity {
         }
 
         parent::hydrate($data);
+
+        if (is_string($this->fileslocation)) {
+            $this->fileslocation = unserialize($this->fileslocation);
+        }
+    }
+
+    public function to_public_array() {
+        $this->fileslocation = serialize($this->fileslocation);
+        $vars = get_object_vars($this);
+        $this->fileslocation = unserialize($this->fileslocation);
+        return $arr;
     }
 
     public function get_html() {

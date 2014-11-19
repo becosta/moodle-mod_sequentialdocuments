@@ -49,6 +49,17 @@ class version extends entity {
         }
 
         parent::hydrate($data);
+
+        if (is_string($this->fileslocation)) {
+            $this->fileslocation = unserialize($this->fileslocation);
+        }
+    }
+
+    public function to_public_array() {
+        $this->fileslocation = serialize($this->fileslocation);
+        $arr = get_object_vars($this);
+        $this->fileslocation = unserialize($this->fileslocation);
+        return $arr;
     }
 
     public function get_html() {
@@ -77,7 +88,7 @@ class version extends entity {
     }
 
     public function set_versionindice($i) {
-        if (!is_int($$i)) {
+        if (!is_int($i)) {
             throw new InvalidArgumentException();
         } else if ($i < 1) {
             throw new BadFunctionCallException(
