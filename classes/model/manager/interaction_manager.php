@@ -29,19 +29,14 @@ include_once __DIR__.'/../entity/entity.php';
 
 class interaction_manager {
 
-    protected $instanceid;
     protected $added_documentdao;
     protected $added_versiondao;
     protected $added_feedbackdao;
 
-    public function __construct($instanceid) {
-
-        entity::check_numeric_id($instanceid);
-        $this->instanceid = $instanceid;
-
-        $this->added_document_dao = new added_document_interaction_dao($instanceid);
-        $this->added_version_dao = new added_version_interaction_dao($instanceid);
-        $this->added_feedback_dao = new added_feedback_interaction_dao($instanceid);
+    public function __construct() {
+        $this->added_document_dao = new added_document_interaction_dao();
+        $this->added_version_dao = new added_version_interaction_dao();
+        $this->added_feedback_dao = new added_feedback_interaction_dao();
     }
 
     public function get_entity($id) {

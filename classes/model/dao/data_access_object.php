@@ -28,9 +28,7 @@ include_once __DIR__.'/../entity/entity.php';
 
 abstract class data_access_object {
 
-    protected $instanceid = -1;
-
-    public function __construct($instanceid, array $data = null) {
+    public function __construct(array $data = null) {
 
         if (!defined('static::ENTITY_TABLE')) {
             throw new Exception('Constant ENTITY_TABLE is not defined on subclass '.get_class($this));
@@ -40,11 +38,8 @@ abstract class data_access_object {
             throw new Exception('Constant ENTITY_CLASS_NAME is not defined on subclass '.get_class($this));
         }
 
-        entity::check_numeric_id($instanceid);
-        $this->instanceid = $instanceid;
-
         if ($data !== null) {
-            $this->hydrate($date);
+            $this->hydrate($data);
         }
     }
 

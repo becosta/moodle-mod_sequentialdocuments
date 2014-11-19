@@ -34,13 +34,13 @@ abstract class interaction_dao extends data_access_object {
 
     const ENTITY_TABLE = 'sequentialdocuments_interact';
 
-    public function __construct($instanceid, array $data = null) {
+    public function __construct(array $data = null) {
 
         if (!defined('static::SPECIFIC_PROPERTY')) {
             throw new Exception('Constant SPECIFIC_PROPERTY is not defined on subclass '.get_class($this));
         }
 
-        parent::__construct($instanceid, $data);
+        parent::__construct($data);
     }
 
     protected function get_getentitywhere_method($DB, array $conditions) {
