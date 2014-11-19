@@ -74,13 +74,7 @@ abstract class entity {
     }
 
     public function to_public_array() {
-        $vars = get_object_vars($this);
-        $arr = array();
-
-        foreach($vars as $property => $value) {
-          $arr[$property] = $value;
-        }
-        return $arr;
+        return get_object_vars($this);
     }
 
     public function to_public_stdClass() {
