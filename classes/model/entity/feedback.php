@@ -97,7 +97,7 @@ class feedback extends entity {
         $this->content = $content;
     }
 
-    public function set_fileslocation(array $files) {
+    public function set_fileslocation($files) {
         $this->fileslocation = $files;
     }
 }

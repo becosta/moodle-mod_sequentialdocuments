@@ -97,7 +97,7 @@ class version extends entity {
         $this->creationtime = $timestamp;
     }
 
-    public function set_fileslocation(array $files) {
+    public function set_fileslocation($files) {
         $this->fileslocation = $files;
     }
 }

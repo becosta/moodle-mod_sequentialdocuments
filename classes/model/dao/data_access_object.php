@@ -136,7 +136,7 @@ abstract class data_access_object {
             $record = $DB->get_records($table, $conditions);
             $data = current($record);
 
-            if ($data === false || count($record != 1)) {
+            if ($data === false || count($record) != 1) {
                 return false;
             }
             return new $class((array)$data);
