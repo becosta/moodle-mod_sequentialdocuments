@@ -97,6 +97,33 @@ class interaction_manager extends manager {
         $this->interactionvisitor = new history_interaction_visitor();
     }
 
+    public function track_action_add_document($instanceid, $userid, $documentid) {
+        $interaction = new added_document();
+        $interaction->set_instanceid($instanceid);
+        $interaction->set_userid($userid);
+        $interaction->set_documentid($documentid);
+        $interaction->set_date(time());
+        $this->added_documentdao->insert($interaction);
+    }
+
+    public function track_action_add_version($instanceid, $userid, $versionid) {
+        $interaction = new added_version();
+        $interaction->set_instanceid($instanceid);
+        $interaction->set_userid($userid);
+        $interaction->set_versionid($versionid);
+        $interaction->set_date(time());
+        $this->added_versiondao->insert($interaction);
+    }
+
+    public function track_action_add_feedback($instanceid, $userid, $feedbackid) {
+        $interaction = new added_feedback();
+        $interaction->set_instanceid($instanceid);
+        $interaction->set_userid($userid);
+        $interaction->set_feedbackid($feedbackid);
+        $interaction->set_date(time());
+        $this->added_feedbackdao->insert($interaction);
+    }
+
 
     }
 
