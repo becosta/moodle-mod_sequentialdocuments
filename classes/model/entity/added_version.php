@@ -40,7 +40,8 @@ class added_version extends interaction {
     }
 
     public function get_html() {
-        return '';
+        return 'New version '.parent::get_html();
+
     }
 
     public function get_versionid() {

@@ -58,7 +58,13 @@ class feedback extends entity {
     }
 
     public function get_html() {
-        return '';
+        global $DB;
+        $author = $DB->get_record('user', array('id' => $this->authorid));
+        return  '<aside class="sqds-bottom-right">'.
+                    '<strong>Submitted: </strong>'.userdate($this->creationtime).
+                '</aside>'.
+                '<strong>Feedback from: </strong>'.$author->lastname.' '.$author->firstname.'<br /><br />'.
+                '<p>'.$this->content.'</p>';
     }
 
     public function get_versionid() {

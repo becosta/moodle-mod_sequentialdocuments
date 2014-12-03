@@ -25,6 +25,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 include_once __DIR__.'/entity.php';
+include_once __DIR__.'/../../../locallib.php';
 
 class document extends entity {
 
@@ -62,7 +63,16 @@ class document extends entity {
     }
 
     public function get_html() {
-        return '';
+        return  '<aside class="sqds-top-right">'.
+                    '<strong>Created:</strong> '.userdate($this->creationtime).'<br />'.
+                    '<strong>Modified:</strong> '.userdate($this->modificationtime).'<br />'.
+                '</aside>'.
+                '<strong>Title:</strong> '.
+                '<a href="'.get_view_document_url($this->id, $this->instanceid).'">'.
+                    '<h5>'.$this->title.'</h5>'.
+                '</a><br />'.
+                '<p class="sqds-description"><strong>Description:</strong> '.$this->description.'</p>'.
+                '<strong>Content:</strong>';
     }
 
     public function get_authorid() {

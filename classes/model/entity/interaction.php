@@ -25,6 +25,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 include_once __DIR__.'/entity.php';
+include_once __DIR__.'/../../../locallib.php';
 
 abstract class interaction extends entity {
 
@@ -41,6 +42,13 @@ abstract class interaction extends entity {
         }
 
         parent::hydrate($data);
+    }
+
+    public function get_html() {
+        global $DB;
+        $author = $DB->get_record('user', array('id' => $this->userid));
+        return  '<strong>From: </strong>'.$author->lastname.' '.$author->firstname.
+                ' <strong>On: '.userdate($this->date).'</strong>';
     }
 
     public function get_userid() {

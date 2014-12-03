@@ -40,7 +40,7 @@ class added_feedback extends interaction {
     }
 
     public function get_html() {
-        return '';
+        return 'New feedback '.parent::get_html();
     }
 
     public function get_feedbackid() {

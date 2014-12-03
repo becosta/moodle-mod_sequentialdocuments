@@ -50,7 +50,9 @@ class version extends entity {
     }
 
     public function get_html() {
-        return '';
+        return  '<aside class="sqds-top-right">'.
+                    'Submited: '.userdate($this->creationtime).
+                '</aside>';
     }
 
     public function get_documentid() {
