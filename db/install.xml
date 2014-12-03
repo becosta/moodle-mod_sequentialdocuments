@@ -36,6 +36,7 @@
             <FIELD NAME="currentversionid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" UNIQUE="true" COMMENT="Specifies which of the versions composing this document is the latest." />
             <FIELD NAME="creationtime" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Unix timestamp specifying when this document was created." />
             <FIELD NAME="modificationtime" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Unix timestamp specifying when this document was modified for the last time." />
+            <FIELD NAME="locked" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="false" DEFAULT="0" COMMENT="Boolean value specifying if a document is locked down for editing" />
         </FIELDS>
         <KEYS>
             <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
@@ -55,7 +56,7 @@
             <FIELD NAME="documentid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" UNIQUE="false" COMMENT="Document id this version belongs to."/>
             <FIELD NAME="versionindice" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" UNIQUE="false" COMMENT="For a given version in a given document, this field specifies the number of versions (+1) created before this one." />
             <FIELD NAME="creationtime" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Unix timestamp specifying when this version was created." />
-            <FIELD NAME="fileslocation" TYPE="binary" NOTNULL="false" SEQUENCE="false" COMMENT="Filepath of each files that belongs to this version." />
+            <FIELD NAME="locked" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="false" DEFAULT="0" COMMENT="Boolean value specifying if a document version is locked down for editing" />
         </FIELDS>
         <KEYS>
             <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
@@ -73,8 +74,10 @@
             <FIELD NAME="instanceid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" UNIQUE="false" COMMENT="Instance id this entity belongs to."/>
             <FIELD NAME="versionid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" UNIQUE="false" COMMENT="Version id this feedback belongs to."/>
             <FIELD NAME="authorid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" UNIQUE="false" COMMENT="User id this feedback belongs to."/>
+            <FIELD NAME="feedbackindice" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" UNIQUE="false" COMMENT="For a given feedback in a given document version, this field specifies the number of feedbacks (+1) created before this one." />
+            <FIELD NAME="creationtime" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Unix timestamp specifying when this feedback was created." />
             <FIELD NAME="content" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Feedback's textual content." />
-            <FIELD NAME="fileslocation" TYPE="blob" NOTNULL="false" SEQUENCE="false" COMMENT="Filepath of each files that belongs to this feedback." />
+            <FIELD NAME="locked" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="false" DEFAULT="0" COMMENT="Boolean value specifying if a feedback is locked down for editing" />
         </FIELDS>
         <KEYS>
             <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
