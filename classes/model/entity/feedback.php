@@ -31,6 +31,7 @@ class feedback extends entity {
     protected $versionid = -1;
     protected $authorid = -1;
     protected $content = '';
+    protected $locked = 0;
     protected $fileslocation = array();
 
     protected function hydrate(array $data) {
@@ -78,6 +79,9 @@ class feedback extends entity {
         return $this->content;
     }
 
+
+    public function is_locked() {
+        return $this->locked;
     public function get_fileslocation() {
         return $this->fileslocation;
     }
@@ -97,6 +101,12 @@ class feedback extends entity {
         $this->content = $content;
     }
 
+    public function set_locked($bool) {
+        if ($bool) {
+            $this->locked = 1;
+        } else {
+            $this->locked = 0;
+        }
     public function set_fileslocation($files) {
         $this->fileslocation = $files;
     }

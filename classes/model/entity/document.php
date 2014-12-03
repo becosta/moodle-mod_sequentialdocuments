@@ -35,6 +35,7 @@ class document extends entity {
     protected $currentversionid = -1;
     protected $creationtime = -1;
     protected $modificationtime = -1;
+    protected $locked = 0;
 
     protected function hydrate(array $data) {
 
@@ -92,6 +93,10 @@ class document extends entity {
         return $this->modificationtime;
     }
 
+    public function is_locked() {
+        return $this->locked;
+    }
+
     public function set_authorid($id) {
         $this->authorid = $this->check_numeric_id($id);
     }
@@ -130,6 +135,14 @@ class document extends entity {
             throw new InvalidArgumentException('Received invalid timestamp parameter: "'.$timestamp.'"');
         }
         $this->modificationtime = $timestamp;
+    }
+
+    public function set_locked($bool) {
+        if ($bool) {
+            $this->locked = 1;
+        } else {
+            $this->locked = 0;
+        }
     }
 }
 

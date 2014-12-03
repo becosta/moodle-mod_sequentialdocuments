@@ -25,12 +25,14 @@
 defined('MOODLE_INTERNAL') || die();
 
 include_once __DIR__.'/entity.php';
+include_once __DIR__.'/../../../locallib.php';
 
 class version extends entity {
 
     protected $documentid = -1;
     protected $versionindice = -1;
     protected $creationtime = -1;
+    protected $locked = 0;
     protected $fileslocation = array();
 
     protected function hydrate(array $data) {
@@ -78,6 +80,11 @@ class version extends entity {
         return $this->creationtime;
     }
 
+    public function is_locked() {
+        if ($this->locked == 1) {
+            return true;
+        }
+        return false;
     public function get_fileslocation() {
         return $this->fileslocation;
     }
@@ -97,6 +104,12 @@ class version extends entity {
         $this->creationtime = $timestamp;
     }
 
+    public function set_locked($bool) {
+        if ($bool) {
+            $this->locked = 1;
+        } else {
+            $this->locked = 0;
+        }
     public function set_fileslocation($files) {
         $this->fileslocation = $files;
     }
