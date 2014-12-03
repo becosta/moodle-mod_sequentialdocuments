@@ -81,11 +81,13 @@ abstract class entity {
     }
 
     public function to_public_stdClass() {
-        $arr = $this->to_public_array();
+        $vars = $this->to_public_array();
         $o = new stdClass();
 
-        foreach($arr as $property => $value) {
-          $o->$property = $value;
+        if ($vars !== NULL) {
+            foreach($vars as $property => $value) {
+              $o->$property = $value;
+            }
         }
         return $o;
     }
