@@ -198,13 +198,23 @@ class document_manager extends manager {
             throw new unauthorized_access_exception(1000, 'mod_sequencialdocuments');
         }
 
-        $html = '';
-        $versions = $versionmanager->get_versions_by_documentid($document->get_id());
+        $lastversionattr = '';
+        if ($this->is_last_document($document)) {
+            $lastversionattr = 'data-sqds-is-last';
+        }
+        $documentid = $document->get_id();
+        $html = '<a onclick="toggle_visibility(\'sqds-document-content-'.$documentid.'\')">'.
+                    'Content:'.
+                '</a>'.
+                '<div id="sqds-document-content-'.$documentid.
+                '" class="sqds-document-content" '.$lastversionattr.'>';
+        $versions = $versionmanager->get_versions_by_documentid($documentid);
         foreach ($versions as $version) {
             $html .= $versionmanager->get_version_html_by_version_instance(
                                         $version, $this, $feedbackmanager, $contextid
             );
         }
+        $html .= '</div>';
 
         $links = '';
         if ($document->is_locked()) {
@@ -214,10 +224,10 @@ class document_manager extends manager {
                     '">Unlock this document</a> ';
         } else {
             $links =
-                    '<a href="'.get_lock_document_url($document->get_id(), $this->instanceid).'">Lock this document</a> '.
-                    '<a href="'.get_add_version_url($document->get_id(), $this->instanceid).'">Add a new version</a> '.
-                    '<a href="'.get_update_document_url($document->get_id(), $this->instanceid).'">Edit</a> '.
-                    '<a href="'.get_delete_document_url($document->get_id(), $this->instanceid).'">Delete</a>';
+                    '<a href="'.get_lock_document_url($documentid, $this->instanceid).'">Lock this document</a> '.
+                    '<a href="'.get_add_version_url($documentid, $this->instanceid).'">Add a new version</a> '.
+                    '<a href="'.get_update_document_url($documentid, $this->instanceid).'">Edit</a> '.
+                    '<a href="'.get_delete_document_url($documentid, $this->instanceid).'">Delete</a>';
         }
 
         return '<section class="sqds-document">'.$document->get_html().$html.

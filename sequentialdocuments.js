@@ -23,7 +23,7 @@
 
 function toggle_visibility(id) {
     var e = document.getElementById(id);
-    var label = document.getElementById('x' + id);
+    //var label = document.getElementById('x' + id);
 
     if(e.style.display == 'none') {
       //label.src = label.src.replace('collapsed', 'expanded');
@@ -60,6 +60,7 @@ function toggle_postload_visibility(classname) {
 
 function sqds_postload() {
     toggle_postload_visibility('sqds-version-content');
+    toggle_postload_visibility('sqds-document-content');
 }
 
 

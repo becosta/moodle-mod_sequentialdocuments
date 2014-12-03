@@ -71,8 +71,7 @@ class document extends entity {
                 '<a href="'.get_view_document_url($this->id, $this->instanceid).'">'.
                     '<h5>'.$this->title.'</h5>'.
                 '</a><br />'.
-                '<p class="sqds-description"><strong>Description:</strong> '.$this->description.'</p>'.
-                '<strong>Content:</strong>';
+                '<p class="sqds-description"><strong>Description:</strong> '.$this->description.'</p>';
     }
 
     public function get_authorid() {
