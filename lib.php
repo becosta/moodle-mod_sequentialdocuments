@@ -157,10 +157,17 @@ function sequentialdocuments_delete_instance($id) {
         return false;
     }
 
-    $archives = $DB->get_records_select('sequentialdocuments_archive', 'instance='.$id);
-    foreach ($archives as $archive) {
-        sequentialdocuments_delete_archive($archive->id);
+    $documents = $DB->get_records_select('sequentialdocuments_document', 'instanceid='.$id);
+    foreach ($documents as $document) {
+        $versions = $DB->get_records_select('sequentialdocuments_version', 'documentid='.$document->id);
+        foreach ($versions as $version) {
+            $DB->delete_records('sequentialdocuments_feedback', array('versionid' => $version->id));
+        }
+        $DB->delete_records('sequentialdocuments_version', array('documentid' => $document->id));
     }
+    $DB->delete_records('sequentialdocuments_document', array('instanceid' => $id));
+    $DB->delete_records('sequentialdocuments_interact', array('instanceid' => $id));
+
     $DB->delete_records('sequentialdocuments', array('id' => $sequentialdocuments->id));
 
     return true;
