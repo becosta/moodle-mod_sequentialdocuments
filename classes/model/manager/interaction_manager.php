@@ -125,6 +125,12 @@ class interaction_manager extends manager {
     }
 
 
+    public function get_interaction_html_by_id($id) {
+        return $this->get_interaction_html_by_interaction_instance($this->get_entity($id));
+    }
+
+    public function get_interaction_html_by_interaction_instance(interaction $interaction) {
+        return $interaction->accept($this->interactionvisitor);
     }
 
     public function get_entity($id) {
