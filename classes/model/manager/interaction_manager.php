@@ -24,19 +24,25 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+include_once __DIR__.'/manager.php';
 include_once __DIR__.'/../dao/interaction_dao.php';
 include_once __DIR__.'/../entity/entity.php';
 
-class interaction_manager {
+class interaction_manager extends manager {
 
     protected $added_documentdao;
     protected $added_versiondao;
     protected $added_feedbackdao;
 
-    public function __construct() {
-        $this->added_document_dao = new added_document_interaction_dao();
-        $this->added_version_dao = new added_version_interaction_dao();
-        $this->added_feedback_dao = new added_feedback_interaction_dao();
+    public function __construct(array $data = null) {
+        parent::__construct($data);
+        $this->added_documentdao = new added_document_interaction_dao();
+        $this->added_versiondao = new added_version_interaction_dao();
+        $this->added_feedbackdao = new added_feedback_interaction_dao();
+        $this->interactionvisitor = new history_interaction_visitor();
+    }
+
+
     }
 
     public function get_entity($id) {
