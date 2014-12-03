@@ -32,7 +32,15 @@ global $COURSE, $DB, $PAGE, $USER;
 // Course module id, or...
 $id = optional_param('id', 0, PARAM_INT);
 // ...sequentialdocuments instance id - it should be named as the first character of the module.
-$s  = optional_param('t', 0, PARAM_INT);
+$s  = optional_param('s', 0, PARAM_INT);
+
+$action = optional_param('action', 'index', PARAM_TEXT);
+$action = 'action_'.$action;
+
+$params = array();
+$params['documentid'] = optional_param('documentid', '-1', PARAM_INT);
+$params['versionid'] = optional_param('versionid', '-1', PARAM_INT);
+$params['feedbackid'] = optional_param('feedbackid', '-1', PARAM_INT);
 
 $inpopup = optional_param('inpopup', 0, PARAM_BOOL);
 
@@ -48,7 +56,7 @@ if ($id) {
     );
 }
 elseif ($s) {
-    $sequentialdocuments = $DB->get_record('sequentialdocuments', array('id' => $n), '*', MUST_EXIST);
+    $sequentialdocuments = $DB->get_record('sequentialdocuments', array('id' => $s), '*', MUST_EXIST);
     $course = $DB->get_record('course', array('id' => $sequentialdocuments->course), '*', MUST_EXIST);
 
     $cm = get_coursemodule_from_instance(
@@ -101,22 +109,13 @@ else {
     $PAGE->set_activity_record($sequentialdocuments);
 }
 
-// Output starts here.
-echo $OUTPUT->header();
+include_once __DIR__.'/classes/controller/sequentialdocuments_controller.php';
+$controller = new sequentialdocuments_controller($sequentialdocuments, $cm, (int)$USER->id);
 
-if (!isset($options['printheading']) || !empty($options['printheading'])) {
-    echo $OUTPUT->heading(format_string($sequentialdocuments->name), 2);
+if (is_callable(array($controller, $action))) {
+    $controller->$action($params);
+} else {
+    $controller->action_unknown($params);
 }
-// Conditions to show the intro can change to look for own settings or whatever.
-if ($sequentialdocuments->intro) {
-    echo $OUTPUT->box(
-            format_module_intro(
-                'sequentialdocuments', $sequentialdocuments, $cm->id
-            ),
-            'generalbox mod_introbox', 'sequentialdocumentsintro'
-    );
-}
-
-echo $OUTPUT->footer();
 
 
