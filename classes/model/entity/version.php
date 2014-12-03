@@ -33,7 +33,6 @@ class version extends entity {
     protected $versionindice = -1;
     protected $creationtime = -1;
     protected $locked = 0;
-    protected $fileslocation = array();
 
     protected function hydrate(array $data) {
 
@@ -46,22 +45,8 @@ class version extends entity {
         if (!isset($data['creationtime'])) {
             throw new BadMethodCallException('Mising creationtime parameter');
         }
-        if (!isset($data['fileslocation'])) {
-            throw new BadMethodCallException('Mising fileslocation parameter');
-        }
 
         parent::hydrate($data);
-
-        if (is_string($this->fileslocation)) {
-            $this->fileslocation = unserialize($this->fileslocation);
-        }
-    }
-
-    public function to_public_array() {
-        $this->fileslocation = serialize($this->fileslocation);
-        $arr = get_object_vars($this);
-        $this->fileslocation = unserialize($this->fileslocation);
-        return $arr;
     }
 
     public function get_html() {
@@ -85,8 +70,6 @@ class version extends entity {
             return true;
         }
         return false;
-    public function get_fileslocation() {
-        return $this->fileslocation;
     }
 
     public function set_documentid($id) {
@@ -110,8 +93,6 @@ class version extends entity {
         } else {
             $this->locked = 0;
         }
-    public function set_fileslocation($files) {
-        $this->fileslocation = $files;
     }
 }
 

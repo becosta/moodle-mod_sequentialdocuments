@@ -25,14 +25,16 @@
 defined('MOODLE_INTERNAL') || die();
 
 include_once __DIR__.'/entity.php';
+include_once __DIR__.'/../../../locallib.php';
 
 class feedback extends entity {
 
     protected $versionid = -1;
     protected $authorid = -1;
+    protected $feedbackindice = -1;
+    protected $creationtime = -1;
     protected $content = '';
     protected $locked = 0;
-    protected $fileslocation = array();
 
     protected function hydrate(array $data) {
 
@@ -45,22 +47,14 @@ class feedback extends entity {
         if (!isset($data['content'])) {
             throw new BadMethodCallException('Missing content parameter');
         }
-        if (!isset($data['fileslocation'])) {
-            throw new BadMethodCallException('Missing fileslocation parameter');
+        if (!isset($data['feedbackindice'])) {
+            throw new BadMethodCallException('Mising feedbackindice parameter');
+        }
+        if (!isset($data['creationtime'])) {
+            throw new BadMethodCallException('Mising creationtime parameter');
         }
 
         parent::hydrate($data);
-
-        if (is_string($this->fileslocation)) {
-            $this->fileslocation = unserialize($this->fileslocation);
-        }
-    }
-
-    public function to_public_array() {
-        $this->fileslocation = serialize($this->fileslocation);
-        $vars = get_object_vars($this);
-        $this->fileslocation = unserialize($this->fileslocation);
-        return $arr;
     }
 
     public function get_html() {
@@ -79,11 +73,16 @@ class feedback extends entity {
         return $this->content;
     }
 
+    public function get_feedbackindice() {
+        return $this->feedbackindice;
+    }
+
+    public function get_creationtime() {
+        return $this->creationtime;
+    }
 
     public function is_locked() {
         return $this->locked;
-    public function get_fileslocation() {
-        return $this->fileslocation;
     }
 
     public function set_versionid($id) {
@@ -92,6 +91,17 @@ class feedback extends entity {
 
     public function set_authorid($id) {
         $this->authorid = $this->check_numeric_id($id);
+    }
+
+    public function set_feedbackindice($i) {
+        $this->feedbackindice = $this->check_numeric_id($i);
+    }
+
+    public function set_creationtime($timestamp) {
+        if(!$this->is_valid_timestamp($timestamp)) {
+            throw new InvalidArgumentException('Received invalid timestamp parameter: "'.$timestamp.'"');
+        }
+        $this->creationtime = $timestamp;
     }
 
     public function set_content($content) {
@@ -107,8 +117,6 @@ class feedback extends entity {
         } else {
             $this->locked = 0;
         }
-    public function set_fileslocation($files) {
-        $this->fileslocation = $files;
     }
 }
 
