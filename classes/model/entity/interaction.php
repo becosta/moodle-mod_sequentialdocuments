@@ -27,7 +27,11 @@ defined('MOODLE_INTERNAL') || die();
 include_once __DIR__.'/entity.php';
 include_once __DIR__.'/../../../locallib.php';
 
-abstract class interaction extends entity {
+interface interaction_visitee {
+    public function accept(interaction_visitor $visitor);
+}
+
+abstract class interaction extends entity implements interaction_visitee {
 
     protected $userid = -1;
     protected $date = -1;
@@ -42,6 +46,10 @@ abstract class interaction extends entity {
         }
 
         parent::hydrate($data);
+    }
+
+    public function accept(interaction_visitor $visitor) {
+        return $visitor->visit_interaction($this);
     }
 
     public function get_html() {

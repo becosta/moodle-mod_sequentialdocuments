@@ -39,6 +39,10 @@ class added_feedback extends interaction {
         parent::hydrate($data);
     }
 
+    public function accept(interaction_visitor $visitor) {
+       return $visitor->visit_added_feedback($this);
+    }
+
     public function get_html() {
         return 'New feedback '.parent::get_html();
     }

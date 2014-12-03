@@ -39,6 +39,10 @@ class added_document extends interaction {
         parent::hydrate($data);
     }
 
+    public function accept(interaction_visitor $visitor) {
+        return $visitor->visit_added_document($this);
+    }
+
     public function get_html() {
         return 'New document '.parent::get_html();
     }

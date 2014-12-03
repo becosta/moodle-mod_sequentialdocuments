@@ -28,11 +28,66 @@ include_once __DIR__.'/manager.php';
 include_once __DIR__.'/../dao/interaction_dao.php';
 include_once __DIR__.'/../entity/entity.php';
 
+interface interaction_visitor {
+    public function visit_interaction(interaction $interaction);
+    public function visit_added_document(added_document $interaction);
+    public function visit_added_version(added_version $interaction);
+    public function visit_added_feedback(added_feedback $interaction);
+}
+
+class history_interaction_visitor implements interaction_visitor {
+
+    public function visit_interaction(interaction $interaction) {
+        return '<section class="sqds-interaction">'.$interaction->get_html().'</section>';
+    }
+
+    public function visit_added_document(added_document $interaction) {
+        global $DB;
+        $document = $DB->get_record(
+                            'sequentialdocuments_document', array('id' => $interaction->get_documentid())
+        );
+
+        return '<section class="sqds-interaction-added-document">'.
+                    '<div class="sqds-header">'.
+                        $interaction->get_html().'<br />'.
+                    '</div>'.
+                    '<strong>Title: </strong>'.$document->title.'<br />'.
+                    '<strong>Description: </strong>'.$document->description.
+                '</section>';
+    }
+
+    public function visit_added_version(added_version $interaction) {
+        global $DB;
+        $version = $DB->get_record('sequentialdocuments_version', array('id' => $interaction->get_versionid()));
+
+        return '<section class="sqds-interaction-added-version">'.
+                    '<div class="sqds-header">'.
+                        $interaction->get_html().
+                    '</div>'.
+                '</section>';
+    }
+
+    public function visit_added_feedback(added_feedback $interaction) {
+        global $DB;
+        $feedback = $DB->get_record(
+                            'sequentialdocuments_feedback', array('id' => $interaction->get_feedbackid())
+        );
+
+        return '<section class="sqds-interaction-added-feedback">'.
+                    '<div class="sqds-header">'.
+                        $interaction->get_html().'<br />'.
+                    '</div>'.
+                    $feedback->content.
+                '</section>';
+    }
+}
+
 class interaction_manager extends manager {
 
     protected $added_documentdao;
     protected $added_versiondao;
     protected $added_feedbackdao;
+    protected $interactionvisitor;
 
     public function __construct(array $data = null) {
         parent::__construct($data);

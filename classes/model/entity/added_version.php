@@ -39,6 +39,10 @@ class added_version extends interaction {
         parent::hydrate($data);
     }
 
+    public function accept(interaction_visitor $visitor) {
+        return $visitor->visit_added_version($this);
+    }
+
     public function get_html() {
         return 'New version '.parent::get_html();
 
