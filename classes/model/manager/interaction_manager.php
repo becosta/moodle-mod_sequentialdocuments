@@ -108,6 +108,10 @@ class interaction_manager extends manager {
         return $this->call_on_each_dao('get_entity_where', $conditions, false);
     }
 
+    public function get_entities_by_instanceid($instanceid) {
+        return $this->get_all_entities_where(array('instanceid' => $instanceid));
+    }
+
     public function get_all_entities_where(array $conditions) {
         return $this->call_on_each_dao('get_all_entities_where', $conditions, false);
     }
