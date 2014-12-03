@@ -1,0 +1,96 @@
+
+.sqds-document {
+    overflow: hidden;
+    border: solid white 2px;
+    margin: 1em;
+    padding: 0.5em;
+
+    -webkit-box-shadow: 0px 0px 3px 1px rgba(200,200,200,1);
+    -moz-box-shadow: 0px 0px 3px 1px rgba(200,200,200,1);
+    box-shadow: 0px 0px 3px 1px rgba(200,200,200,1);
+}
+
+.sqds-version {
+    overflow: hidden;
+    border-left: dotted grey 1px;
+    border-bottom: dotted grey 1px;
+    width: 85%;
+    margin: 1em;
+    padding: 0.5em;
+}
+
+.sqds-feedback {
+    overflow: hidden;
+    background-color: whitesmoke;
+    width: 75%;
+    margin: 0.5em;
+    margin-left: 24%;
+    padding: 0.5em;
+
+    -webkit-box-shadow: inset 0px 0px 30px -20px rgba(0,0,0,0.75);
+    -moz-box-shadow: inset 0px 0px 30px -20px rgba(0,0,0,0.75);
+    box-shadow: inset 0px 0px 30px -20px rgba(0,0,0,0.75);
+}
+
+.sqds-description {
+    clear: both;
+    margin: 1.5em;
+    margin-top: 2.5em;
+}
+
+.sqds-document .sqds-top-left,
+.sqds-document .sqds-bottom-left {
+    float: left;
+}
+
+.sqds-document .sqds-top-right,
+.sqds-document .sqds-bottom-right {
+    float: right;
+}
+
+.sqds-document h5 {
+    display: inline;
+}
+
+.sqds-interaction-added-document,
+.sqds-interaction-added-version,
+.sqds-interaction-added-feedback {
+    overflow: hidden;
+    border: solid white 2px;
+    margin: 1em;
+    padding: 0.5em;
+
+    -webkit-box-shadow: 0px 0px 3px 1px rgba(200,200,200,1);
+    -moz-box-shadow: 0px 0px 3px 1px rgba(200,200,200,1);
+    box-shadow: 0px 0px 3px 1px rgba(200,200,200,1);
+}
+
+.sqds-interaction-added-document .sqds-header,
+.sqds-interaction-added-version .sqds-header,
+.sqds-interaction-added-feedback .sqds-header {
+    background-color: transparent;
+    margin-bottom: 0.5em;
+    padding: 0.3em 1em 0.3em 1em;
+
+    -moz-border-radius-topleft: 50px;
+    border-top-left-radius: 50px;
+
+    -webkit-box-shadow: inset 0px 0px 30px -20px rgba(0,0,0,1);
+    -moz-box-shadow: inset 0px 0px 30px -20px rgba(0,0,0,1);
+    box-shadow: inset 0px 0px 30px -20px rgba(0,0,0,1);
+}
+
+.sqds-interaction-added-document .sqds-header {
+    /*border: 1px solid white;*/
+    color: teal;
+}
+
+.sqds-interaction-added-version .sqds-header {
+    color: slateblue;
+}
+
+.sqds-interaction-added-feedback .sqds-header {
+    color: steelblue;
+}
+
+
