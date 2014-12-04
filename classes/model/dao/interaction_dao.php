@@ -52,7 +52,7 @@ abstract class interaction_dao extends data_access_object {
             $record = $DB->get_records($table, $conditions);
             $data = current($record);
 
-            if ($data === false || count($record != 1)) {
+            if ($data === false || count($record) !== 1) {
                 return false;
             } else if ($data->$specific === null) {
                 return false;
