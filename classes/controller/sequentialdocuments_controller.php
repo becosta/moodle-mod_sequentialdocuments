@@ -249,6 +249,8 @@ class sequentialdocuments_controller {
                                                 $this->versionmanager,
                                                 $this->feedbackmanager
             );
+            $this->interactionmanager->
+                    track_action_delete_document($this->instanceid, $this->userid, $documentid);
         } catch (unauthorized_access_exception $e) {
             $this->action_error('You don\'t have access to this document');
         } catch (InvalidArgumentException $e) {
@@ -368,6 +370,8 @@ class sequentialdocuments_controller {
 
         try {
             $this->versionmanager->delete_version($versionid, $this->documentmanager, $this->feedbackmanager);
+            $this->interactionmanager->
+                    track_action_delete_version($this->instanceid, $this->userid, $versionid);
         } catch (unauthorized_access_exception $e) {
             $this->action_error('You don\'t have access to this document version');
         } catch (InvalidArgumentException $e) {
@@ -501,6 +505,8 @@ class sequentialdocuments_controller {
 
         try {
             $this->feedbackmanager->delete_feedback($feedbackid);
+            $this->interactionmanager->
+                    track_action_delete_feedback($this->instanceid, $this->userid, $feedbackid);
         } catch (unauthorized_access_exception $e) {
             $this->action_error('You don\'t have access to this document feedback');
         } catch (InvalidArgumentException $e) {
