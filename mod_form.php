@@ -52,6 +52,7 @@ class mod_sequentialdocuments_mod_form extends moodleform_mod {
                 get_string('sequentialdocumentsname', 'sequentialdocuments'),
                 array('size' => '64')
         );
+        $mform->setType('name', PARAM_TEXT);
 
         // Add the standard "intro" and "introformat" fields.
         $this->add_intro_editor();
@@ -59,6 +60,7 @@ class mod_sequentialdocuments_mod_form extends moodleform_mod {
         global $COURSE;
         $context = context_course::instance($COURSE->id);
         $mform->addElement('hidden', 'courseid', $COURSE->id);
+        $mform->setType('courseid', PARAM_INT);
 
         $teachers = get_enrolled_users($context, 'mod/sequentialdocuments:teacher');
         $arr = array();
