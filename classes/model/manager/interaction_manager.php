@@ -106,6 +106,13 @@ class interaction_manager extends manager {
         $this->added_documentdao->insert($interaction);
     }
 
+    public function track_action_delete_document($instanceid, $userid, $documentid) {
+        $interaction = $this->added_documentdao->get_entity_where(array('documentid' => $documentid));
+        if ($interaction) {
+            $this->delete($interaction);
+        }
+    }
+
     public function track_action_add_version($instanceid, $userid, $versionid) {
         $interaction = new added_version();
         $interaction->set_instanceid($instanceid);
@@ -115,6 +122,13 @@ class interaction_manager extends manager {
         $this->added_versiondao->insert($interaction);
     }
 
+    public function track_action_delete_version($instanceid, $userid, $versionid) {
+        $interaction = $this->added_versiondao->get_entity_where(array('versionid' => $versionid));
+        if ($interaction) {
+            $this->added_versiondao->delete($interaction);
+        }
+    }
+
     public function track_action_add_feedback($instanceid, $userid, $feedbackid) {
         $interaction = new added_feedback();
         $interaction->set_instanceid($instanceid);
@@ -122,6 +136,13 @@ class interaction_manager extends manager {
         $interaction->set_feedbackid($feedbackid);
         $interaction->set_date(time());
         $this->added_feedbackdao->insert($interaction);
+    }
+
+    public function track_action_delete_feedback($instanceid, $userid, $feedbackid) {
+        $interaction = $this->added_feedbackdao->get_entity_where(array('feedbackid' => $feedbackid));
+        if ($interaction) {
+            $this->added_feedbackdao->delete($interaction);
+        }
     }
 
 
