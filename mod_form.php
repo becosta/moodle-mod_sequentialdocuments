@@ -56,6 +56,26 @@ class mod_sequentialdocuments_mod_form extends moodleform_mod {
         // Add the standard "intro" and "introformat" fields.
         $this->add_intro_editor();
 
+        global $COURSE;
+        $context = context_course::instance($COURSE->id);
+        $mform->addElement('hidden', 'courseid', $COURSE->id);
+
+        $teachers = get_enrolled_users($context, 'mod/sequentialdocuments:teacher');
+        $arr = array();
+        foreach ($teachers as $teacher) {
+            $arr[$teacher->id] = $teacher->lastname.' '.$teacher->firstname;
+        }
+        $selectteachers = $mform->addElement('select', 'teachers', 'Teachers', $arr);
+        $selectteachers->setMultiple(true);
+
+        $students = get_enrolled_users($context, 'mod/sequentialdocuments:student');
+        $arr = array();
+        foreach ($students as $student) {
+            $arr[$student->id] = $student->lastname.' '.$student->firstname;
+        }
+        $selectstudents = $mform->addElement('select', 'students', 'Students', $arr);
+        $selectstudents->setMultiple(true);
+
         // Add standard elements, common to all modules.
         $this->standard_coursemodule_elements();
 

@@ -67,9 +67,31 @@ function sequentialdocuments_supports($feature) {
  * @return int The id of the newly inserted sequentialdocuments record
  */
 function sequentialdocuments_add_instance(stdClass $sequentialdocuments, mod_sequentialdocuments_mod_form $mform = null) {
-    global $DB;
+    global $CFG, $DB;
+    require_once($CFG->dirroot.'/group/lib.php');
 
     $sequentialdocuments->timecreated = time();
+
+    $data = $mform->get_data();
+    $uniqid = substr(uniqid(), 0, 4);
+
+    $grouping = new stdClass();
+    $grouping->courseid = $data->courseid;
+    $grouping->name = 'G_'.$data->name.$uniqid;
+    $groupingid = groups_create_grouping($grouping);
+
+    $group = new stdClass();
+    $group->courseid = $data->courseid;
+    $group->name = 'g_'.$data->name.$uniqid;
+    $groupid = groups_create_group($group);
+
+    foreach ($data->teachers as $teacher) {
+        groups_add_member($groupid, $teacher);
+    }
+    foreach ($data->students as $student) {
+        groups_add_member($groupid, $student);
+    }
+    groups_assign_grouping($groupingid, $groupid);
 
     return $DB->insert_record('sequentialdocuments', $sequentialdocuments);
 }
