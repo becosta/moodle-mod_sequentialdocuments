@@ -75,17 +75,24 @@ function sequentialdocuments_add_instance(stdClass $sequentialdocuments, mod_seq
     $data = $mform->get_data();
     $uniqid = uniqid();
     $len = strlen($uniqid);
-    $uniqid = substr($uniqid, $len -5, $len -1);
+    $uniqid = $data->name.substr($uniqid, $len -5, $len -1);
 
     $grouping = new stdClass();
     $grouping->courseid = $data->courseid;
-    $grouping->name = 'SQ_'.$data->name.$uniqid;
+    $grouping->name = 'SQ_'.$uniqid;
     $groupingid = groups_create_grouping($grouping);
 
     $group = new stdClass();
     $group->courseid = $data->courseid;
-    $group->name = 'sq_'.$data->name.$uniqid;
+    $group->name = 'sq_'.$uniqid;
     $groupid = groups_create_group($group);
+
+    if ($groupingid !== false) {
+        $sequentialdocuments->groupingid = (int)$groupingid;
+    }
+    if ($groupid !== false) {
+        $sequentialdocuments->groupid = (int)$groupid;
+    }
 
     foreach ($data->teachers as $teacher) {
         groups_add_member($groupid, $teacher);
@@ -94,6 +101,9 @@ function sequentialdocuments_add_instance(stdClass $sequentialdocuments, mod_seq
         groups_add_member($groupid, $student);
     }
     groups_assign_grouping($groupingid, $groupid);
+
+    /*$data->groupingid = $groupingid;
+    $data->groupmode = 2;*/
 
     return $DB->insert_record('sequentialdocuments', $sequentialdocuments);
 }
@@ -178,11 +188,15 @@ function sequentialdocuments_delete_archive($id) {
  * @return boolean Success/Failure
  */
 function sequentialdocuments_delete_instance($id) {
-    global $DB;
+    global $CFG, $DB;
+    require_once($CFG->dirroot.'/group/lib.php');
 
     if (! $sequentialdocuments = $DB->get_record('sequentialdocuments', array('id' => $id))) {
         return false;
     }
+
+    groups_delete_group($sequentialdocuments->groupid);
+    groups_delete_grouping($sequentialdocuments->groupingid);
 
     $documents = $DB->get_records_select('sequentialdocuments_document', 'instanceid='.$id);
     foreach ($documents as $document) {
