@@ -73,16 +73,18 @@ function sequentialdocuments_add_instance(stdClass $sequentialdocuments, mod_seq
     $sequentialdocuments->timecreated = time();
 
     $data = $mform->get_data();
-    $uniqid = substr(uniqid(), 0, 4);
+    $uniqid = uniqid();
+    $len = strlen($uniqid);
+    $uniqid = substr($uniqid, $len -5, $len -1);
 
     $grouping = new stdClass();
     $grouping->courseid = $data->courseid;
-    $grouping->name = 'G_'.$data->name.$uniqid;
+    $grouping->name = 'SQ_'.$data->name.$uniqid;
     $groupingid = groups_create_grouping($grouping);
 
     $group = new stdClass();
     $group->courseid = $data->courseid;
-    $group->name = 'g_'.$data->name.$uniqid;
+    $group->name = 'sq_'.$data->name.$uniqid;
     $groupid = groups_create_group($group);
 
     foreach ($data->teachers as $teacher) {
