@@ -125,7 +125,7 @@ function sequentialdocuments_has_document_creation_rights($instanceid, $userid) 
                 has_capability(
                     'mod/sequentialdocuments:student',
                     sequentialdocuments_get_course_context($instanceid)
-                ) && students_can_create_documents($instanceid)
+                ) && students_can_create_document($instanceid)
             )
     ;
 }
@@ -136,7 +136,7 @@ function sequentialdocuments_has_version_creation_rights($instanceid, $userid) {
                 has_capability(
                     'mod/sequentialdocuments:student',
                     sequentialdocuments_get_course_context($instanceid)
-                ) && students_can_create_versions($instanceid)
+                ) && students_can_create_version($instanceid)
             )
     ;
 }
@@ -168,7 +168,7 @@ function sequentialdocuments_has_document_edit_rights($instanceid, $userid) {
                 has_capability(
                     'mod/sequentialdocuments:student',
                     sequentialdocuments_get_course_context($instanceid)
-                ) && students_can_edit_documents($instanceid)
+                ) && students_can_edit_document($instanceid)
             )
     ;
 }
@@ -179,7 +179,7 @@ function sequentialdocuments_has_version_edit_rights($instanceid, $userid) {
                 has_capability(
                     'mod/sequentialdocuments:student',
                     sequentialdocuments_get_course_context($instanceid)
-                ) && students_can_edit_versions($instanceid)
+                ) && students_can_edit_version($instanceid)
             )
     ;
 }
@@ -190,7 +190,7 @@ function sequentialdocuments_has_feedback_edit_rights($instanceid, $userid) {
                 has_capability(
                     'mod/sequentialdocuments:student',
                     sequentialdocuments_get_course_context($instanceid)
-                ) && students_can_edit_feedbacks($instanceid)
+                ) && students_can_edit_feedback($instanceid)
             )
     ;
 }
@@ -211,7 +211,7 @@ function sequentialdocuments_has_document_suppression_rights($instanceid, $useri
                 has_capability(
                     'mod/sequentialdocuments:student',
                     sequentialdocuments_get_course_context($instanceid)
-                ) && students_can_delete_documents($instanceid)
+                ) && students_can_delete_document($instanceid)
             )
     ;
 }
@@ -222,7 +222,7 @@ function sequentialdocuments_has_version_suppression_rights($instanceid, $userid
                 has_capability(
                     'mod/sequentialdocuments:student',
                     sequentialdocuments_get_course_context($instanceid)
-                ) && students_can_delete_versions($instanceid)
+                ) && students_can_delete_version($instanceid)
             )
     ;
 }
@@ -233,7 +233,7 @@ function sequentialdocuments_has_feedback_suppression_rights($instanceid, $useri
                 has_capability(
                     'mod/sequentialdocuments:student',
                     sequentialdocuments_get_course_context($instanceid)
-                ) && students_can_delete_feedbacks($instanceid)
+                ) && students_can_delete_feedback($instanceid)
             )
     ;
 }

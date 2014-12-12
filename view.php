@@ -113,7 +113,11 @@ include_once __DIR__.'/classes/controller/sequentialdocuments_controller.php';
 $controller = new sequentialdocuments_controller($sequentialdocuments, $cm, (int)$USER->id);
 
 if (is_callable(array($controller, $action))) {
-    $controller->$action($params);
+    if (sequentialdocuments_is_instance_member($sequentialdocuments->id, (int)$USER->id)) {
+        $controller->$action($params);
+    } else {
+        $controller->action_error('You don\'t have access to this Sequential Documents instance');
+    }
 } else {
     $controller->action_unknown($params);
 }
