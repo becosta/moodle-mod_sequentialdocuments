@@ -78,6 +78,13 @@ $capabilities = array(
             'student' => CAP_ALLOW
         )
     ),
+    'mod/sequentialdocuments:manager' => array(
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_COURSE,
+        'legacy' => array(
+            'manager' => CAP_ALLOW,
+        )
+    ),
     'mod/sequentialdocuments:student' => array(
         'captype' => 'write',
         'contextlevel' => CONTEXT_MODULE,

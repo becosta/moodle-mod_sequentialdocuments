@@ -105,7 +105,12 @@ function sequentialdocuments_add_instance(stdClass $sequentialdocuments, mod_seq
     /*$data->groupingid = $groupingid;
     $data->groupmode = 2;*/
 
-    return $DB->insert_record('sequentialdocuments', $sequentialdocuments);
+    $access = new stdClass();
+    $access->instanceid = $DB->insert_record('sequentialdocuments', $sequentialdocuments);
+
+    $DB->insert_record('sequentialdocuments_access', $access);
+
+    return $access->instanceid;
 }
 
 /**
@@ -209,6 +214,7 @@ function sequentialdocuments_delete_instance($id) {
     $DB->delete_records('sequentialdocuments_document', array('instanceid' => $id));
     $DB->delete_records('sequentialdocuments_interact', array('instanceid' => $id));
 
+    $DB->delete_records('sequentialdocuments_access', array('instanceid' => $sequentialdocuments->id));
     $DB->delete_records('sequentialdocuments', array('id' => $sequentialdocuments->id));
 
     return true;

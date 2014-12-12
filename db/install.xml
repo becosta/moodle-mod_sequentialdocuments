@@ -27,7 +27,29 @@
         <INDEX NAME="assignment" UNIQUE="false" FIELDS="assignment"/>
       </INDEXES>
     </TABLE>
-    <TABLE NAME="sequentialdocuments_document" COMMENT="Sequencial Documents documents table.">
+    <TABLE NAME="sequentialdocuments_access" COMMENT="Sequential Documents student access rights table.">
+        <FIELDS>
+            <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" UNIQUE="true" COMMENT="unique id."/>
+            <FIELD NAME="instanceid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The sequentialdocuments instance this access rights set belongs to."/>
+            <FIELD NAME="readdocument" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="false" DEFAULT="1" COMMENT="Boolean value specifying if a student can read an instance document" />
+            <FIELD NAME="readversion" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="false" DEFAULT="1" COMMENT="Boolean value specifying if a student can read an instance version" />
+            <FIELD NAME="readfeedback" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="false" DEFAULT="1" COMMENT="Boolean value specifying if a student can read an instance feedback" />
+            <FIELD NAME="createdocument" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="false" DEFAULT="1" COMMENT="Boolean value specifying if a student can create a document" />
+            <FIELD NAME="createversion" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="false" DEFAULT="1" COMMENT="Boolean value specifying if a student can create a version" />
+            <FIELD NAME="createfeedback" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="false" DEFAULT="1" COMMENT="Boolean value specifying if a student can create a feedback" />
+            <FIELD NAME="editdocument" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="false" DEFAULT="0" COMMENT="Boolean value specifying if a student can edit a document" />
+            <FIELD NAME="editversion" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="false" DEFAULT="0" COMMENT="Boolean value specifying if a student can edit a version" />
+            <FIELD NAME="editfeedback" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="false" DEFAULT="0" COMMENT="Boolean value specifying if a student can edit a feedback" />
+            <FIELD NAME="deletedocument" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="false" DEFAULT="0" COMMENT="Boolean value specifying if a student can delete a document" />
+            <FIELD NAME="deleteversion" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="false" DEFAULT="0" COMMENT="Boolean value specifying if a student can delete a version" />
+            <FIELD NAME="deletefeedback" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="false" DEFAULT="0" COMMENT="Boolean value specifying if a student can delete a feedback" />
+        </FIELDS>
+        <KEYS>
+            <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+            <KEY NAME="instanceid" TYPE="foreign" FIELDS="instanceid" REFTABLE="sequentialdocuments" REFFIELDS="id"/>
+        </KEYS>
+    </TABLE>
+    <TABLE NAME="sequentialdocuments_document" COMMENT="Sequential Documents documents table.">
         <FIELDS>
             <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" UNIQUE="true" COMMENT="Unique entity id."/>
             <FIELD NAME="instanceid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" UNIQUE="false" COMMENT="Instance id this entity belongs to."/>
@@ -51,7 +73,7 @@
             <INDEX NAME="authorid" UNIQUE="false" FIELDS="authorid"/>
         </INDEXES>
     </TABLE>
-    <TABLE NAME="sequentialdocuments_version" COMMENT="Sequencial Documents versions table.">
+    <TABLE NAME="sequentialdocuments_version" COMMENT="Sequential Documents versions table.">
         <FIELDS>
             <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" UNIQUE="true" COMMENT="Unique entity id."/>
             <FIELD NAME="instanceid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" UNIQUE="false" COMMENT="Instance id this entity belongs to."/>
@@ -70,7 +92,7 @@
             <INDEX NAME="documentid" UNIQUE="false" FIELDS="documentid"/>
         </INDEXES>
     </TABLE>
-    <TABLE NAME="sequentialdocuments_feedback" COMMENT="Sequencial Documents feedbacks table.">
+    <TABLE NAME="sequentialdocuments_feedback" COMMENT="Sequential Documents feedbacks table.">
         <FIELDS>
             <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" UNIQUE="true" COMMENT="Unique entity id."/>
             <FIELD NAME="instanceid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" UNIQUE="false" COMMENT="Instance id this entity belongs to."/>
@@ -92,7 +114,7 @@
             <INDEX NAME="versionid" UNIQUE="false" FIELDS="versionid"/>
         </INDEXES>
     </TABLE>
-    <TABLE NAME="sequentialdocuments_interact" COMMENT="Sequencial Documents interactions table.">
+    <TABLE NAME="sequentialdocuments_interact" COMMENT="Sequential Documents interactions table.">
         <FIELDS>
             <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" UNIQUE="true" COMMENT="Unique entity id."/>
             <FIELD NAME="instanceid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" UNIQUE="false" COMMENT="Instance id this entity belongs to."/>

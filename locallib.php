@@ -28,6 +28,287 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+function sequentialdocuments_get_course_context($instanceid) {
+    global $CFG, $COURSE, $DB;
+
+    if (! $sequentialdocuments = $DB->get_record('sequentialdocuments', array('id' => $instanceid))) {
+        return false;
+    }
+
+    $context = context_course::instance($sequentialdocuments->course);
+    return $context;
+}
+
+function sequentialdocuments_is_instance_member($instanceid, $userid) {
+    global $CFG, $COURSE, $DB;
+
+    if (! $sequentialdocuments = $DB->get_record('sequentialdocuments', array('id' => $instanceid))) {
+        return false;
+    }
+
+    $context = context_course::instance($sequentialdocuments->course);
+    if (has_capability('mod/sequentialdocuments:manager', $context)) {
+        return true;
+    }
+
+    require_once($CFG->dirroot.'/group/lib.php');
+    $roles = groups_get_members_by_role($sequentialdocuments->groupid, $sequentialdocuments->course);
+
+    if ($roles) {
+        foreach ($roles as $role) {
+            foreach ($role->users as $id => $user) {
+                if ($id == $userid) {
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
+function sequentialdocuments_has_global_read_rights($instanceid, $userid) {
+    $context = sequentialdocuments_get_course_context($instanceid);
+    return  (
+                sequentialdocuments_is_instance_member($instanceid, $userid) &&
+                has_capability('mod/sequentialdocuments:teacher', $context)
+            )
+            || has_capability('mod/sequentialdocuments:manager', $context)
+    ;
+}
+
+function sequentialdocuments_has_document_read_rights($instanceid, $userid) {
+    return sequentialdocuments_has_global_read_rights($instanceid, $userid) ||
+            (
+                has_capability(
+                    'mod/sequentialdocuments:student',
+                    sequentialdocuments_get_course_context($instanceid)
+                ) && students_can_read_document($instanceid)
+            )
+    ;
+}
+
+function sequentialdocuments_has_version_read_rights($instanceid, $userid) {
+    return sequentialdocuments_has_global_read_rights($instanceid, $userid) ||
+            (
+                has_capability(
+                    'mod/sequentialdocuments:student',
+                    sequentialdocuments_get_course_context($instanceid)
+                ) && students_can_read_version($instanceid)
+            )
+    ;
+}
+
+function sequentialdocuments_has_feedback_read_rights($instanceid, $userid) {
+    return sequentialdocuments_has_global_read_rights($instanceid, $userid) ||
+            (
+                has_capability(
+                    'mod/sequentialdocuments:student',
+                    sequentialdocuments_get_course_context($instanceid)
+                ) && students_can_read_feedback($instanceid)
+            )
+    ;
+}
+
+function sequentialdocuments_has_global_creation_rights($instanceid, $userid) {
+    $context = sequentialdocuments_get_course_context($instanceid);
+    return  (
+                sequentialdocuments_is_instance_member($instanceid, $userid) &&
+                has_capability('mod/sequentialdocuments:teacher', $context)
+            )
+            || has_capability('mod/sequentialdocuments:manager', $context)
+    ;
+}
+
+function sequentialdocuments_has_document_creation_rights($instanceid, $userid) {
+    return sequentialdocuments_has_global_creation_rights($instanceid, $userid) ||
+            (
+                has_capability(
+                    'mod/sequentialdocuments:student',
+                    sequentialdocuments_get_course_context($instanceid)
+                ) && students_can_create_documents($instanceid)
+            )
+    ;
+}
+
+function sequentialdocuments_has_version_creation_rights($instanceid, $userid) {
+    return sequentialdocuments_has_global_creation_rights($instanceid, $userid) ||
+            (
+                has_capability(
+                    'mod/sequentialdocuments:student',
+                    sequentialdocuments_get_course_context($instanceid)
+                ) && students_can_create_versions($instanceid)
+            )
+    ;
+}
+
+function sequentialdocuments_has_feedback_creation_rights($instanceid, $userid) {
+    return sequentialdocuments_has_global_creation_rights($instanceid, $userid) ||
+            (
+                has_capability(
+                    'mod/sequentialdocuments:student',
+                    sequentialdocuments_get_course_context($instanceid)
+                ) && students_can_create_feedback($instanceid)
+            )
+    ;
+}
+
+function sequentialdocuments_has_global_edit_rights($instanceid, $userid) {
+    $context = sequentialdocuments_get_course_context($instanceid);
+    return  (
+                sequentialdocuments_is_instance_member($instanceid, $userid) &&
+                has_capability('mod/sequentialdocuments:teacher', $context)
+            )
+            || has_capability('mod/sequentialdocuments:manager', $context)
+    ;
+}
+
+function sequentialdocuments_has_document_edit_rights($instanceid, $userid) {
+    return sequentialdocuments_has_global_edit_rights($instanceid, $userid) ||
+            (
+                has_capability(
+                    'mod/sequentialdocuments:student',
+                    sequentialdocuments_get_course_context($instanceid)
+                ) && students_can_edit_documents($instanceid)
+            )
+    ;
+}
+
+function sequentialdocuments_has_version_edit_rights($instanceid, $userid) {
+    return sequentialdocuments_has_global_edit_rights($instanceid, $userid) ||
+            (
+                has_capability(
+                    'mod/sequentialdocuments:student',
+                    sequentialdocuments_get_course_context($instanceid)
+                ) && students_can_edit_versions($instanceid)
+            )
+    ;
+}
+
+function sequentialdocuments_has_feedback_edit_rights($instanceid, $userid) {
+    return sequentialdocuments_has_global_edit_rights($instanceid, $userid) ||
+            (
+                has_capability(
+                    'mod/sequentialdocuments:student',
+                    sequentialdocuments_get_course_context($instanceid)
+                ) && students_can_edit_feedbacks($instanceid)
+            )
+    ;
+}
+
+function sequentialdocuments_has_global_suppression_rights($instanceid, $userid) {
+    $context = sequentialdocuments_get_course_context($instanceid);
+    return  (
+                sequentialdocuments_is_instance_member($instanceid, $userid) &&
+                has_capability('mod/sequentialdocuments:teacher', $context)
+            )
+            || has_capability('mod/sequentialdocuments:manager', $context)
+    ;
+}
+
+function sequentialdocuments_has_document_suppression_rights($instanceid, $userid) {
+    return sequentialdocuments_has_global_suppression_rights($instanceid, $userid) ||
+            (
+                has_capability(
+                    'mod/sequentialdocuments:student',
+                    sequentialdocuments_get_course_context($instanceid)
+                ) && students_can_delete_documents($instanceid)
+            )
+    ;
+}
+
+function sequentialdocuments_has_version_suppression_rights($instanceid, $userid) {
+    return sequentialdocuments_has_global_suppression_rights($instanceid, $userid) ||
+            (
+                has_capability(
+                    'mod/sequentialdocuments:student',
+                    sequentialdocuments_get_course_context($instanceid)
+                ) && students_can_delete_versions($instanceid)
+            )
+    ;
+}
+
+function sequentialdocuments_has_feedback_suppression_rights($instanceid, $userid) {
+    return sequentialdocuments_has_global_suppression_rights($instanceid, $userid) ||
+            (
+                has_capability(
+                    'mod/sequentialdocuments:student',
+                    sequentialdocuments_get_course_context($instanceid)
+                ) && students_can_delete_feedbacks($instanceid)
+            )
+    ;
+}
+
+function sequentialdocuments_has_lock_document_rights($intanceid, $userid) {
+    $context = sequentialdocuments_get_course_context($instanceid);
+    return  (
+                sequentialdocuments_is_instance_member($instanceid, $userid) &&
+                has_capability('mod/sequentialdocuments:teacher', $context)
+            )
+            || has_capability('mod/sequentialdocuments:manager', $context)
+    ;
+}
+
+function sequentialdocuments_students_can($action, $instanceid) {
+    global $DB;
+    $access = $DB->get_records('sequentialdocuments_access', array('instanceid' => $instanceid));
+    if ($access !== false) {
+        if (isset($access[1]->$action)) {
+            if ($access[1]->$action == 1) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+function students_can_read_document($instanceid) {
+    return sequentialdocuments_students_can('readdocument', $instanceid);
+}
+
+function students_can_read_version($instanceid) {
+    return sequentialdocuments_students_can('readversion', $instanceid);
+}
+
+function students_can_read_feedback($instanceid) {
+    return sequentialdocuments_students_can('readfeedback', $instanceid);
+}
+
+function students_can_create_document($instanceid) {
+    return sequentialdocuments_students_can('createdocument', $instanceid);
+}
+
+function students_can_create_version($instanceid) {
+    return sequentialdocuments_students_can('createversion', $instanceid);
+}
+
+function students_can_create_feedback($instanceid) {
+    return sequentialdocuments_students_can('createfeedback', $instanceid);
+}
+
+function students_can_edit_document($instanceid) {
+    return sequentialdocuments_students_can('editdocuments', $instanceid);
+}
+
+function students_can_edit_version($instanceid) {
+    return sequentialdocuments_students_can('editversion', $instanceid);
+}
+
+function students_can_edit_feedback($instanceid) {
+    return sequentialdocuments_students_can('editfeedback', $instanceid);
+}
+
+function students_can_delete_document($instanceid) {
+    return sequentialdocuments_students_can('deletedocument', $instanceid);
+}
+
+function students_can_delete_version($instanceid) {
+    return sequentialdocuments_students_can('deleteversion', $instanceid);
+}
+
+function students_can_delete_feedback($instanceid) {
+    return sequentialdocuments_students_can('deletefeedback', $instanceid);
+}
+
 function get_plugin_base_url() {
     global $CFG;
     return $CFG->wwwroot.'/mod/sequentialdocuments';
