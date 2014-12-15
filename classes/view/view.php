@@ -73,15 +73,23 @@ abstract class view {
 
     public function display_content() {
 
+        global $USER;
+
         $tabs =
             array(
                 array(
                     new tabobject('history', get_view_history_url($this->instanceid), 'History'),
                     new tabobject('index', get_view_index_url($this->instanceid), 'Documents'),
-                    new tabobject('add_document', get_add_document_url($this->instanceid), 'Add a document'),
-                    //new tabobject('options', 'url', 'Options'),
                 ),
             );
+
+        if (sequentialdocuments_has_document_creation_rights($this->instanceid, $USER->id)) {
+            $tabs[0][] = new tabobject('add_document', get_add_document_url($this->instanceid), 'Add a document');
+        }
+
+        if (sequentialdocuments_has_edit_access_rights_rights($this->instanceid, $USER->id)) {
+            $tabs[0][] = new tabobject('edit_access', get_edit_access_url($this->instanceid), 'Edit access rights');
+        }
 
         print_tabs($tabs);
         echo $this->content;

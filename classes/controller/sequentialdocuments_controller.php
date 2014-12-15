@@ -148,6 +148,27 @@ class sequentialdocuments_controller {
         $view->display();
     }
 
+    public function action_edit_access(array $params = null) {
+
+        if (!sequentialdocuments_has_edit_access_rights_rights($this->instanceid, $this->userid)) {
+            $this->action_error('You don\'t have access to this page');
+        }
+
+        $data = sequentialdocuments_get_current_access_rights($this->instanceid);
+        $data['accessid'] = $data['id'];
+        $this->form_based_action(
+                'access_rights_config_form',
+                'view.php?id='.$this->courseid.'&action=edit_access',
+                $data,
+                function($formdata, $view) {
+                    $formdata->id = $formdata->accessid;
+                    $formdata->instanceid = $this->instanceid;
+                    sequentialdocuments_update_current_access_rights($this->instanceid, (array)$formdata);
+                    $this->action_index();
+                }
+        );
+    }
+
     public function action_history(array $params = null) {
 
         $interactions = $this->interactionmanager->get_entities_by_instanceid($this->instanceid);

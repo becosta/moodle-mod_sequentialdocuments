@@ -66,6 +66,32 @@ function sequentialdocuments_is_instance_member($instanceid, $userid) {
     return false;
 }
 
+function sequentialdocuments_get_current_access_rights($instanceid) {
+    global $DB;
+    $data = $DB->get_records('sequentialdocuments_access', array('instanceid' => $instanceid));
+    return (array)$data[1];
+}
+
+function sequentialdocuments_update_current_access_rights($instanceid, array $data) {
+    global $DB;
+    //if (!isset($data->id)) {
+    if (true) {
+        $id = $DB->get_records('sequentialdocuments_access', array('instanceid' => $instanceid), null, 'id');
+        $data['id'] = $id[1]->id;
+    }
+    $DB->update_record('sequentialdocuments_access', $data);
+}
+
+function sequentialdocuments_has_edit_access_rights_rights($instanceid, $userid) {
+    $context = sequentialdocuments_get_course_context($instanceid);
+    return  (
+                sequentialdocuments_is_instance_member($instanceid, $userid) &&
+                has_capability('mod/sequentialdocuments:editingteacher', $context)
+            )
+            || has_capability('mod/sequentialdocuments:manager', $context)
+    ;
+}
+
 function sequentialdocuments_has_global_read_rights($instanceid, $userid) {
     $context = sequentialdocuments_get_course_context($instanceid);
     return  (
@@ -409,6 +435,10 @@ function get_lock_document_url($documentid, $instanceid) {
 
 function get_unlock_document_url($documentid, $instanceid) {
     return get_plugin_base_url().'/view.php?action=unlock_document&s='.$instanceid.'&documentid='.$documentid;
+}
+
+function get_edit_access_url($instanceid) {
+    return get_plugin_base_url().'/view.php?action=edit_access&s='.$instanceid;
 }
 
 
