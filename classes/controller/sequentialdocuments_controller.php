@@ -124,18 +124,24 @@ class sequentialdocuments_controller {
         );
 
         $content = '';
-        if ($documents !== false) {
-            foreach ($documents as $document) {
-                $content .= $this->documentmanager->
-                                    get_document_html_by_document_instance(
-                                        $document,
-                                        $this->versionmanager,
-                                        $this->feedbackmanager,
-                                        $this->contextid
-                                    )
-                ;
-            }
-        }
+		try {
+			if ($documents !== false) {
+				foreach ($documents as $document) {
+					$content .= $this->documentmanager->
+										get_document_html_by_document_instance(
+											$document,
+											$this->userid,
+											$this->versionmanager,
+											$this->feedbackmanager,
+											$this->contextid
+										)
+					;
+				}
+			}
+		} catch (unauthorized_access_exception $e) {
+			$this->action_error("You don't have access to this document");
+			return;
+		}
 
         $view->set_content($content);
         $view->display();
@@ -176,6 +182,7 @@ class sequentialdocuments_controller {
             $content = $this->documentmanager->
                     get_document_html_by_id(
                             $documentid,
+							$this->userid,
                             $this->versionmanager,
                             $this->feedbackmanager,
                             $this->contextid
@@ -198,6 +205,10 @@ class sequentialdocuments_controller {
 
     public function action_add_document(array $params = null) {
 
+		if (!sequentialdocuments_has_document_creation_rights($this->instanceid, $this->userid)) {
+			$this->action_error('You don\'t have permission to create documents.');
+		}
+
         $this->form_based_action(
                 'add_document_form',
                 'view.php?id='.$this->courseid.'&action=add_document',
@@ -213,6 +224,10 @@ class sequentialdocuments_controller {
     }
 
     public function action_update_document(array $params = null) {
+
+		if (!sequentialdocuments_has_document_edit_rights($this->instanceid, $this->userid)) {
+			$this->action_error('You don\'t have permission to edit documents.');
+		}
 
         $documentid = $this->get_numeric_id('documentid', $params);
         $document = $this->documentdao->get_entity($documentid);
@@ -246,13 +261,24 @@ class sequentialdocuments_controller {
         try {
             $this->documentmanager->delete_document(
                                                 $documentid,
+												$this->userid,
                                                 $this->versionmanager,
                                                 $this->feedbackmanager
             );
             $this->interactionmanager->
                     track_action_delete_document($this->instanceid, $this->userid, $documentid);
         } catch (unauthorized_access_exception $e) {
-            $this->action_error('You don\'t have access to this document');
+
+			switch ($e->errorcode) {
+				case 1000:
+					$this->action_error('You don\'t have access to this document');
+					break;
+
+				case 1001:
+				case 1002:
+					$this->action_error('You don\'t have suppression rights on this document');
+					break;
+			}
         } catch (InvalidArgumentException $e) {
             $this->action_error('Invalid document id');
         }
@@ -264,16 +290,56 @@ class sequentialdocuments_controller {
 
         $documentid = $this->get_numeric_id('documentid', $params);
 
-        $this->documentmanager->lock_document($documentid, $this->versionmanager, $this->feedbackmanager);
-        $this->action_index($params);
+		try {
+			$this->documentmanager->lock_document(
+										$documentid,
+										$this->userid,
+										$this->versionmanager,
+										$this->feedbackmanager
+			);
+			$this->action_index($params);
+		} catch (unauthorized_access_exception $e) {
+
+			switch ($e->errorcode) {
+				case 1004:
+				case 1005:
+				case 1006:
+					$this->action_error('You don\'t have locking rights on this document');
+					break;
+				
+				default:
+					$this->action_error('You don\'t have locking rights');
+					break;
+			}
+		}
     }
 
     public function action_unlock_document(array $params = null) {
 
         $documentid = $this->get_numeric_id('documentid', $params);
 
-        $this->documentmanager->unlock_document($documentid, $this->versionmanager, $this->feedbackmanager);
-        $this->action_index($params);
+		try {
+			$this->documentmanager->unlock_document(
+										$documentid,
+										$this->userid,
+										$this->versionmanager,
+										$this->feedbackmanager
+			);
+			$this->action_index($params);
+		} catch (unauthorized_access_exception $e) {
+
+			switch ($e->errorcode) {
+				case 1004:
+				case 1005:
+				case 1006:
+					$this->action_error('You don\'t have locking rights on this document');
+					break;
+
+				default:
+					$this->action_error('You don\'t have locking rights');
+					break;
+			}
+		}
     }
 
     public function action_view_version(array $params = null) {
@@ -282,7 +348,11 @@ class sequentialdocuments_controller {
 
         try {
             $content = $this->versionmanager->get_version_html_by_id(
-                    $versionid, $this->documentmanager, $this->feedbackmanager, $this->contextid
+													$versionid,
+													$this->userid,
+													$this->documentmanager,
+													$this->feedbackmanager,
+													$this->contextid
             );
         } catch (unauthorized_access_exception $e) {
             $this->action_error('You don\'t have access to this document version');
@@ -301,6 +371,10 @@ class sequentialdocuments_controller {
     }
 
     public function action_add_version(array $params = null) {
+
+		if (!sequentialdocuments_has_version_creation_rights($this->instanceid, $this->userid)) {
+			$this->action_error('You don\'t have permission to create versions.');
+		}
 
         $documentid = $this->get_numeric_id('documentid', $params);
 
@@ -331,6 +405,10 @@ class sequentialdocuments_controller {
     }
 
     public function action_update_version(array $params = null) {
+
+		if (!sequentialdocuments_has_version_edit_rights($this->instanceid, $this->userid)) {
+			$this->action_error('You don\'t have permission to edit versions.');
+		}
 
         $versionid = $this->get_numeric_id('versionid', $params);
 
@@ -369,11 +447,25 @@ class sequentialdocuments_controller {
         $versionid = $this->get_numeric_id('versionid', $params);
 
         try {
-            $this->versionmanager->delete_version($versionid, $this->documentmanager, $this->feedbackmanager);
+            $this->versionmanager->delete_version(
+										$versionid,
+										$this->userid,
+										$this->documentmanager,
+										$this->feedbackmanager
+			);
             $this->interactionmanager->
                     track_action_delete_version($this->instanceid, $this->userid, $versionid);
         } catch (unauthorized_access_exception $e) {
-            $this->action_error('You don\'t have access to this document version');
+
+			switch ($e->errorcode) {
+				case 1000:
+					$this->action_error('You don\'t have access to this document version');
+					break;
+
+				case 1002:
+					$this->action_error('You don\'t have suppression rights on this document version');
+					break;
+			}
         } catch (InvalidArgumentException $e) {
             $this->action_error('Invalid version id');
         }
@@ -387,7 +479,11 @@ class sequentialdocuments_controller {
 
         try {
             $content = $this->feedbackmanager->get_feedback_html_by_id(
-                    $feedbackid, $this->documentmanager, $this->versionmanager, $this->contextid
+													$feedbackid,
+													$this->userid,
+													$this->documentmanager,
+													$this->versionmanager,
+													$this->contextid
             );
         } catch (unauthorized_access_exception $e) {
             $this->action_error('You don\'t have access to this feedback version');
@@ -406,6 +502,10 @@ class sequentialdocuments_controller {
     }
 
     public function action_add_feedback(array $params = null) {
+
+		if (!sequentialdocuments_has_feedback_creation_rights($this->instanceid, $this->userid)) {
+			$this->action_error('You don\'t have permission to post feedbacks.');
+		}
 
         $versionid = $this->get_numeric_id('versionid', $params);
 
@@ -441,6 +541,10 @@ class sequentialdocuments_controller {
     }
 
     public function action_update_feedback(array $params = null) {
+
+		if (!sequentialdocuments_has_feedback_edit_rights($this->instanceid, $this->userid)) {
+			$this->action_error('You don\'t have permission to edit feedbacks.');
+		}
 
         $feedbackid = $this->get_numeric_id('feedbackid', $params);
         $feedback = $this->feedbackmanager->get_feedback_by_id($feedbackid);
@@ -504,11 +608,19 @@ class sequentialdocuments_controller {
         $feedbackid = $this->get_numeric_id('feedbackid', $params);
 
         try {
-            $this->feedbackmanager->delete_feedback($feedbackid);
+            $this->feedbackmanager->delete_feedback($feedbackid, $this->userid);
             $this->interactionmanager->
                     track_action_delete_feedback($this->instanceid, $this->userid, $feedbackid);
         } catch (unauthorized_access_exception $e) {
-            $this->action_error('You don\'t have access to this document feedback');
+			switch ($e->errorcode) {
+				case 1000:
+					$this->action_error('You don\'t have access to this document feedback');
+					break;
+
+				case 1003:
+					$this->action_error('You don\'t have suppression rights on this document feedback');
+					break;
+			}
         } catch (InvalidArgumentException $e) {
             $this->action_error('Invalid feedback id');
         }
