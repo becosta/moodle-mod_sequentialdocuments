@@ -94,7 +94,7 @@ class document_manager extends manager {
 
     public function delete_document(
                                     $documentid,
-									$userid,
+                                    $userid,
                                     version_manager $versionmanager,
                                     feedback_manager $feedbackmanager) {
 
@@ -106,9 +106,9 @@ class document_manager extends manager {
             throw new unauthorized_access_exception(1000, 'mod_sequentialdocuments');
         }
 
-		if (!sequentialdocuments_has_document_suppression_rights($this->instanceid, $userid)) {
-			throw new unauthorized_access_exception(1001, 'mod_sequentialdocuments');
-		}
+        if (!sequentialdocuments_has_document_suppression_rights($this->instanceid, $userid)) {
+            throw new unauthorized_access_exception(1001, 'mod_sequentialdocuments');
+        }
 
         $versionmanager->delete_versions_by_documentid($documentid, $userid, $feedbackmanager);
         $this->dao->delete($document);
@@ -116,9 +116,9 @@ class document_manager extends manager {
 
     public function lock_document($documentid, $userid, version_manager $versionmanager, feedback_manager $feedbackmanager) {
 
-		if (!sequentialdocuments_has_lock_document_rights($this->instanceid, $userid)) {
-			throw new unauthorized_access_exception(1004, 'mod_sequentialdocuments');
-		}
+        if (!sequentialdocuments_has_lock_document_rights($this->instanceid, $userid)) {
+            throw new unauthorized_access_exception(1004, 'mod_sequentialdocuments');
+        }
 
         $document = $this->dao->get_entity($documentid);
         $document->set_locked(true);
@@ -160,9 +160,9 @@ class document_manager extends manager {
 
     public function unlock_document($documentid, $userid, version_manager $versionmanager, feedback_manager $feedbackmanager) {
 
-		if (!sequentialdocuments_has_lock_document_rights($this->instanceid, $userid)) {
-			throw new unauthorized_access_exception(1004, 'mod_sequentialdocuments');
-		}
+        if (!sequentialdocuments_has_lock_document_rights($this->instanceid, $userid)) {
+            throw new unauthorized_access_exception(1004, 'mod_sequentialdocuments');
+        }
 
         $document = $this->dao->get_entity($documentid);
         $document->set_locked(false);
@@ -192,15 +192,15 @@ class document_manager extends manager {
 
     public function get_document_html_by_id(
                                             $id,
-											$userid,
+                                            $userid,
                                             version_manager $versionmanager,
                                             feedback_manager $feedbackmanager,
                                             $contextid) {
 
-		if (!sequentialdocuments_has_document_read_rights($this->instanceid, $userid)) {
-			$controller->action_error('You don\'t have access to this document');
-			return false;
-		}
+        if (!sequentialdocuments_has_document_read_rights($this->instanceid, $userid)) {
+            $controller->action_error('You don\'t have access to this document');
+            return false;
+        }
 
         return $this->get_document_html_by_document_instance(
 							$this->dao->get_entity($id),
@@ -213,7 +213,7 @@ class document_manager extends manager {
 
     public function get_document_html_by_document_instance(
                                                     document $document,
-													$userid,
+                                                    $userid,
                                                     version_manager $versionmanager,
                                                     feedback_manager $feedbackmanager,
                                                     $contextid) {
@@ -223,9 +223,9 @@ class document_manager extends manager {
             throw new unauthorized_access_exception(1000, 'mod_sequentialdocuments');
         }
 
-		if (!sequentialdocuments_has_document_read_rights($this->instanceid, $userid)) {
-			return '';
-		}
+        if (!sequentialdocuments_has_document_read_rights($this->instanceid, $userid)) {
+            return '';
+        }
 
         $lastversionattr = '';
         if ($this->is_last_document($document)) {
@@ -249,30 +249,34 @@ class document_manager extends manager {
         if ($document->is_locked()) {
 			if (sequentialdocuments_has_lock_document_rights($this->instanceid, $userid)) {
 				$links =
-						'<a href="'.
-							get_unlock_document_url($document->get_id(), $this->instanceid).
-						'">Unlock this document</a> ';
+                                    '<a href="'.
+                                        get_unlock_document_url($document->get_id(), $this->instanceid).
+                                        '">Unlock this document</a> ';
 			}
         } else {
 			if (sequentialdocuments_has_lock_document_rights($this->instanceid, $userid)) {
-				$links .= '<a href="'.
-							get_lock_document_url($documentid, $this->instanceid).
-							'">Lock this document</a> ';
+				$links .=
+                                    '<a href="'.
+                                        get_lock_document_url($documentid, $this->instanceid).
+                                        '">Lock this document</a> ';
 			}
 			if (sequentialdocuments_has_version_creation_rights($this->instanceid, $userid)) {
-				$links .= '<a href="'.
-							get_add_version_url($documentid, $this->instanceid).
-							'">Add a new version</a> ';
+				$links .=
+                                    '<a href="'.
+                                        get_add_version_url($documentid, $this->instanceid).
+                                        '">Add a new version</a> ';
 			}
 			if (sequentialdocuments_has_document_edit_rights($this->instanceid, $userid)) {
-				$links .= '<a href="'.
-							get_update_document_url($documentid, $this->instanceid).
-							'">Edit</a> ';
+				$links .=
+                                    '<a href="'.
+                                        get_update_document_url($documentid, $this->instanceid).
+                                        '">Edit</a> ';
 			}
 			if (sequentialdocuments_has_document_suppression_rights($this->instanceid, $userid)) {
-				$links .= '<a href="'.
-							get_delete_document_url($documentid, $this->instanceid).
-							'">Delete</a>';
+				$links .=
+                                    '<a href="'.
+                                        get_delete_document_url($documentid, $this->instanceid).
+                                        '">Delete</a>';
 			}
         }
 

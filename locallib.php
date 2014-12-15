@@ -261,7 +261,7 @@ function sequentialdocuments_students_can($action, $instanceid) {
     $access = $DB->get_records('sequentialdocuments_access', array('instanceid' => $instanceid));
     if ($access !== false) {
         if (isset($access[1]->$action) && $access[1]->$action == 1) {
-			return true;
+            return true;
         }
     }
     return false;
