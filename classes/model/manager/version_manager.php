@@ -40,7 +40,7 @@ class version_manager extends manager {
     }
 
     public function create_version($data, document_manager $documentmanager, feedback_manager $feedbackmanager) {
-        global $DB;
+        global $DB, $USER;
 
         $timestamp = time();
         $data->creationtime = $timestamp;
@@ -53,8 +53,8 @@ class version_manager extends manager {
             $previous = $this->dao->get_entity($document->get_currentversionid());
         }
         if ($previous) {
-            $this->lock($previous);
-            $feedbackmanager->lock_feedbacks_by_version($previous);
+            $this->lock($previous, $USER->id, true);
+            $feedbackmanager->lock_feedbacks_by_version($previous, $USER->id, true);
             $version->set_versionindice($previous->get_versionindice() + 1);
         }
 
@@ -120,9 +120,9 @@ class version_manager extends manager {
         $this->dao->delete($version);
     }
 
-    public function lock(version $version, $userid) {
+    public function lock(version $version, $userid, $ignoreaccesscontrol = false) {
 
-        if (!sequentialdocuments_has_lock_version_rights($this->instanceid, $userid)) {
+        if (!$ignoreaccesscontrol && !sequentialdocuments_has_lock_version_rights($this->instanceid, $userid)) {
             throw new unauthorized_access_exception(1005, 'mod_sequentialdocuments');
         }
 

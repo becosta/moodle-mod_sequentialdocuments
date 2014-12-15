@@ -69,9 +69,9 @@ class feedback_manager extends manager {
         $this->dao->update($feedback);
     }
 
-    public function lock_feedbacks_by_version(version $version, $userid) {
+    public function lock_feedbacks_by_version(version $version, $userid, $ignoreaccesscontrol = false) {
 
-        if (!sequentialdocuments_has_lock_feedback_rights($this->instanceid, $userid)) {
+        if (!$ignoreaccesscontrol && !sequentialdocuments_has_lock_feedback_rights($this->instanceid, $userid)) {
             throw new unauthorized_access_exception(1006, 'mod_sequentialdocuments');
         }
 
