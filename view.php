@@ -68,7 +68,7 @@ elseif ($s) {
     );
 }
 else {
-    error('You must specify a course_module ID or an instance ID');
+    print_error('You must specify a course_module ID or an instance ID');
 }
 
 require_login($course, true, $cm);
