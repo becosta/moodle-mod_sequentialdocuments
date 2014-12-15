@@ -42,7 +42,7 @@ function sequentialdocuments_get_course_context($instanceid) {
 function sequentialdocuments_is_instance_member($instanceid, $userid) {
     global $CFG, $COURSE, $DB;
 
-    if (! $sequentialdocuments = $DB->get_record('sequentialdocuments', array('id' => $instanceid))) {
+    if (!$sequentialdocuments = $DB->get_record('sequentialdocuments', array('id' => $instanceid))) {
         return false;
     }
 
@@ -238,7 +238,7 @@ function sequentialdocuments_has_feedback_suppression_rights($instanceid, $useri
     ;
 }
 
-function sequentialdocuments_has_lock_document_rights($intanceid, $userid) {
+function sequentialdocuments_has_lock_document_rights($instanceid, $userid) {
     $context = sequentialdocuments_get_course_context($instanceid);
     return  (
                 sequentialdocuments_is_instance_member($instanceid, $userid) &&
@@ -248,14 +248,20 @@ function sequentialdocuments_has_lock_document_rights($intanceid, $userid) {
     ;
 }
 
+function sequentialdocuments_has_lock_version_rights($instanceid, $userid) {
+	return sequentialdocuments_has_lock_document_rights($instanceid, $userid);
+}
+
+function sequentialdocuments_has_lock_feedback_rights($instanceid, $userid) {
+	return sequentialdocuments_has_lock_document_rights($instanceid, $userid);
+}
+
 function sequentialdocuments_students_can($action, $instanceid) {
     global $DB;
     $access = $DB->get_records('sequentialdocuments_access', array('instanceid' => $instanceid));
     if ($access !== false) {
-        if (isset($access[1]->$action)) {
-            if ($access[1]->$action == 1) {
-                return true;
-            }
+        if (isset($access[1]->$action) && $access[1]->$action == 1) {
+			return true;
         }
     }
     return false;
