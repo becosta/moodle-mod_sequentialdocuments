@@ -80,7 +80,9 @@
             <FIELD NAME="documentid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" UNIQUE="false" COMMENT="Document id this version belongs to."/>
             <FIELD NAME="versionindice" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" UNIQUE="false" COMMENT="For a given version in a given document, this field specifies the number of versions (+1) created before this one." />
             <FIELD NAME="creationtime" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Unix timestamp specifying when this version was created." />
-            <FIELD NAME="locked" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="false" DEFAULT="0" COMMENT="Boolean value specifying if a document version is locked down for editing" />
+            <FIELD NAME="duetime" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Unix timestamp specifying when this version is due." />
+            <FIELD NAME="duevalidated" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="false" DEFAULT="0" COMMENT="Boolean value specifying if a due version has been submited already." />
+            <FIELD NAME="locked" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="false" DEFAULT="0" COMMENT="Boolean value specifying if a document version is locked down for editing." />
         </FIELDS>
         <KEYS>
             <KEY NAME="primary" TYPE="primary" FIELDS="id"/>

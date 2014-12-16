@@ -93,4 +93,16 @@
     color: steelblue;
 }
 
+.sqds-priority-low {
+    color: green;
+}
+
+.sqds-priority-medium {
+    color: orange;
+}
+
+.sqds-priority-high {
+    color: red;
+}
+
 

@@ -31,20 +31,14 @@ class add_version_form extends moodleform {
 
     public function definition() {
 
-        $cm = $this->_customdata['cm'];
-        /*protected $authorid = -1;
-        protected $title = '';
-        protected $documentindice = -1;
-        protected $currentversionid = -1;
-        protected $creationtime = -1;
-        protected $modificationtime = -1;*/
-
         $form = $this->_form;
 
         $form->addElement('header', 'addversion', 'Add a document version');
 
-        /*$form->addElement('hidden', 'cmid', $cm->id);
-        $form->setType('cmid', PARAM_INT);*/
+        $isteacher = sequentialdocuments_current_user_is_instance_teacher($this->_customdata['instanceid']);
+        if ($isteacher) {
+            $form->addElement('date_time_selector', 'duetime', 'Due date: ', array('optional'=>true));
+        }
 
         $draftid = file_get_submitted_draft_itemid('versionfiles');
         $form->addElement('hidden', 'draftid', $draftid);
@@ -65,7 +59,9 @@ class add_version_form extends moodleform {
                         'accepted_types' => array('document'),
                     )
         );
-        $form->addRule('attachments', 'This field is required', 'required', null, 'server');
+        if (!$isteacher) {
+            $form->addRule('attachments', 'This field is required', 'required', null, 'server');
+        }
 
         //$this->set_data(array());
         $this->add_action_buttons();

@@ -32,6 +32,8 @@ class version extends entity {
     protected $documentid = -1;
     protected $versionindice = -1;
     protected $creationtime = -1;
+    protected $duetime = -1;
+    protected $duevalidated = 0;
     protected $locked = 0;
 
     protected function hydrate(array $data) {
@@ -52,8 +54,59 @@ class version extends entity {
     public function get_html() {
         return  '<aside class="sqds-top-right">'.
                     'Submited: '.userdate($this->creationtime).
-                '</aside>';
+                '</aside>'.
+                $this->get_duedate_html();
     }
+
+    protected function get_duedate_html() {
+        $duedate = '';
+        if ($this->duetime != -1) {
+
+            if ($this->get_duevalidated()) {
+                $priority = 0;
+            } else {
+                $priority = $this->get_duedate_priority();
+            }
+
+            switch($priority) {
+                case 3:
+                    $class = 'class="sqds-priority-low"';
+                    break;
+                case 2:
+                    $class = 'class="sqds-priority-medium"';
+                    break;
+                case 1:
+                    $class = 'class="sqds-priority-high"';
+                    break;
+                default:
+                    $class = '';
+                    break;
+            }
+
+            $duedate = '<strong '.$class.'>Due date:</strong> '.userdate($this->duetime).'<br />';
+        }
+        return $duedate;
+    }
+
+    public function get_duedate_priority() {
+
+    if ($this->duetime == -1) {
+        return 0;
+    }
+
+    // Number of days between $timestamp and current date
+    $diff = ~floor((time() - $this->duetime) / 86400);
+
+    if ($diff > 15) {
+        $priority = 3;
+    } else if ($diff > 2) {
+        $priority = 2;
+    } else {
+        $priority = 1;
+    }
+
+    return $priority;
+}
 
     public function get_documentid() {
         return $this->documentid;
@@ -67,11 +120,26 @@ class version extends entity {
         return $this->creationtime;
     }
 
+    public function get_duetime() {
+        return $this->duetime;
+    }
+
+    public function get_duevalidated() {
+        if ($this->duevalidated == 1) {
+            return true;
+        }
+        return false;
+    }
+
     public function is_locked() {
         if ($this->locked == 1) {
             return true;
         }
         return false;
+    }
+
+    public function needs_user_submission() {
+        return $this->duetime != -1 && !$this->duevalidated;
     }
 
     public function set_documentid($id) {
@@ -87,6 +155,21 @@ class version extends entity {
             throw new InvalidArgumentException('Received invalid timestamp parameter: "'.$timestamp.'"');
         }
         $this->creationtime = $timestamp;
+    }
+
+    public function set_duetime($timestamp) {
+        if (!$this->is_valid_timestamp($timestamp)) {
+            throw new InvalidArgumentException('Received invalid timestamp parameter: "'.$timestamp.'"');
+        }
+        $this->duetime = $timestamp;
+    }
+
+    public function set_duevalidated($bool) {
+        if ($bool) {
+            $this->duevalidated = 1;
+        } else {
+            $this->duevalidated = 0;
+        }
     }
 
     public function set_locked($bool) {

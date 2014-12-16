@@ -403,10 +403,15 @@ class sequentialdocuments_controller {
         $this->form_based_action(
                 'add_version_form',
                 'view.php?id='.$this->courseid.'&action=add_version&documentid='.$documentid,
-                null,
+                array('instanceid' => $this->instanceid),
                 function($formdata, $view) use ($documentid) {
                     $formdata->instanceid = $this->instanceid;
                     $formdata->documentid = $documentid;
+
+                    if (!isset($formdata->duetime) || $formdata->duetime == 0) {
+                        $formdata->duetime = -1;
+                    }
+
                     $id = $this->versionmanager->
                             create_version($formdata, $this->documentmanager, $this->feedbackmanager);
 
@@ -428,18 +433,35 @@ class sequentialdocuments_controller {
 
     public function action_update_version(array $params = null) {
 
-        if (!sequentialdocuments_has_version_edit_rights($this->instanceid, $this->userid)) {
+        $versionid = $this->get_numeric_id('versionid', $params);
+
+        $hasrights = sequentialdocuments_has_version_edit_rights($this->instanceid, $this->userid);
+        $isuser = sequentialdocuments_current_user_is_instance_student($this->instanceid);
+        if (!$hasrights) {
+            $version = $this->versionmanager->get_version($versionid);
+            $needssubmission = $version->needs_user_submission();
+        }
+
+        if (!$hasrights && !($isuser && $needssubmission)) {
             $this->action_error('You don\'t have permission to edit versions.');
         }
 
-        $versionid = $this->get_numeric_id('versionid', $params);
+        $duedate = $this->versionmanager->get_version($versionid)->get_duetime();
+        if ($duedate == -1) {
+            $duedate = 0;
+        }
+
+        $data = array('instanceid' => $this->instanceid, 'duetime' => $duedate);
 
         $this->form_based_action(
                 'add_version_form',
                 'view.php?id='.$this->courseid.'&action=update_version&versionid='.$versionid,
-                null,
-                function($formdata, $view) use ($versionid) {
+                $data,
+                function($formdata, $view) use ($versionid, $isuser) {
                     $formdata->instanceid = $this->instanceid;
+                    if ($isuser) {
+                        $formdata->duevalidated = true;
+                    }
 
                     try {
                         $this->versionmanager->update_version($versionid, $formdata);

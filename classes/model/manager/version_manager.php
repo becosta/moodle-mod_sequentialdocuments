@@ -259,25 +259,37 @@ class version_manager extends manager {
             $filelist .= '<a href="'.$url.'">'.$filename.'</a><br />';
         }
 
-        $editlink = '';
-        $postfeedbacklink = '';
-        if (!$version->is_locked()) {
-            if (sequentialdocuments_has_version_edit_rights($this->instanceid, $userid)) {
-                $editlink =
-                        '<a href="'.get_update_version_url($version->get_id(), $version->get_instanceid()).'">'.
-                                'Edit'.
-                        '</a>';
+        $links = '';
+        $versionid = $version->get_id();
+        $instanceid = $version->get_instanceid();
+        if (!$version->is_locked() || $version->needs_user_submission()) {
+
+            if ((!$version->is_locked() &&
+                    sequentialdocuments_has_version_edit_rights($this->instanceid, $userid)) ||
+                    $version->needs_user_submission()) {
+                $links .=
+                        '<a href="'.get_update_version_url($versionid, $instanceid).'">'.
+                            'Edit'.
+                        '</a> ';
             }
 
+        } else if (!$version->is_locked()) {
+
             if (sequentialdocuments_has_feedback_creation_rights($this->instanceid, $userid)) {
-                $postfeedbacklink =
-                        '<a href="'.get_add_feedback_url($version->get_id(), $version->get_instanceid()).'">'.
-                                'Post a feedback'.
+                $links .=
+                        '<a href="'.get_add_feedback_url($versionid, $instanceid).'">'.
+                            'Post a feedback'.
                         '</a> ';
+            }
+
+            if (sequentialdocuments_has_version_suppression_rights($this->instanceid, $userid)) {
+                $links .=
+                        '<a href="'.get_delete_version_url($versionid, $instanceid).'">'.
+                            'Delete'.
+                        '</a>';
             }
         }
 
-        $versionid = $version->get_id();
         $lastversionattr = '';
         if ($this->is_last_version($documentmanager, $version)) {
             $document = $documentmanager->get_document($version->get_documentid());
@@ -294,8 +306,7 @@ class version_manager extends manager {
                     '" class="sqds-version-content" '.$lastversionattr.'>'.
                         $version->get_html().'<br />'.$filelist.$html.
                         '<aside class="sqds-bottom-right">'.
-                            $postfeedbacklink.
-                            $editlink.
+                            $links.
                         '</aside>'.
                     '</div>'.
                 '</section>';

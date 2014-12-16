@@ -66,6 +66,27 @@ function sequentialdocuments_is_instance_member($instanceid, $userid) {
     return false;
 }
 
+function sequentialdocuments_current_user_is_instance_teacher($instanceid) {
+    global $USER;
+    $context = sequentialdocuments_get_course_context($instanceid);
+    return  (
+                sequentialdocuments_is_instance_member($instanceid, $USER->id) &&
+                has_capability('mod/sequentialdocuments:teacher', $context)
+            )
+            || has_capability('mod/sequentialdocuments:manager', $context)
+    ;
+}
+
+function sequentialdocuments_current_user_is_instance_student($instanceid) {
+    global $USER;
+    $context = sequentialdocuments_get_course_context($instanceid);
+    return  (
+                sequentialdocuments_is_instance_member($instanceid, $USER->id) &&
+                has_capability('mod/sequentialdocuments:student', $context)
+            )
+    ;
+}
+
 function sequentialdocuments_get_current_access_rights($instanceid) {
     global $DB;
     $data = $DB->get_records('sequentialdocuments_access', array('instanceid' => $instanceid));
