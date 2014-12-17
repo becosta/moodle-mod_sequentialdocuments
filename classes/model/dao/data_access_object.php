@@ -61,6 +61,10 @@ abstract class data_access_object {
         return $this->read_access('get_getentitywhere_method', $conditions);
     }
 
+    public function get_all_entities() {
+        return $this->read_access('get_getallentities_method', array());
+    }
+
     public function get_all_entities_where(array $conditions) {
         return $this->read_access('get_getallentitieswhere_method', $conditions);
     }
@@ -141,6 +145,10 @@ abstract class data_access_object {
             }
             return new $class((array)$data);
         };
+    }
+
+    protected function get_getallentities_method($DB, array $conditions) {
+        return $this->get_getallentitieswhere_method($DB, array());
     }
 
     protected function get_getallentitieswhere_method($DB, array $conditions) {
