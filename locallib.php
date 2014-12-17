@@ -82,7 +82,9 @@ function sequentialdocuments_current_user_is_instance_student($instanceid) {
     $context = sequentialdocuments_get_course_context($instanceid);
     return  (
                 sequentialdocuments_is_instance_member($instanceid, $USER->id) &&
-                has_capability('mod/sequentialdocuments:student', $context)
+                has_capability('mod/sequentialdocuments:student', $context) &&
+                !has_capability('mod/sequentialdocuments:teacher', $context) &&
+                !has_capability('mod/sequentialdocuments:manager', $context)
             )
     ;
 }

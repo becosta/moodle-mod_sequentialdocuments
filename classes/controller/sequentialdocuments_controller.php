@@ -459,7 +459,7 @@ class sequentialdocuments_controller {
                 $data,
                 function($formdata, $view) use ($versionid, $isuser) {
                     $formdata->instanceid = $this->instanceid;
-                    if ($isuser) {
+                    if ($isuser && $formdata->duetime != -1) {
                         $formdata->duevalidated = true;
                     }
 
