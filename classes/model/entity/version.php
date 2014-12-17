@@ -62,13 +62,7 @@ class version extends entity {
         $duedate = '';
         if ($this->duetime != -1) {
 
-            if ($this->get_duevalidated()) {
-                $priority = 0;
-            } else {
-                $priority = $this->get_duedate_priority();
-            }
-
-            switch($priority) {
+            switch($this->get_duedate_priority()) {
                 case 3:
                     $class = 'class="sqds-priority-low"';
                     break;
@@ -90,7 +84,7 @@ class version extends entity {
 
     public function get_duedate_priority() {
 
-    if ($this->duetime == -1) {
+    if ($this->get_duevalidated() || $this->duetime == -1) {
         return 0;
     }
 
