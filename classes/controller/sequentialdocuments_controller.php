@@ -32,6 +32,7 @@ include_once __DIR__.'/../model/manager/feedback_manager.php';
 include_once __DIR__.'/../model/dao/document_dao.php';
 include_once __DIR__.'/../model/dao/version_dao.php';
 include_once __DIR__.'/../model/dao/feedback_dao.php';
+include_once __DIR__.'/../model/dao/reminder_dao.php';
 include_once __DIR__.'/../model/entity/entity.php';
 include_once __DIR__.'/../view/index_view.php';
 include_once __DIR__.'/../view/history_view.php';
@@ -400,10 +401,22 @@ class sequentialdocuments_controller {
 
         $documentid = $this->get_numeric_id('documentid', $params);
 
+        $data = array(
+            'instanceid' => $this->instanceid,
+            'dueday' => 1,
+            'oneday' => 1,
+            'oneweek' => 1,
+            'twoweeks' => 0,
+            'onemonth' => 0,
+            'postneeded' => 0,
+            'duetime' => 0,
+        );
         $this->form_based_action(
                 'add_version_form',
                 'view.php?id='.$this->courseid.'&action=add_version&documentid='.$documentid,
-                array('instanceid' => $this->instanceid),
+                //array('instanceid' => $this->instanceid),
+                //null,
+                $data,
                 function($formdata, $view) use ($documentid) {
                     $formdata->instanceid = $this->instanceid;
                     $formdata->documentid = $documentid;
@@ -425,6 +438,27 @@ class sequentialdocuments_controller {
                     );
                     $this->interactionmanager->
                             track_action_add_version($this->instanceid, (int)$this->userid, $id);
+
+                    if ($formdata->duetime != -1) {
+                        $reminder = new reminder(
+                                array(
+                                    'id' => 0,
+                                    'instanceid' => $formdata->instanceid,
+                                    'versionid' => $id,
+                                    'senderid' => $this->userid,
+                                    'dueday' => $formdata->dueday,
+                                    'oneday' => $formdata->oneday,
+                                    'oneweek' => $formdata->oneweek,
+                                    'twoweeks' => $formdata->twoweeks,
+                                    'onemonth' => $formdata->onemonth,
+                                    'postneeded' => $formdata->postneeded,
+                                    'duetime' => $formdata->duetime,
+                                )
+                        );
+                        $dao = new reminder_dao();
+                        $reminder->set_id($dao->insert($reminder));
+                        $dao->update($reminder);
+                    }
 
                     $this->action_view_document(array('documentid' => $documentid));
                 }
@@ -452,6 +486,17 @@ class sequentialdocuments_controller {
         }
 
         $data = array('instanceid' => $this->instanceid, 'duetime' => $duedate);
+        $reminderdao = new reminder_dao();
+        $reminder = $reminderdao->get_entity_where(array('versionid' => $versionid));
+        if ($reminder != false) {
+            $data['dueday'] = $reminder->get_dueday();
+            $data['oneday'] = $reminder->get_oneday();
+            $data['oneweek'] = $reminder->get_oneweek();
+            $data['twoweeks'] = $reminder->get_twoweeks();
+            $data['onemonth'] = $reminder->get_onemonth();
+            $data['postneeded'] = $reminder->get_postneeded();
+            $data['duetime'] = $reminder->get_duetime();
+        }
 
         $this->form_based_action(
                 'add_version_form',
@@ -474,6 +519,29 @@ class sequentialdocuments_controller {
                                         $versionid,
                                         array('subdirs' => 0, 'maxbytes' => 0, 'maxfiles' => 50)
                         );
+
+                        $reminderdao = new reminder_dao();
+                        $reminder = $reminderdao->get_entity_where(array('versionid' => $versionid));
+                        if (!$isuser && $reminder != false) {
+                            $reminderdao->delete($reminder);
+                        }
+
+                        if (!$isuser && isset($formdata->duetime) && $formdata->duetime != 0) {
+                            if ($reminder == false) {
+                                $reminder = new reminder();
+                                $reminder->set_instanceid($this->instanceid);
+                                $reminder->set_versionid($versionid);
+                            }
+                            $reminder->set_senderid($this->userid);
+                            $reminder->set_dueday($formdata->dueday);
+                            $reminder->set_oneday($formdata->oneday);
+                            $reminder->set_oneweek($formdata->oneweek);
+                            $reminder->set_twoweeks($formdata->twoweeks);
+                            $reminder->set_onemonth($formdata->onemonth);
+                            $reminder->set_postneeded($formdata->postneeded);
+                            $reminder->set_duetime($formdata->duetime);
+                            $reminderdao->insert($reminder);
+                        }
 
                         $this->action_view_version(array('versionid' => $versionid));
 

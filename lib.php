@@ -214,8 +214,9 @@ function sequentialdocuments_delete_instance($id) {
     $DB->delete_records('sequentialdocuments_document', array('instanceid' => $id));
     $DB->delete_records('sequentialdocuments_interact', array('instanceid' => $id));
 
-    $DB->delete_records('sequentialdocuments_access', array('instanceid' => $sequentialdocuments->id));
-    $DB->delete_records('sequentialdocuments', array('id' => $sequentialdocuments->id));
+    $DB->delete_records('sequentialdocuments_reminder', array('instanceid' => $id));
+    $DB->delete_records('sequentialdocuments_access', array('instanceid' => $id));
+    $DB->delete_records('sequentialdocuments', array('id' => $id));
 
     return true;
 }

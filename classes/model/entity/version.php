@@ -52,6 +52,9 @@ class version extends entity {
     }
 
     public function get_html() {
+        // TODO : add a submited by property and print the user info here
+        // TODO : call either the controller or lib.php to get a link to the current version
+
         return  '<aside class="sqds-top-right">'.
                     'Submited: '.userdate($this->creationtime).
                 '</aside>'.

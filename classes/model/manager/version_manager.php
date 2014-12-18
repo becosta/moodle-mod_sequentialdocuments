@@ -118,6 +118,13 @@ class version_manager extends manager {
         }
         $feedbackmanager->delete_feedbacks_by_versionid($versionid, $userid);
         $this->dao->delete($version);
+
+        // TODO : call reminder_manager.
+        $reminderdao = new reminder_dao();
+        $reminders = $reminderdao->get_all_entities_where(array('versionid' => $versionid));
+        foreach ($reminders as $reminder) {
+            $reminderdao->delete($reminder);
+        }
     }
 
     public function lock(version $version, $userid, $ignoreaccesscontrol = false) {
@@ -174,9 +181,17 @@ class version_manager extends manager {
             throw new unauthorized_access_exception(1002, 'mod_sequentialdocuments');
         }
 
+        $reminderdao = new reminder_dao();
         $versions = $this->dao->get_all_entities_where(array('documentid' => $documentid));
         if ($versions !== false) {
             foreach($versions as $version) {
+                // TODO : call reminder_manager.
+                $reminders = $reminderdao->get_all_entities_where(array('versionid' => $version->get_id()));
+                if ($reminders) {
+                    foreach ($reminders as $reminder) {
+                        $reminderdao->delete($reminder);
+                    }
+                }
                 $feedbackmanager->delete_feedbacks_by_versionid($version->get_id(), $userid);
                 $this->dao->delete($version);
             }

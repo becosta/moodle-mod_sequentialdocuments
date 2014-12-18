@@ -31,20 +31,9 @@ class add_document_form extends moodleform {
 
     public function definition() {
 
-        //$cm = $this->_customdata['cm'];
-        /*protected $authorid = -1;
-        protected $title = '';
-        protected $documentindice = -1;
-        protected $currentversionid = -1;
-        protected $creationtime = -1;
-        protected $modificationtime = -1;*/
-
         $form = $this->_form;
 
         $form->addElement('header', 'adddocument', 'Add a document');
-
-        /*$form->addElement('hidden', 'cmid', $cm->id);
-        $form->setType('cmid', PARAM_INT);*/
 
         $form->addElement('hidden', 'instanceid');
         $form->setType('instanceid', PARAM_INT);
@@ -59,7 +48,6 @@ class add_document_form extends moodleform {
         $form->addRule('description', 'This field is required', 'required', null, 'server');
         $form->setDefault('description', $this->_customdata['description']);
 
-        //$this->set_data(array());
         $this->add_action_buttons();
     }
 

@@ -139,6 +139,34 @@
             <INDEX NAME="userid" UNIQUE="false" FIELDS="userid"/>
         </INDEXES>
     </TABLE>
+    <TABLE NAME="sequentialdocuments_reminder" COMMENT="Sequential Documents reminders table.">
+        <FIELDS>
+            <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" UNIQUE="true" COMMENT="Unique entity id."/>
+            <FIELD NAME="instanceid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" UNIQUE="false" COMMENT="Instance id this reminders status entry belongs to."/>
+            <FIELD NAME="versionid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" UNIQUE="false" COMMENT="Version id this reminders status entry relates to."/>
+            <FIELD NAME="senderid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" UNIQUE="false" COMMENT="Version id this reminders status entry relates to."/>
+            <FIELD NAME="onemonth" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="false" DEFAULT="0" COMMENT="Boolean value specifying if a reminder needs to be send one month before the due date." />
+            <FIELD NAME="onemonthsent" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="false" DEFAULT="0" COMMENT="Boolean value specifying if a reminder has been sent one month before the due date." />
+            <FIELD NAME="twoweeks" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="false" DEFAULT="0" COMMENT="Boolean value specifying if a reminder needs to be send two weeks before the due date." />
+            <FIELD NAME="twoweekssent" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="false" DEFAULT="0" COMMENT="Boolean value specifying if a reminder has been sent send two weeks before the due date." />
+            <FIELD NAME="oneweek" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="false" DEFAULT="0" COMMENT="Boolean value specifying if a reminder needs to be send one week before the due date." />
+            <FIELD NAME="oneweeksent" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="false" DEFAULT="0" COMMENT="Boolean value specifying if a reminder has been sent one week before the due date." />
+            <FIELD NAME="oneday" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="false" DEFAULT="0" COMMENT="Boolean value specifying if a reminder needs to be send one day before the due date." />
+            <FIELD NAME="onedaysent" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="false" DEFAULT="0" COMMENT="Boolean value specifying if a reminder has been sent one day before the due date." />
+            <FIELD NAME="dueday" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="false" DEFAULT="0" COMMENT="Boolean value specifying if a reminder needs to be send the due date." />
+            <FIELD NAME="duedaysent" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="false" DEFAULT="0" COMMENT="Boolean value specifying if a reminder has been sent the due date." />
+            <FIELD NAME="postneeded" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" UNIQUE="false" COMMENT="Number of weeks to send a reminder after the due date"/>
+            <FIELD NAME="postcount" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" UNIQUE="false" COMMENT="Number of reminders actually sent after the due date"/>
+            <FIELD NAME="lastpost" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Unix timestamp specifying when the last post due date reminder was sent." />
+            <FIELD NAME="duetime" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Unix timestamp specifying when the version corresponding to this reminder is due." />
+        </FIELDS>
+        <KEYS>
+            <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+            <KEY NAME="instanceid" TYPE="foreign" FIELDS="instanceid" REFTABLE="sequentialdocuments" REFFIELDS="id"/>
+            <KEY NAME="versionid" TYPE="foreign" FIELDS="versionid" REFTABLE="sequentialdocuments_version" REFFIELDS="id"/>
+            <KEY NAME="senderid" TYPE="foreign" FIELDS="senderid" REFTABLE="user" REFFIELDS="id"/>
+        </KEYS>
+    </TABLE>
   </TABLES>
 </XMLDB>
 

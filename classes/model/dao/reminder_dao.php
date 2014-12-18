@@ -15,10 +15,6 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Defines the version of sequentialdocuments
- *
- * This code fragment is called by moodle_needs_upgrading() and
- * /admin/index.php
  *
  * @package    mod_sequentialdocuments
  * @author     Benjamin Costa
@@ -28,17 +24,13 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-// The current module version (Date: YYYYMMDDXX).
-// If version == 0 then module will not be installed.
-$module->version = 2014111304;
+include_once __DIR__.'/data_access_object.php';
+include_once __DIR__.'/../entity/reminder.php';
 
-// Requires this Moodle version.
-$module->requires = 2010031900;
+class reminder_dao extends data_access_object {
 
-// Period for cron to check this module (secs).
-$module->cron = 0;
-
-// To check on upgrade, that module sits in correct place.
-$module->component = 'mod_sequentialdocuments';
+    const ENTITY_TABLE = 'sequentialdocuments_reminder';
+    const ENTITY_CLASS_NAME = 'reminder';
+}
 
 

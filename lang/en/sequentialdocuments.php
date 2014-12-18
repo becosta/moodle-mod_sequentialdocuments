@@ -40,4 +40,18 @@ $string['sequentialdocumentssname_help'] = 'This is the content of the help tool
 
 $string['modulename_help'] = '';
 
+// Versions due dates reminders.
+$string['versionduelink'] = 'See this version';
+$string['versionduedueday'] = 'A document version is due today.<br />(this is an automatic message)<br />';
+$string['versiondueoneday'] = 'A document version is due tomorrow.<br />(this is an automatic message)<br />';
+$string['versiondueoneweek'] = 'A document version is due in a week.<br />(this is an automatic message)<br />';
+$string['versionduetwoweeks'] = 'A document version is due in two weeks.<br />(this is an automatic message)<br />';
+$string['versiondueonemonth'] = 'A document version is due in a month.<br />(this is an automatic message)<br />';
+$string['versionduelate'] = 'A document version is late.<br />(this is an automatic message)';
 
+// Messages.
+$string['messageprovider:duedatereminder'] = 'Reminders of versions due dates';
+$string['messageprovider:newsubmission'] = 'Notifies you that a student posted a new submission';
+
+// Cron tasks.
+$string['sendreminders'] = 'Send Sequential Documents reminders';

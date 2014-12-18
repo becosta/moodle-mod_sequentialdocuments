@@ -39,6 +39,26 @@ function sequentialdocuments_get_course_context($instanceid) {
     return $context;
 }
 
+function sequentialdocuments_get_instance_students($instanceid) {
+    global $CFG, $DB;
+
+    if (!$sequentialdocuments = $DB->get_record('sequentialdocuments', array('id' => $instanceid))) {
+        return false;
+    }
+
+    require_once($CFG->dirroot.'/group/lib.php');
+    $roles = groups_get_members_by_role($sequentialdocuments->groupid, $sequentialdocuments->course);
+
+    if ($roles) {
+        foreach ($roles as $role) {
+            if ($role->shortname == 'student') {
+                return $role->users;
+            }
+        }
+    }
+    return array();
+}
+
 function sequentialdocuments_is_instance_member($instanceid, $userid) {
     global $CFG, $COURSE, $DB;
 
@@ -92,7 +112,7 @@ function sequentialdocuments_current_user_is_instance_student($instanceid) {
 function sequentialdocuments_get_current_access_rights($instanceid) {
     global $DB;
     $data = $DB->get_records('sequentialdocuments_access', array('instanceid' => $instanceid));
-    return (array)$data[1];
+    return (array)current($data);
 }
 
 function sequentialdocuments_update_current_access_rights($instanceid, array $data) {
@@ -100,7 +120,7 @@ function sequentialdocuments_update_current_access_rights($instanceid, array $da
     //if (!isset($data->id)) {
     if (true) {
         $id = $DB->get_records('sequentialdocuments_access', array('instanceid' => $instanceid), null, 'id');
-        $data['id'] = $id[1]->id;
+        $data['id'] = current($id)->id;
     }
     $DB->update_record('sequentialdocuments_access', $data);
 }
@@ -309,7 +329,7 @@ function sequentialdocuments_students_can($action, $instanceid) {
     global $DB;
     $access = $DB->get_records('sequentialdocuments_access', array('instanceid' => $instanceid));
     if ($access !== false) {
-        if (isset($access[1]->$action) && $access[1]->$action == 1) {
+        if (isset(current($access)->$action) && current($access)->$action == 1) {
             return true;
         }
     }
