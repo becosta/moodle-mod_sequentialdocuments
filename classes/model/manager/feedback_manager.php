@@ -200,14 +200,18 @@ class feedback_manager extends manager {
         }
 
         if ($filelist != '') {
-            $filelist = '<strong>Attachments: </strong>'.$filelist;
+            $filelist = '<strong>'.
+                            get_string('feedbackattachments', 'mod_sequentialdocuments').
+                        '</strong>'.$filelist;
 
             // TODO : implement the version creation from feedback function.
             $version = $versionmanager->get_version($feedback->get_versionid());
             if (!$version->is_locked() &&
                     $versionmanager->is_last_version($documentmanager, $version) &&
                     sequentialdocuments_has_version_creation_rights($this->instanceid, $userid)) {
-                $filelist .= '<br /><br /><a href="#">Create new version from this feedback</a>';
+                $filelist .=    '<br /><br /><a href="#">'.
+                                    get_string('feedbackcreateversionfromthis', 'mod_sequentialdocuments').
+                                '</a>';
             }
         }
 
@@ -217,13 +221,15 @@ class feedback_manager extends manager {
                 $links .=
                     '<a href="'.
                         get_update_feedback_url($feedback->get_id(), $this->instanceid).
-                        '">Edit</a> ';
+                        '">'.get_string('feedbackeditlink', 'mod_sequentialdocuments').
+                    '</a> ';
             }
             if (sequentialdocuments_has_feedback_suppression_rights($this->instanceid, $userid)) {
                     $links .=
                         '<a href="'.
                             get_delete_feedback_url($feedback->get_id(), $this->instanceid).
-                            '">Delete</a>';
+                            '">'.get_string('feedbackdeletelink', 'mod_sequentialdocuments').
+                        '</a>';
             }
         }
 

@@ -33,7 +33,7 @@ class add_feedback_form extends moodleform {
 
         $form = $this->_form;
 
-        $form->addElement('header', 'addfeedback', 'Post a feedback');
+        $form->addElement('header', 'addfeedback', get_string('affaddfeedback', 'mod_sequentialdocuments'));
 
         $form->addElement('hidden', 'instanceid');
         $form->setType('instanceid', PARAM_INT);
@@ -45,15 +45,23 @@ class add_feedback_form extends moodleform {
         $form->addElement('hidden', 'authorid', $USER->id);
         $form->setType('authorid', PARAM_INT);
 
-        $form->addElement('textarea', 'content', 'Feedback content', 'rows="20" cols="65"');
+        $form->addElement(
+                'textarea', 'content',
+                get_string('affcontent', 'mod_sequentialdocuments'),
+                'rows="20" cols="65"'
+        );
         $form->setType('content', PARAM_TEXT);
-        $form->addRule('content', 'This field is required', 'required', null, 'server');
+        $form->addRule(
+                'content',
+                get_string('affrequired', 'mod_sequentialdocuments'),
+                'required', null, 'server'
+        );
         $form->setDefault('content', $this->_customdata['content']);
 
         $form->addElement(
                     'filemanager',
                     'attachments',
-                    'File(s)',
+                    get_string('afffiles', 'mod_sequentialdocuments'),
                     null,
                     array(
                         'subdirs' => 0,
@@ -63,7 +71,6 @@ class add_feedback_form extends moodleform {
                     )
         );
 
-        //$this->set_data(array());
         $this->add_action_buttons();
     }
 

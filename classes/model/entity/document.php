@@ -64,14 +64,20 @@ class document extends entity {
 
     public function get_html() {
         return  '<aside class="sqds-top-right">'.
-                    '<strong>Created:</strong> '.userdate($this->creationtime).'<br />'.
-                    '<strong>Modified:</strong> '.userdate($this->modificationtime).'<br />'.
+                    '<strong>'.get_string('documentcreated', 'mod_sequentialdocuments').'</strong> '.
+                        userdate($this->creationtime).'<br />'.
+                    '<strong>'.get_string('documentmodified', 'mod_sequentialdocuments').'</strong> '.
+                        userdate($this->modificationtime).'<br />'.
                 '</aside>'.
-                '<strong>Title:</strong> '.
+                '<strong>'.get_string('documenttitle', 'mod_sequentialdocuments').'</strong> '.
                 '<a href="'.get_view_document_url($this->id, $this->instanceid).'">'.
                     '<h5>'.$this->title.'</h5>'.
                 '</a><br />'.
-                '<p class="sqds-description"><strong>Description:</strong> '.$this->description.'</p>';
+                '<p class="sqds-description">'.
+                    '<strong>'.
+                        get_string('documentdescription', 'mod_sequentialdocuments').
+                    '</strong> '.$this->description.
+                '</p>';
     }
 
     public function get_authorid() {

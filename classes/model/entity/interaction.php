@@ -55,8 +55,10 @@ abstract class interaction extends entity implements interaction_visitee {
     public function get_html() {
         global $DB;
         $author = $DB->get_record('user', array('id' => $this->userid));
-        return  '<strong>From: </strong>'.$author->lastname.' '.$author->firstname.
-                ' <strong>On: '.userdate($this->date).'</strong>';
+        return  '<strong>'.get_string('interactfrom', 'mod_sequentialdocuments').'</strong>'.
+                    $author->lastname.' '.$author->firstname.
+                ' <strong>'.get_string('interacton', 'mod_sequentialdocuments').
+                    userdate($this->date).'</strong>';
     }
 
     public function get_userid() {

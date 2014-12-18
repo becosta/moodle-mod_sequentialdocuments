@@ -33,17 +33,21 @@ class add_document_form extends moodleform {
 
         $form = $this->_form;
 
-        $form->addElement('header', 'adddocument', 'Add a document');
+        $form->addElement('header', 'adddocument', get_string('adfadddocument', 'mod_sequentialdocuments'));
 
         $form->addElement('hidden', 'instanceid');
         $form->setType('instanceid', PARAM_INT);
 
-        $form->addElement('text', 'title', 'Document title');
+        $form->addElement('text', 'title', get_string('adftitle', 'mod_sequentialdocuments'));
         $form->setType('title', PARAM_TEXT);
-        $form->addRule('title', 'This field is required', 'required', null, 'server');
+        $form->addRule(
+                'title', get_string('adfrequired', 'mod_sequentialdocuments'), 'required', null, 'server'
+        );
         $form->setDefault('title', $this->_customdata['title']);
 
-        $form->addElement('textarea', 'description', 'Document description', 'rows="20" cols="65"');
+        $form->addElement(
+                'textarea', 'description', get_string('adfdescription', 'mod_sequentialdocuments'), 'rows="20" cols="65"'
+        );
         $form->setType('description', PARAM_TEXT);
         $form->addRule('description', 'This field is required', 'required', null, 'server');
         $form->setDefault('description', $this->_customdata['description']);

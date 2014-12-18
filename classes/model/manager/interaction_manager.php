@@ -51,8 +51,12 @@ class history_interaction_visitor implements interaction_visitor {
                     '<div class="sqds-header">'.
                         $interaction->get_html().'<br />'.
                     '</div>'.
-                    '<strong>Title: </strong>'.$document->title.'<br />'.
-                    '<strong>Description: </strong>'.$document->description.
+                    '<strong>'.
+                        get_string('interacttitle', 'mod_sequentialdocuments').
+                    '</strong>'.$document->title.'<br />'.
+                    '<strong>'.
+                        get_string('interactdescription', 'mod_sequentialdocuments').
+                    '</strong>'.$document->description.
                 '</section>';
     }
 

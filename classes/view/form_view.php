@@ -53,12 +53,8 @@ class form_view extends view {
         global $PAGE, $OUTPUT;
 
         echo $OUTPUT->header();
-        //echo $OUTPUT->heading(format_string($this->title), 2);
         if ($this->intro != '') {
             echo $OUTPUT->box(
-                    /*format_module_intro(
-                        'sequentialdocuments', $sequentialdocuments, $cm->id
-                    ),*/
                     $this->intro,
                     'generalbox mod_introbox', 'sequentialdocumentsintro'
             );

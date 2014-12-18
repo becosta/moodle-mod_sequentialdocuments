@@ -61,9 +61,11 @@ class feedback extends entity {
         global $DB;
         $author = $DB->get_record('user', array('id' => $this->authorid));
         return  '<aside class="sqds-bottom-right">'.
-                    '<strong>Submitted: </strong>'.userdate($this->creationtime).
+                    '<strong>'.get_string('feedbacksubmitted', 'mod_sequentialdocuments').'</strong>'.
+                    userdate($this->creationtime).
                 '</aside>'.
-                '<strong>Feedback from: </strong>'.$author->lastname.' '.$author->firstname.'<br /><br />'.
+                '<strong>'.get_string('feedbackfrom', 'mod_sequentialdocuments').'</strong>'.
+                $author->lastname.' '.$author->firstname.'<br /><br />'.
                 '<p>'.$this->content.'</p>';
     }
 

@@ -44,7 +44,7 @@ class added_document extends interaction {
     }
 
     public function get_html() {
-        return 'New document '.parent::get_html();
+        return get_string('interactnewdocument', 'mod_sequentialdocuments').parent::get_html();
     }
 
     public function get_documentid() {

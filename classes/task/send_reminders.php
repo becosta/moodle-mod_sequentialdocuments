@@ -60,7 +60,7 @@ class send_reminders extends \core\task\scheduled_task {
 
                     $this->send_message(
                                 $reminder,
-                                'Version due date passed reminder',
+                                get_string('versionduelatesubject', 'mod_sequentialdocuments'),
                                 $this->get_postdueday_message($reminder)
                     );
                     $reminder->set_postcount($count + 1);
@@ -82,7 +82,7 @@ class send_reminders extends \core\task\scheduled_task {
                         } else if (!$messagesent && $reminder->get_dueday() && !$reminder->get_duedaysent()) {
                             $this->send_message(
                                         $reminder,
-                                        'Version due date reminder',
+                                        get_string('versionduesubject', 'mod_sequentialdocuments'),
                                         $this->get_dueday_message($reminder)
                             );
                             $messagesent = true;
@@ -96,7 +96,7 @@ class send_reminders extends \core\task\scheduled_task {
                         } else if (!$messagesent && $reminder->get_oneday() && !$reminder->get_onedaysent()) {
                             $this->send_message(
                                         $reminder,
-                                        'Version due date reminder',
+                                        get_string('versionduesubject', 'mod_sequentialdocuments'),
                                         $this->get_oneday_message($reminder)
                             );
                             $messagesent = true;
@@ -110,7 +110,7 @@ class send_reminders extends \core\task\scheduled_task {
                         } else if (!$messagesent && $reminder->get_oneweek() && !$reminder->get_oneweeksent()) {
                             $this->send_message(
                                         $reminder,
-                                        'Version due date reminder',
+                                        get_string('versionduesubject', 'mod_sequentialdocuments'),
                                         $this->get_oneweek_message($reminder)
                             );
                             $messagesent = true;
@@ -124,7 +124,7 @@ class send_reminders extends \core\task\scheduled_task {
                         } else if (!$messagesent && $reminder->get_twoweeks() && !$reminder->get_twoweekssent()) {
                             $this->send_message(
                                         $reminder,
-                                        'Version due date reminder',
+                                        get_string('versionduesubject', 'mod_sequentialdocuments'),
                                         $this->get_twoweeks_message($reminder)
                             );
                             $messagesent = true;
@@ -138,7 +138,7 @@ class send_reminders extends \core\task\scheduled_task {
                         } else if (!$messagesent && $reminder->get_onemonth() && !$reminder->get_onemonthsent()) {
                             $this->send_message(
                                         $reminder,
-                                        'Version due date reminder',
+                                        get_string('versionduesubject', 'mod_sequentialdocuments'),
                                         $this->get_onemonth_message($reminder)
                             );
                             $messagesent = true;

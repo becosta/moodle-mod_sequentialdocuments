@@ -68,7 +68,7 @@ elseif ($s) {
     );
 }
 else {
-    print_error('You must specify a course_module ID or an instance ID');
+    print_error(get_string('missingcmorid', 'mod_sequentialdocuments'));
 }
 
 require_login($course, true, $cm);
@@ -116,7 +116,7 @@ if (is_callable(array($controller, $action))) {
     if (sequentialdocuments_is_instance_member($sequentialdocuments->id, (int)$USER->id)) {
         $controller->$action($params);
     } else {
-        $controller->action_error('You don\'t have access to this Sequential Documents instance');
+        $controller->action_error(get_string('missinginstanceaccess', 'mod_sequentialdocuments'));
     }
 } else {
     $controller->action_unknown($params);

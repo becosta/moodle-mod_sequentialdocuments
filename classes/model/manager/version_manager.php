@@ -234,7 +234,7 @@ class version_manager extends manager {
         }
 
         if ($version->get_instanceid() != $this->instanceid) {
-            throw new unauthorized_access_exception(1000, 'mod_sequencialdocuments');
+            throw new unauthorized_access_exception(1000, 'mod_sequentialdocuments');
         }
 
         if (!sequentialdocuments_has_version_read_rights($this->instanceid, $userid)) {
@@ -284,7 +284,7 @@ class version_manager extends manager {
                     $version->needs_user_submission()) {
                 $links .=
                         '<a href="'.get_update_version_url($versionid, $instanceid).'">'.
-                            'Edit'.
+                            get_string('versioneditlink', 'mod_sequentialdocuments').
                         '</a> ';
             }
 
@@ -293,14 +293,14 @@ class version_manager extends manager {
             if (sequentialdocuments_has_feedback_creation_rights($this->instanceid, $userid)) {
                 $links .=
                         '<a href="'.get_add_feedback_url($versionid, $instanceid).'">'.
-                            'Post a feedback'.
+                            get_string('versionpostfeedbacklink', 'mod_sequentialdocuments').
                         '</a> ';
             }
 
             if (sequentialdocuments_has_version_suppression_rights($this->instanceid, $userid)) {
                 $links .=
                         '<a href="'.get_delete_version_url($versionid, $instanceid).'">'.
-                            'Delete'.
+                            get_string('versiondeletelink', 'mod_sequentialdocuments').
                         '</a>';
             }
         }
@@ -315,7 +315,7 @@ class version_manager extends manager {
 
         return  '<section class="sqds-version">'.
                     '<a onclick="toggle_visibility(\'sqds-version-content-'.$versionid.'\')">'.
-                        'Version: '.$version->get_versionindice().
+                        get_string('versionlink', 'mod_sequentialdocuments').$version->get_versionindice().
                     '</a>'.
                     '<div id="sqds-version-content-'.$versionid.
                     '" class="sqds-version-content" '.$lastversionattr.'>'.

@@ -78,17 +78,35 @@ abstract class view {
         $tabs =
             array(
                 array(
-                    new tabobject('history', get_view_history_url($this->instanceid), 'History'),
-                    new tabobject('index', get_view_index_url($this->instanceid), 'Documents'),
+                    new tabobject(
+                            'history',
+                            get_view_history_url(
+                                    $this->instanceid), get_string('tabhistory', 'mod_sequentialdocuments')
+                    ),
+                    new tabobject(
+                            'index',
+                            get_view_index_url(
+                                    $this->instanceid), get_string('tabindex', 'mod_sequentialdocuments')
+                    ),
                 ),
             );
 
         if (sequentialdocuments_has_document_creation_rights($this->instanceid, $USER->id)) {
-            $tabs[0][] = new tabobject('add_document', get_add_document_url($this->instanceid), 'Add a document');
+            $tabs[0][] = new tabobject(
+                                'add_document',
+                                get_add_document_url(
+                                        $this->instanceid),
+                                        get_string('tabnewdocument', 'mod_sequentialdocuments')
+            );
         }
 
         if (sequentialdocuments_has_edit_access_rights_rights($this->instanceid, $USER->id)) {
-            $tabs[0][] = new tabobject('edit_access', get_edit_access_url($this->instanceid), 'Edit access rights');
+            $tabs[0][] = new tabobject(
+                                'edit_access',
+                                get_edit_access_url(
+                                        $this->instanceid),
+                                        get_string('tabaccessrights', 'mod_sequentialdocuments')
+            );
         }
 
         print_tabs($tabs);

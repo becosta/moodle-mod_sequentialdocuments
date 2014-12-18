@@ -111,7 +111,7 @@ class sequentialdocuments_controller {
     }
 
     public function action_unknown(array $params = null) {
-        $this->action_error("Page not found");
+        $this->action_error(get_string('pagenotfound', 'mod_sequentialdocuments'));
     }
 
     public function action_index(array $params = null) {
@@ -141,7 +141,7 @@ class sequentialdocuments_controller {
                 }
             }
         } catch (unauthorized_access_exception $e) {
-            $this->action_error("You don't have access to this document");
+            $this->action_error(get_string('missingdocumentaccess', 'mod_sequentialdocuments'));
             return;
         }
 
@@ -152,7 +152,7 @@ class sequentialdocuments_controller {
     public function action_edit_access(array $params = null) {
 
         if (!sequentialdocuments_has_edit_access_rights_rights($this->instanceid, $this->userid)) {
-            $this->action_error('You don\'t have access to this page');
+            $this->action_error(get_string('missingpageaccess', 'mod_sequentialdocuments'));
         }
 
         $data = sequentialdocuments_get_current_access_rights($this->instanceid);
@@ -211,7 +211,7 @@ class sequentialdocuments_controller {
                         $this->contextid
                 );
         } catch (unauthorized_access_exception $e) {
-            $this->action_error('You don\'t have access to this document');
+            $this->action_error(get_string('missingdocumentaccess', 'mod_sequentialdocuments'));
             die();
         }
 
@@ -229,7 +229,7 @@ class sequentialdocuments_controller {
     public function action_add_document(array $params = null) {
 
         if (!sequentialdocuments_has_document_creation_rights($this->instanceid, $this->userid)) {
-            $this->action_error('You don\'t have permission to create documents.');
+            $this->action_error(get_string('missingdocumentcreationrights', 'mod_sequentialdocuments'));
         }
 
         $this->form_based_action(
@@ -249,7 +249,7 @@ class sequentialdocuments_controller {
     public function action_update_document(array $params = null) {
 
         if (!sequentialdocuments_has_document_edit_rights($this->instanceid, $this->userid)) {
-            $this->action_error('You don\'t have permission to edit documents.');
+            $this->action_error(get_string('missingdocumenteditionrights', 'mod_sequentialdocuments'));
         }
 
         $documentid = $this->get_numeric_id('documentid', $params);
@@ -269,9 +269,9 @@ class sequentialdocuments_controller {
                         $this->action_view_document(array('documentid' => $documentid));
 
                     } catch (unauthorized_access_exception $e) {
-                        $this->action_error('You don\'t have access to this document');
+                        $this->action_error(get_string('missingdocumentaccess', 'mod_sequentialdocuments'));
                     } catch (InvalidArgumentException $e) {
-                        $this->action_error('Invalid document id');
+                        $this->action_error(get_string('invaliddocumentid', 'mod_sequentialdocuments'));
                     }
                 }
         );
@@ -294,16 +294,18 @@ class sequentialdocuments_controller {
 
             switch ($e->errorcode) {
                 case 1000:
-                    $this->action_error('You don\'t have access to this document');
+                    $this->action_error(get_string('missingdocumentaccess', 'mod_sequentialdocuments'));
                     break;
 
                 case 1001:
                 case 1002:
-                    $this->action_error('You don\'t have suppression rights on this document');
+                    $this->action_error(
+                            get_string('missingdocumentsuppressionrights', 'mod_sequentialdocuments')
+                    );
                     break;
             }
         } catch (InvalidArgumentException $e) {
-            $this->action_error('Invalid document id');
+            $this->action_error(get_string('invaliddocumentid', 'mod_sequentialdocuments'));
         }
 
         $this->action_index($params);
@@ -327,11 +329,11 @@ class sequentialdocuments_controller {
                 case 1004:
                 case 1005:
                 case 1006:
-                    $this->action_error('You don\'t have locking rights on this document');
+                    $this->action_error(get_string('missingdocumentlockingrights', 'mod_sequentialdocuments'));
                     break;
 
                 default:
-                    $this->action_error('You don\'t have locking rights');
+                    $this->action_error(get_string('missinglockingrights', 'mod_sequentialdocuments'));
                     break;
             }
         }
@@ -355,11 +357,13 @@ class sequentialdocuments_controller {
                     case 1004:
                     case 1005:
                     case 1006:
-                        $this->action_error('You don\'t have locking rights on this document');
+                        $this->action_error(
+                                get_string('missingdocumentlockingrights', 'mod_sequentialdocuments')
+                        );
                         break;
 
                     default:
-                        $this->action_error('You don\'t have locking rights');
+                        $this->action_error(get_string('missinglockingrights', 'mod_sequentialdocuments'));
                         break;
                     }
             }
@@ -378,7 +382,7 @@ class sequentialdocuments_controller {
                                                 $this->contextid
             );
         } catch (unauthorized_access_exception $e) {
-            $this->action_error('You don\'t have access to this document version');
+            $this->action_error(get_string('missingversionaccess', 'mod_sequentialdocuments'));
             die();
         }
 
@@ -396,7 +400,7 @@ class sequentialdocuments_controller {
     public function action_add_version(array $params = null) {
 
         if (!sequentialdocuments_has_version_creation_rights($this->instanceid, $this->userid)) {
-            $this->action_error('You don\'t have permission to create versions.');
+            $this->action_error(get_string('missingversioncreationrights', 'mod_sequentialdocuments'));
         }
 
         $documentid = $this->get_numeric_id('documentid', $params);
@@ -477,7 +481,7 @@ class sequentialdocuments_controller {
         }
 
         if (!$hasrights && !($isuser && $needssubmission)) {
-            $this->action_error('You don\'t have permission to edit versions.');
+            $this->action_error(get_string('missingversioneditionrights', 'mod_sequentialdocuments'));
         }
 
         $duedate = $this->versionmanager->get_version($versionid)->get_duetime();
@@ -546,9 +550,9 @@ class sequentialdocuments_controller {
                         $this->action_view_version(array('versionid' => $versionid));
 
                     } catch (unauthorized_access_exception $e) {
-                        $this->action_error('You don\'t have access to this document');
+                        $this->action_error(get_string('missingdocumentaccess', 'mod_sequentialdocuments'));
                     } catch (InvalidArgumentException $e) {
-                        $this->action_error('Invalid document id');
+                        $this->action_error(get_string('invaliddocumentid', 'mod_sequentialdocuments'));
                     }
                 }
         );
@@ -571,15 +575,17 @@ class sequentialdocuments_controller {
 
             switch ($e->errorcode) {
                 case 1000:
-                    $this->action_error('You don\'t have access to this document version');
+                    $this->action_error(get_string('missingversionaccess', 'mod_sequentialdocuments'));
                     break;
 
                 case 1002:
-                    $this->action_error('You don\'t have suppression rights on this document version');
+                    $this->action_error(
+                            get_string('missingversionsuppressionrights', 'mod_sequentialdocuments')
+                    );
                     break;
             }
         } catch (InvalidArgumentException $e) {
-            $this->action_error('Invalid version id');
+            $this->action_error(get_string('invalidversionid', 'mod_sequentialdocuments'));
         }
 
         $this->action_index($params);
@@ -598,7 +604,7 @@ class sequentialdocuments_controller {
                                                     $this->contextid
             );
         } catch (unauthorized_access_exception $e) {
-            $this->action_error('You don\'t have access to this feedback version');
+            $this->action_error(get_string('missingfeedbackaccess', 'mod_sequentialdocuments'));
             die();
         }
 
@@ -616,7 +622,7 @@ class sequentialdocuments_controller {
     public function action_add_feedback(array $params = null) {
 
         if (!sequentialdocuments_has_feedback_creation_rights($this->instanceid, $this->userid)) {
-            $this->action_error('You don\'t have permission to post feedbacks.');
+            $this->action_error(get_string('missingfeedbackcreationrights', 'mod_sequentialdocuments'));
         }
 
         $versionid = $this->get_numeric_id('versionid', $params);
@@ -655,7 +661,7 @@ class sequentialdocuments_controller {
     public function action_update_feedback(array $params = null) {
 
         if (!sequentialdocuments_has_feedback_edit_rights($this->instanceid, $this->userid)) {
-            $this->action_error('You don\'t have permission to edit feedbacks.');
+            $this->action_error(get_string('missingfeedbackeditionrights', 'mod_sequentialdocuments'));
         }
 
         $feedbackid = $this->get_numeric_id('feedbackid', $params);
@@ -700,9 +706,9 @@ class sequentialdocuments_controller {
                             $this->action_view_feedback(array('feedbackid' => $feedbackid));
 
                         } catch (unauthorized_access_exception $e) {
-                            $this->action_error('You don\'t have access to this document feedback');
+                            $this->action_error(get_string('missingfeedbackaccess', 'mod_sequentialdocuments'));
                         } catch (InvalidArgumentException $e) {
-                            $this->action_error('Invalid feedback id');
+                            $this->action_error(get_string('invalidfeedbackid', 'mod_sequentialdocuments'));
                         }
                     }
         ;
@@ -726,15 +732,17 @@ class sequentialdocuments_controller {
         } catch (unauthorized_access_exception $e) {
             switch ($e->errorcode) {
                 case 1000:
-                    $this->action_error('You don\'t have access to this document feedback');
+                    $this->action_error(get_string('missingfeedbackaccess', 'mod_sequentialdocuments'));
                     break;
 
                 case 1003:
-                    $this->action_error('You don\'t have suppression rights on this document feedback');
+                    $this->action_error(
+                            get_string('missingfeedbacksuppressionrights', 'mod_sequentialdocuments')
+                    );
                     break;
             }
         } catch (InvalidArgumentException $e) {
-            $this->action_error('Invalid feedback id');
+            $this->action_error(get_string('invalidfeedbackid', 'mod_sequentialdocuments'));
         }
 
         $this->action_index($params);

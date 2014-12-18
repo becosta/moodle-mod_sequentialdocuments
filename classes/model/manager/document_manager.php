@@ -158,7 +158,11 @@ class document_manager extends manager {
         }
     }
 
-    public function unlock_document($documentid, $userid, version_manager $versionmanager, feedback_manager $feedbackmanager) {
+    public function unlock_document(
+                                    $documentid,
+                                    $userid,
+                                    version_manager $versionmanager,
+                                    feedback_manager $feedbackmanager) {
 
         if (!sequentialdocuments_has_lock_document_rights($this->instanceid, $userid)) {
             throw new unauthorized_access_exception(1004, 'mod_sequentialdocuments');
@@ -198,7 +202,7 @@ class document_manager extends manager {
                                             $contextid) {
 
         if (!sequentialdocuments_has_document_read_rights($this->instanceid, $userid)) {
-            $controller->action_error('You don\'t have access to this document');
+            $controller->action_error(get_string('missingdocumentaccess', 'mod_sequentialdocuments'));
             return false;
         }
 
@@ -233,7 +237,7 @@ class document_manager extends manager {
         }
         $documentid = $document->get_id();
         $html = '<a onclick="toggle_visibility(\'sqds-document-content-'.$documentid.'\')">'.
-                    'Content:'.
+                    get_string('documentcontent', 'mod_sequentialdocuments').
                 '</a>'.
                 '<div id="sqds-document-content-'.$documentid.
                 '" class="sqds-document-content" '.$lastversionattr.'>';
@@ -247,37 +251,42 @@ class document_manager extends manager {
 
         $links = '';
         if ($document->is_locked()) {
-			if (sequentialdocuments_has_lock_document_rights($this->instanceid, $userid)) {
-				$links =
-                                    '<a href="'.
-                                        get_unlock_document_url($document->get_id(), $this->instanceid).
-                                        '">Unlock this document</a> ';
-			}
+            if (sequentialdocuments_has_lock_document_rights($this->instanceid, $userid)) {
+                $links =
+                    '<a href="'.
+                        get_unlock_document_url($document->get_id(), $this->instanceid).
+                        '">'.get_string('documentunlocklink', 'mod_sequentialdocuments').
+                    '</a> ';
+            }
         } else {
-			if (sequentialdocuments_has_lock_document_rights($this->instanceid, $userid)) {
-				$links .=
-                                    '<a href="'.
-                                        get_lock_document_url($documentid, $this->instanceid).
-                                        '">Lock this document</a> ';
-			}
-			if (sequentialdocuments_has_version_creation_rights($this->instanceid, $userid)) {
-				$links .=
-                                    '<a href="'.
-                                        get_add_version_url($documentid, $this->instanceid).
-                                        '">Add a new version</a> ';
-			}
-			if (sequentialdocuments_has_document_edit_rights($this->instanceid, $userid)) {
-				$links .=
-                                    '<a href="'.
-                                        get_update_document_url($documentid, $this->instanceid).
-                                        '">Edit</a> ';
-			}
-			if (sequentialdocuments_has_document_suppression_rights($this->instanceid, $userid)) {
-				$links .=
-                                    '<a href="'.
-                                        get_delete_document_url($documentid, $this->instanceid).
-                                        '">Delete</a>';
-			}
+            if (sequentialdocuments_has_lock_document_rights($this->instanceid, $userid)) {
+                $links .=
+                    '<a href="'.
+                        get_lock_document_url($documentid, $this->instanceid).
+                        '">'.get_string('documentlocklink', 'mod_sequentialdocuments').
+                    '</a> ';
+            }
+            if (sequentialdocuments_has_version_creation_rights($this->instanceid, $userid)) {
+                $links .=
+                    '<a href="'.
+                        get_add_version_url($documentid, $this->instanceid).
+                        '">'.get_string('documentaddversionlink', 'mod_sequentialdocuments').
+                    '</a> ';
+            }
+            if (sequentialdocuments_has_document_edit_rights($this->instanceid, $userid)) {
+                $links .=
+                    '<a href="'.
+                        get_update_document_url($documentid, $this->instanceid).
+                        '">'.get_string('documenteditlink', 'mod_sequentialdocuments').
+                    '</a> ';
+            }
+            if (sequentialdocuments_has_document_suppression_rights($this->instanceid, $userid)) {
+                $links .=
+                    '<a href="'.
+                        get_delete_document_url($documentid, $this->instanceid).
+                        '">'.get_string('documentdeletelink', 'mod_sequentialdocuments').
+                    '</a>';
+            }
         }
 
         return '<section class="sqds-document">'.$document->get_html().$html.

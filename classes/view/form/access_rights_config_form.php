@@ -38,61 +38,115 @@ class access_rights_config_form extends moodleform {
 
 
 
-        $form->addElement('header', 'documentsaccess', 'Configure students access rights on documents');
+        $form->addElement(
+                'header', 'documentsaccess', get_string('arfdocumentaccess', 'mod_sequentialdocuments')
+        );
 
-        $form->addElement('advcheckbox', 'readdocument', 'Students can read documents', '', null, array(0, 1));
+        $form->addElement(
+                'advcheckbox', 'readdocument',
+                get_string('arfreaddocument', 'mod_sequentialdocuments'),
+                '', null, array(0, 1)
+        );
         $form->setType('readdocument', PARAM_BOOL);
         $form->setDefault('readdocument', $this->_customdata['readdocument']);
 
-        $form->addElement('advcheckbox', 'createdocument', 'Students can create documents', '', null, array(0, 1));
+        $form->addElement(
+                'advcheckbox', 'createdocument',
+                get_string('arfcreatedocument', 'mod_sequentialdocuments'),
+                '', null, array(0, 1)
+        );
         $form->setType('createdocument', PARAM_BOOL);
         $form->setDefault('createdocument', $this->_customdata['createdocument']);
 
-        $form->addElement('advcheckbox', 'editdocument', 'Students can edit documents', '', null, array(0, 1));
+        $form->addElement(
+                'advcheckbox', 'editdocument',
+                get_string('arfeditdocument', 'mod_sequentialdocuments'),
+                '', null, array(0, 1)
+        );
         $form->setType('editdocument', PARAM_BOOL);
         $form->setDefault('editdocument', $this->_customdata['editdocument']);
 
-        $form->addElement('advcheckbox', 'deletedocument', 'Students can delete documents', '', null, array(0, 1));
+        $form->addElement(
+                'advcheckbox', 'deletedocument',
+                get_string('arfdeletedocument', 'mod_sequentialdocuments'),
+                '', null, array(0, 1)
+        );
         $form->setType('deletedocument', PARAM_BOOL);
         $form->setDefault('deletedocument', $this->_customdata['deletedocument']);
 
 
 
-        $form->addElement('header', 'documentsaccess', 'Configure students access rights on versions');
+        $form->addElement(
+                'header', 'documentsaccess', get_string('arfversionaccess', 'mod_sequentialdocuments')
+        );
 
-        $form->addElement('advcheckbox', 'readversion', 'Students can read versions', '', null, array(0, 1));
+        $form->addElement(
+                'advcheckbox', 'readversion',
+                get_string('arfreadversion', 'mod_sequentialdocuments'),
+                '', null, array(0, 1)
+        );
         $form->setType('readversion', PARAM_BOOL);
         $form->setDefault('readversion', $this->_customdata['readversion']);
 
-        $form->addElement('advcheckbox', 'createversion', 'Students can create versions', '', null, array(0, 1));
+        $form->addElement(
+                'advcheckbox', 'createversion',
+                get_string('arfcreateversion', 'mod_sequentialdocuments'),
+                '', null, array(0, 1)
+        );
         $form->setType('createversion', PARAM_BOOL);
         $form->setDefault('createversion', $this->_customdata['createversion']);
 
-        $form->addElement('advcheckbox', 'editversion', 'Students can edit versions', '', null, array(0, 1));
+        $form->addElement(
+                'advcheckbox', 'editversion',
+                get_string('arfeditversion', 'mod_sequentialdocuments'),
+                '', null, array(0, 1)
+        );
         $form->setType('editversion', PARAM_BOOL);
         $form->setDefault('editversion', $this->_customdata['editversion']);
 
-        $form->addElement('advcheckbox', 'deleteversion', 'Students can delete versions', '', null, array(0, 1));
+        $form->addElement(
+                'advcheckbox', 'deleteversion',
+                get_string('arfdeleteversion', 'mod_sequentialdocuments'),
+                '', null, array(0, 1)
+        );
         $form->setType('deleteversion', PARAM_BOOL);
         $form->setDefault('deleteversion', $this->_customdata['deleteversion']);
 
 
 
-        $form->addElement('header', 'documentsaccess', 'Configure students access rights on feedbacks');
+        $form->addElement(
+                'header', 'documentsaccess', get_string('arffeedbackaccess', 'mod_sequentialdocuments')
+        );
 
-        $form->addElement('advcheckbox', 'readfeedback', 'Students can read feedbacks', '', null, array(0, 1));
+        $form->addElement(
+                'advcheckbox', 'readfeedback',
+                get_string('arfreadfeedback', 'mod_sequentialdocuments'),
+                '', null, array(0, 1)
+        );
         $form->setType('readfeedback', PARAM_BOOL);
         $form->setDefault('readfeedback', $this->_customdata['readfeedback']);
 
-        $form->addElement('advcheckbox', 'createfeedback', 'Students can create feedbacks', '', null, array(0, 1));
+        $form->addElement(
+                'advcheckbox', 'createfeedback',
+                get_string('arfcreatefeedback', 'mod_sequentialdocuments'),
+                '', null, array(0, 1)
+        );
         $form->setType('createfeedback', PARAM_BOOL);
         $form->setDefault('createfeedback', $this->_customdata['createfeedback']);
 
-        $form->addElement('advcheckbox', 'editfeedback', 'Students can edit feedbacks', '', null, array(0, 1));
+        $form->addElement(
+                'advcheckbox', 'editfeedback',
+                get_string('arfeditfeedback', 'mod_sequentialdocuments'),
+                '', null, array(0, 1)
+        );
         $form->setType('editfeedback', PARAM_BOOL);
         $form->setDefault('editfeedback', $this->_customdata['editfeedback']);
 
-        $form->addElement('advcheckbox', 'deletefeedback', 'Students can delete feedbacks', '', null, array(0, 1));
+        $form->addElement(
+                'advcheckbox', 'deletefeedback',
+                get_string('arfdeletefeedback', 'mod_sequentialdocuments'),
+                '', null, array(0, 1)
+        );
         $form->setType('deletefeedback', PARAM_BOOL);
         $form->setDefault('deletefeedback', $this->_customdata['deletefeedback']);
 

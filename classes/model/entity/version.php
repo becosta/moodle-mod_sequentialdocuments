@@ -56,7 +56,7 @@ class version extends entity {
         // TODO : call either the controller or lib.php to get a link to the current version
 
         return  '<aside class="sqds-top-right">'.
-                    'Submited: '.userdate($this->creationtime).
+                    get_string('versionsubmitted', 'mod_sequentialdocuments').userdate($this->creationtime).
                 '</aside>'.
                 $this->get_duedate_html();
     }
@@ -80,7 +80,9 @@ class version extends entity {
                     break;
             }
 
-            $duedate = '<strong '.$class.'>Due date:</strong> '.userdate($this->duetime).'<br />';
+            $duedate = '<strong '.$class.'>'.
+                            get_string('versionduedate', 'mod_sequentialdocuments').
+                        '</strong> '.userdate($this->duetime).'<br />';
         }
         return $duedate;
     }

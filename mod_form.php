@@ -67,7 +67,12 @@ class mod_sequentialdocuments_mod_form extends moodleform_mod {
         foreach ($teachers as $teacher) {
             $arr[$teacher->id] = $teacher->lastname.' '.$teacher->firstname;
         }
-        $selectteachers = $mform->addElement('select', 'teachers', 'Teachers', $arr);
+        $selectteachers = $mform->addElement(
+                                    'select',
+                                    'teachers',
+                                    get_string('mfteachers', 'mod_sequentialdocuments'),
+                                    $arr
+        );
         $selectteachers->setMultiple(true);
 
         $students = get_enrolled_users($context, 'mod/sequentialdocuments:student');
@@ -75,7 +80,12 @@ class mod_sequentialdocuments_mod_form extends moodleform_mod {
         foreach ($students as $student) {
             $arr[$student->id] = $student->lastname.' '.$student->firstname;
         }
-        $selectstudents = $mform->addElement('select', 'students', 'Students', $arr);
+        $selectstudents = $mform->addElement(
+                                    'select',
+                                    'students',
+                                    get_string('mfstudents', 'mod_sequentialdocuments'),
+                                    $arr
+        );
         $selectstudents->setMultiple(true);
 
         // Add standard elements, common to all modules.

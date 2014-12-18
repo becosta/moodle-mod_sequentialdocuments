@@ -33,39 +33,67 @@ class add_version_form extends moodleform {
 
         $form = $this->_form;
 
-        $form->addElement('header', 'addversion', 'Add a document version');
+        $form->addElement('header', 'addversion', get_string('avfaddversion', 'mod_sequentialdocuments'));
 
         $isteacher = sequentialdocuments_current_user_is_instance_teacher($this->_customdata['instanceid']);
         if ($isteacher) {
-            $form->addElement('date_time_selector', 'duetime', 'Due date: ', array('optional'=>true));
+            $form->addElement(
+                    'date_time_selector', 'duetime',
+                    get_string('avfduetime', 'mod_sequentialdocuments'),
+                    array('optional'=>true)
+            );
             $form->setDefault('duetime', $this->_customdata['duetime']);
 
-            $form->addElement('advcheckbox', 'dueday', 'Send a reminder on due day', '', null, array(0, 1));
+            $form->addElement(
+                    'advcheckbox', 'dueday',
+                    get_string('avfdueday', 'mod_sequentialdocuments'),
+                    '', null, array(0, 1)
+            );
             $form->setDefault('dueday', $this->_customdata['dueday']);
 
-            $form->addElement('advcheckbox', 'oneday', 'Send a reminder on due day eve', '', null, array(0, 1));
+            $form->addElement(
+                    'advcheckbox', 'oneday',
+                    get_string('avfoneday', 'mod_sequentialdocuments'),
+                    '', null, array(0, 1)
+            );
             $form->setDefault('oneday', $this->_customdata['oneday']);
 
-            $form->addElement('advcheckbox', 'oneweek', 'Send a reminder one week before the due day', '', null, array(0, 1));
+            $form->addElement(
+                    'advcheckbox', 'oneweek',
+                    get_string('avfoneweek', 'mod_sequentialdocuments'),
+                    '', null, array(0, 1)
+            );
             $form->setDefault('oneweek', $this->_customdata['oneweek']);
 
-            $form->addElement('advcheckbox', 'twoweeks', 'Send a reminder two weeks before the due day', '', null, array(0, 1));
+            $form->addElement(
+                    'advcheckbox', 'twoweeks',
+                    get_string('avftwoweeks', 'mod_sequentialdocuments'),
+                    '', null, array(0, 1)
+            );
             $form->setDefault('twoweeks', $this->_customdata['twoweeks']);
 
-            $form->addElement('advcheckbox', 'onemonth', 'Send a reminder one month before the due day', '', null, array(0, 1));
+            $form->addElement(
+                    'advcheckbox', 'onemonth',
+                    get_string('avfonemonth', 'mod_sequentialdocuments'),
+                    '', null, array(0, 1)
+            );
             $form->setDefault('onemonth', $this->_customdata['onemonth']);
 
             $options = array(
-                '0' => 'Never',
-                '1' => '1 week',
-                '2' => '2 weeks',
-                '3' => '3 weeks',
-                '4' => '1 month',
-                '8' => '2 months',
-                '12' => '3 months',
-                '24' => '6 months',
+                '0' => get_string('avfselectnever', 'mod_sequentialdocuments'),
+                '1' => get_string('avfselectoneweek', 'mod_sequentialdocuments'),
+                '2' => get_string('avfselecttwoweeks', 'mod_sequentialdocuments'),
+                '3' => get_string('avfselectthreeweeks', 'mod_sequentialdocuments'),
+                '4' => get_string('avfselectonemonth', 'mod_sequentialdocuments'),
+                '8' => get_string('avfselecttwomonth', 'mod_sequentialdocuments'),
+                '12' => get_string('avfselectthreemonth', 'mod_sequentialdocuments'),
+                '24' => get_string('avfselectsixmonth', 'mod_sequentialdocuments'),
             );
-            $select = $form->addElement('select', 'postneeded', 'Send reminder that this version is late for:', $options);
+            $select = $form->addElement(
+                    'select', 'postneeded',
+                    get_string('avfpostneeded', 'mod_sequentialdocuments'),
+                    $options
+            );
             if (isset($this->_customdata['postneeded'])) {
                 $select->setSelected($this->_customdata['postneeded']);
             } else {
@@ -83,7 +111,7 @@ class add_version_form extends moodleform {
         $form->addElement(
                     'filemanager',
                     'attachments',
-                    'File(s)',
+                    get_string('avffiles', 'mod_sequentialdocuments'),
                     null,
                     array(
                         'subdirs' => 0,
@@ -93,7 +121,11 @@ class add_version_form extends moodleform {
                     )
         );
         if (!$isteacher) {
-            $form->addRule('attachments', 'This field is required', 'required', null, 'server');
+            $form->addRule(
+                    'attachments',
+                    get_string('avfrequired', 'mod_sequentialdocuments'),
+                    'required', null, 'server'
+            );
         }
 
         $this->add_action_buttons();

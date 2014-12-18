@@ -44,7 +44,7 @@ class added_version extends interaction {
     }
 
     public function get_html() {
-        return 'New version '.parent::get_html();
+        return get_string('interactnewversion', 'mod_sequentialdocuments').parent::get_html();
 
     }
 

@@ -44,7 +44,7 @@ class added_feedback extends interaction {
     }
 
     public function get_html() {
-        return 'New feedback '.parent::get_html();
+        return get_string('interactnewfeedback', 'mod_sequentialdocuments').parent::get_html();
     }
 
     public function get_feedbackid() {
