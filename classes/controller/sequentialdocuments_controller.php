@@ -508,6 +508,9 @@ class sequentialdocuments_controller {
                 $data,
                 function($formdata, $view) use ($versionid, $isuser) {
                     $formdata->instanceid = $this->instanceid;
+                    if ($formdata->duetime == 0) {
+                        $formdata->duetime = -1;
+                    }
                     if ($isuser && $formdata->duetime != -1) {
                         $formdata->duevalidated = true;
                     }
@@ -589,6 +592,54 @@ class sequentialdocuments_controller {
         }
 
         $this->action_index($params);
+    }
+
+    public function action_lock_version(array $params = null) {
+
+        $versionid = $this->get_numeric_id('versionid', $params);
+
+        try {
+            $this->versionmanager->lock($this->versionmanager->get_version($versionid), $this->userid);
+            $this->action_index($params);
+        } catch (unauthorized_access_exception $e) {
+
+            switch ($e->errorcode) {
+                case 1004:
+                case 1005:
+                case 1006:
+                    $this->action_error(get_string('missingversionlockingrights', 'mod_sequentialdocuments'));
+                    break;
+
+                default:
+                    $this->action_error(get_string('missinglockingrights', 'mod_sequentialdocuments'));
+                    break;
+            }
+        }
+    }
+
+    public function action_unlock_version(array $params = null) {
+
+        $versionid = $this->get_numeric_id('versionid', $params);
+
+            try {
+                $this->versionmanager->unlock($this->versionmanager->get_version($versionid), $this->userid);
+                $this->action_index($params);
+            } catch (unauthorized_access_exception $e) {
+
+                switch ($e->errorcode) {
+                    case 1004:
+                    case 1005:
+                    case 1006:
+                        $this->action_error(
+                                get_string('missingversionlockingrights', 'mod_sequentialdocuments')
+                        );
+                        break;
+
+                    default:
+                        $this->action_error(get_string('missinglockingrights', 'mod_sequentialdocuments'));
+                        break;
+                    }
+            }
     }
 
     public function action_view_feedback(array $params = null) {

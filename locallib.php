@@ -480,6 +480,14 @@ function get_unlock_document_url($documentid, $instanceid) {
     return get_plugin_base_url().'/view.php?action=unlock_document&s='.$instanceid.'&documentid='.$documentid;
 }
 
+function get_lock_version_url($versionid, $instanceid) {
+    return get_plugin_base_url().'/view.php?action=lock_version&s='.$instanceid.'&versionid='.$versionid;
+}
+
+function get_unlock_version_url($versionid, $instanceid)  {
+    return get_plugin_base_url().'/view.php?action=unlock_version&s='.$instanceid.'&versionid='.$versionid;
+}
+
 function get_edit_access_url($instanceid) {
     return get_plugin_base_url().'/view.php?action=edit_access&s='.$instanceid;
 }

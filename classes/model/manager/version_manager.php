@@ -288,14 +288,23 @@ class version_manager extends manager {
                         '</a> ';
             }
 
-        }
-        if (!$version->is_locked()) {
-
-            if (sequentialdocuments_has_feedback_creation_rights($this->instanceid, $userid)) {
+            if ((!$version->is_locked() &&
+                    sequentialdocuments_has_feedback_creation_rights($this->instanceid, $userid)) ||
+                    $version->needs_user_submission()) {
                 $links .=
                         '<a href="'.get_add_feedback_url($versionid, $instanceid).'">'.
                             get_string('versionpostfeedbacklink', 'mod_sequentialdocuments').
                         '</a> ';
+            }
+
+        }
+        if (!$version->is_locked()) {
+
+            if (sequentialdocuments_has_lock_version_rights($instanceid, $userid)) {
+                $links =
+                        '<a href="'.get_lock_version_url($versionid, $instanceid).'">'.
+                            get_string('versionlocklink', 'mod_sequentialdocuments').
+                        '</a> '.$links;
             }
 
             if (sequentialdocuments_has_version_suppression_rights($this->instanceid, $userid)) {
@@ -303,6 +312,14 @@ class version_manager extends manager {
                         '<a href="'.get_delete_version_url($versionid, $instanceid).'">'.
                             get_string('versiondeletelink', 'mod_sequentialdocuments').
                         '</a>';
+            }
+        } else {
+
+            if (sequentialdocuments_has_lock_version_rights($instanceid, $userid)) {
+                $links =
+                        '<a href="'.get_unlock_version_url($versionid, $instanceid).'">'.
+                            get_string('versionunlocklink', 'mod_sequentialdocuments').
+                        '</a> '.$links;
             }
         }
 

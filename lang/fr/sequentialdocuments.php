@@ -57,19 +57,19 @@ $string['documentunlocklink'] = 'Dévérouiller ce document';
 
 // Version objects html.
 $string['versionlink'] = 'Version: ';
+$string['versionsubmitted'] = 'Envoyée le: ';
+$string['versionduedate'] = 'Date limite de rendu:';
 $string['versioneditlink'] = $string['documenteditlink'];
 $string['versiondeletelink'] = $string['documentdeletelink'];
 $string['versionpostfeedbacklink'] = 'Poster un feedback';
+$string['versionlocklink'] = 'Vérouiller cette version';
+$string['versionunlocklink'] = 'Dévérouiller cette version';
 
 // Feedback
 $string['feedbackattachments'] = 'Pièces jointes: ';
 $string['feedbackeditlink'] = $string['documenteditlink'];
 $string['feedbackdeletelink'] = $string['documentdeletelink'];
 $string['feedbackcreateversionfromthis'] = 'Créer une version à partir de ce feedback';
-
-// Version objects html.
-$string['versionsubmitted'] = 'Envoyée le: ';
-$string['versionduedate'] = 'Date limite de rendu:';
 
 // Feedback objects html.
 $string['feedbacksubmitted'] = $string['versionsubmitted'];
