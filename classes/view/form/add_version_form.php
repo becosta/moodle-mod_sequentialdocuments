@@ -117,7 +117,6 @@ class add_version_form extends moodleform {
                         'subdirs' => 0,
                         'maxbytes' => 0,
                         'maxfiles' => 50,
-                        'accepted_types' => array('document'),
                     )
         );
         if (!$isteacher) {
