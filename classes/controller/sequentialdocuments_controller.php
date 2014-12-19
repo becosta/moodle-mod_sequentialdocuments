@@ -104,7 +104,7 @@ class sequentialdocuments_controller {
     }
 
     public function action_error($errormessage) {
-        $view = new index_view(array('instanceid' => $this->instanceid, 'title' => 'Error', 'intro' => ''));
+        $view = new index_view(array('instanceid' => $this->instanceid, 'title' => get_string('error', 'mod_sequentialdocuments'), 'intro' => ''));
         $view->set_content('<section class="sqds_error_message"><p>'.$errormessage.'</p></section>');
         $view->display();
         return;

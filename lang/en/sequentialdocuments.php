@@ -164,6 +164,7 @@ $string['messageprovider:newsubmission'] = 'Notifies you that a student posted a
 $string['sendreminders'] = 'Send Sequential Documents reminders';
 
 // Errors.
+$string['error'] = 'Error';
 $string['pagenotfound'] = 'Page not found';
 $string['missingcmorid'] = 'You must specify a course_module ID or an instance ID';
 $string['missinginstanceaccess'] = 'You don\'t have access to this '.$string['modulename'].' instance';
