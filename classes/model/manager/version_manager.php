@@ -282,10 +282,17 @@ class version_manager extends manager {
             if ((!$version->is_locked() &&
                     sequentialdocuments_has_version_edit_rights($this->instanceid, $userid)) ||
                     $version->needs_user_submission()) {
-                $links .=
-                        '<a href="'.get_update_version_url($versionid, $instanceid).'">'.
-                            get_string('versioneditlink', 'mod_sequentialdocuments').
-                        '</a> ';
+                if (sequentialdocuments_current_user_is_instance_student($instanceid)) {
+                    $links .=
+                            '<a href="'.get_update_version_url($versionid, $instanceid).'">'.
+                                get_string('versionaddfilelink', 'mod_sequentialdocuments').
+                            '</a> ';
+                } else {
+                    $links .=
+                            '<a href="'.get_update_version_url($versionid, $instanceid).'">'.
+                                get_string('versioneditlink', 'mod_sequentialdocuments').
+                            '</a> ';
+                }
             }
 
             if ((!$version->is_locked() &&

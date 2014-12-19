@@ -60,6 +60,7 @@ $string['versionlink'] = 'Version: ';
 $string['versionsubmitted'] = 'Envoyée le: ';
 $string['versionduedate'] = 'Date limite de rendu:';
 $string['versioneditlink'] = $string['documenteditlink'];
+$string['versionaddfilelink'] = 'Attacher un fichier';
 $string['versiondeletelink'] = $string['documentdeletelink'];
 $string['versionpostfeedbacklink'] = 'Poster un feedback';
 $string['versionlocklink'] = 'Vérouiller cette version';
