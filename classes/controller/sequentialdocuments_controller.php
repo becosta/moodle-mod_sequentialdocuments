@@ -275,8 +275,6 @@ class sequentialdocuments_controller {
                         $this->documentmanager->update_document($documentid, $formdata);
                         $this->action_view_document(array('documentid' => $documentid));
 
-                    } catch (unauthorized_access_exception $e) {
-                        $this->action_error(get_string('missingdocumentaccess', 'mod_sequentialdocuments'));
                     } catch (InvalidArgumentException $e) {
                         $this->action_error(get_string('invaliddocumentid', 'mod_sequentialdocuments'));
                     }
@@ -297,20 +295,7 @@ class sequentialdocuments_controller {
             );
             $this->interactionmanager->
                     track_action_delete_document($this->instanceid, $this->userid, $documentid);
-        } catch (unauthorized_access_exception $e) {
 
-            switch ($e->errorcode) {
-                case 1000:
-                    $this->action_error(get_string('missingdocumentaccess', 'mod_sequentialdocuments'));
-                    break;
-
-                case 1001:
-                case 1002:
-                    $this->action_error(
-                            get_string('missingdocumentsuppressionrights', 'mod_sequentialdocuments')
-                    );
-                    break;
-            }
         } catch (InvalidArgumentException $e) {
             $this->action_error(get_string('invaliddocumentid', 'mod_sequentialdocuments'));
         }
@@ -322,76 +307,39 @@ class sequentialdocuments_controller {
 
         $documentid = $this->get_numeric_id('documentid', $params);
 
-        try {
-            $this->documentmanager->lock_document(
-                $documentid,
-                $this->userid,
-                $this->versionmanager,
-                $this->feedbackmanager
-            );
-            $this->action_index($params);
-        } catch (unauthorized_access_exception $e) {
-
-            switch ($e->errorcode) {
-                case 1004:
-                case 1005:
-                case 1006:
-                    $this->action_error(get_string('missingdocumentlockingrights', 'mod_sequentialdocuments'));
-                    break;
-
-                default:
-                    $this->action_error(get_string('missinglockingrights', 'mod_sequentialdocuments'));
-                    break;
-            }
-        }
+        $this->documentmanager->lock_document(
+            $documentid,
+            $this->userid,
+            $this->versionmanager,
+            $this->feedbackmanager
+        );
+        $this->action_index($params);
     }
 
     public function action_unlock_document(array $params = null) {
 
         $documentid = $this->get_numeric_id('documentid', $params);
 
-            try {
-                $this->documentmanager->unlock_document(
-                                            $documentid,
-                                            $this->userid,
-                                            $this->versionmanager,
-                                            $this->feedbackmanager
-                );
-                $this->action_index($params);
-            } catch (unauthorized_access_exception $e) {
-
-                switch ($e->errorcode) {
-                    case 1004:
-                    case 1005:
-                    case 1006:
-                        $this->action_error(
-                                get_string('missingdocumentlockingrights', 'mod_sequentialdocuments')
-                        );
-                        break;
-
-                    default:
-                        $this->action_error(get_string('missinglockingrights', 'mod_sequentialdocuments'));
-                        break;
-                    }
-            }
+        $this->documentmanager->unlock_document(
+                                    $documentid,
+                                    $this->userid,
+                                    $this->versionmanager,
+                                    $this->feedbackmanager
+        );
+        $this->action_index($params);
     }
 
     public function action_view_version(array $params = null) {
 
         $versionid = $this->get_numeric_id('versionid', $params);
 
-        try {
-            $content = $this->versionmanager->get_version_html_by_id(
-                                                $versionid,
-                                                $this->userid,
-                                                $this->documentmanager,
-                                                $this->feedbackmanager,
-                                                $this->contextid
-            );
-        } catch (unauthorized_access_exception $e) {
-            $this->action_error(get_string('missingversionaccess', 'mod_sequentialdocuments'));
-            die();
-        }
+        $content = $this->versionmanager->get_version_html_by_id(
+                                            $versionid,
+                                            $this->userid,
+                                            $this->documentmanager,
+                                            $this->feedbackmanager,
+                                            $this->contextid
+        );
 
         $view = new index_view(
                         array(
@@ -559,8 +507,6 @@ class sequentialdocuments_controller {
 
                         $this->action_view_version(array('versionid' => $versionid));
 
-                    } catch (unauthorized_access_exception $e) {
-                        $this->action_error(get_string('missingdocumentaccess', 'mod_sequentialdocuments'));
                     } catch (InvalidArgumentException $e) {
                         $this->action_error(get_string('invaliddocumentid', 'mod_sequentialdocuments'));
                     }
@@ -581,19 +527,6 @@ class sequentialdocuments_controller {
             );
             $this->interactionmanager->
                     track_action_delete_version($this->instanceid, $this->userid, $versionid);
-        } catch (unauthorized_access_exception $e) {
-
-            switch ($e->errorcode) {
-                case 1000:
-                    $this->action_error(get_string('missingversionaccess', 'mod_sequentialdocuments'));
-                    break;
-
-                case 1002:
-                    $this->action_error(
-                            get_string('missingversionsuppressionrights', 'mod_sequentialdocuments')
-                    );
-                    break;
-            }
         } catch (InvalidArgumentException $e) {
             $this->action_error(get_string('invalidversionid', 'mod_sequentialdocuments'));
         }
@@ -605,66 +538,29 @@ class sequentialdocuments_controller {
 
         $versionid = $this->get_numeric_id('versionid', $params);
 
-        try {
-            $this->versionmanager->lock($this->versionmanager->get_version($versionid), $this->userid);
-            $this->action_index($params);
-        } catch (unauthorized_access_exception $e) {
-
-            switch ($e->errorcode) {
-                case 1004:
-                case 1005:
-                case 1006:
-                    $this->action_error(get_string('missingversionlockingrights', 'mod_sequentialdocuments'));
-                    break;
-
-                default:
-                    $this->action_error(get_string('missinglockingrights', 'mod_sequentialdocuments'));
-                    break;
-            }
-        }
+        $this->versionmanager->lock($this->versionmanager->get_version($versionid), $this->userid);
+        $this->action_index($params);
     }
 
     public function action_unlock_version(array $params = null) {
 
         $versionid = $this->get_numeric_id('versionid', $params);
 
-            try {
-                $this->versionmanager->unlock($this->versionmanager->get_version($versionid), $this->userid);
-                $this->action_index($params);
-            } catch (unauthorized_access_exception $e) {
-
-                switch ($e->errorcode) {
-                    case 1004:
-                    case 1005:
-                    case 1006:
-                        $this->action_error(
-                                get_string('missingversionlockingrights', 'mod_sequentialdocuments')
-                        );
-                        break;
-
-                    default:
-                        $this->action_error(get_string('missinglockingrights', 'mod_sequentialdocuments'));
-                        break;
-                    }
-            }
+        $this->versionmanager->unlock($this->versionmanager->get_version($versionid), $this->userid);
+        $this->action_index($params);
     }
 
     public function action_view_feedback(array $params = null) {
 
         $feedbackid = $this->get_numeric_id('feedbackid', $params);
 
-        try {
-            $content = $this->feedbackmanager->get_feedback_html_by_id(
-                                                    $feedbackid,
-                                                    $this->userid,
-                                                    $this->documentmanager,
-                                                    $this->versionmanager,
-                                                    $this->contextid
-            );
-        } catch (unauthorized_access_exception $e) {
-            $this->action_error(get_string('missingfeedbackaccess', 'mod_sequentialdocuments'));
-            die();
-        }
+        $content = $this->feedbackmanager->get_feedback_html_by_id(
+                                                $feedbackid,
+                                                $this->userid,
+                                                $this->documentmanager,
+                                                $this->versionmanager,
+                                                $this->contextid
+        );
 
         $view = new index_view(
                         array(
@@ -765,8 +661,6 @@ class sequentialdocuments_controller {
 
                             $this->action_view_feedback(array('feedbackid' => $feedbackid));
 
-                        } catch (unauthorized_access_exception $e) {
-                            $this->action_error(get_string('missingfeedbackaccess', 'mod_sequentialdocuments'));
                         } catch (InvalidArgumentException $e) {
                             $this->action_error(get_string('invalidfeedbackid', 'mod_sequentialdocuments'));
                         }
@@ -789,18 +683,7 @@ class sequentialdocuments_controller {
             $this->feedbackmanager->delete_feedback($feedbackid, $this->userid);
             $this->interactionmanager->
                     track_action_delete_feedback($this->instanceid, $this->userid, $feedbackid);
-        } catch (unauthorized_access_exception $e) {
-            switch ($e->errorcode) {
-                case 1000:
-                    $this->action_error(get_string('missingfeedbackaccess', 'mod_sequentialdocuments'));
-                    break;
-
-                case 1003:
-                    $this->action_error(
-                            get_string('missingfeedbacksuppressionrights', 'mod_sequentialdocuments')
-                    );
-                    break;
-            }
+        
         } catch (InvalidArgumentException $e) {
             $this->action_error(get_string('invalidfeedbackid', 'mod_sequentialdocuments'));
         }

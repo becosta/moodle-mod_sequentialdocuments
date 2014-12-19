@@ -79,7 +79,7 @@ class document_manager extends manager {
         if (!($document instanceof document)) {
             throw new InvalidArgumentException();
         } else if ($document->get_instanceid() != $this->instanceid) {
-            throw new unauthorized_access_exception(1000, 'mod_sequencialdocuments');
+            throw new unauthorized_access_exception('ua1000', 'mod_sequentialdocuments');
         }
 
         $vars = get_object_vars($data);
@@ -103,11 +103,11 @@ class document_manager extends manager {
         if (!($document instanceof document)) {
             throw new InvalidArgumentException();
         } else if ($document->get_instanceid() != $this->instanceid) {
-            throw new unauthorized_access_exception(1000, 'mod_sequentialdocuments');
+            throw new unauthorized_access_exception('uainstance', 'mod_sequentialdocuments');
         }
 
         if (!sequentialdocuments_has_document_suppression_rights($this->instanceid, $userid)) {
-            throw new unauthorized_access_exception(1001, 'mod_sequentialdocuments');
+            throw new unauthorized_access_exception('ua1001', 'mod_sequentialdocuments');
         }
 
         $versionmanager->delete_versions_by_documentid($documentid, $userid, $feedbackmanager);
@@ -117,7 +117,7 @@ class document_manager extends manager {
     public function lock_document($documentid, $userid, version_manager $versionmanager, feedback_manager $feedbackmanager) {
 
         if (!sequentialdocuments_has_lock_document_rights($this->instanceid, $userid)) {
-            throw new unauthorized_access_exception(1004, 'mod_sequentialdocuments');
+            throw new unauthorized_access_exception('ua1004', 'mod_sequentialdocuments');
         }
 
         $document = $this->dao->get_entity($documentid);
@@ -165,7 +165,7 @@ class document_manager extends manager {
                                     feedback_manager $feedbackmanager) {
 
         if (!sequentialdocuments_has_lock_document_rights($this->instanceid, $userid)) {
-            throw new unauthorized_access_exception(1004, 'mod_sequentialdocuments');
+            throw new unauthorized_access_exception('ua1004', 'mod_sequentialdocuments');
         }
 
         $document = $this->dao->get_entity($documentid);
@@ -202,12 +202,16 @@ class document_manager extends manager {
                                             $contextid) {
 
         if (!sequentialdocuments_has_document_read_rights($this->instanceid, $userid)) {
-            $controller->action_error(get_string('missingdocumentaccess', 'mod_sequentialdocuments'));
-            return false;
+            throw new unauthorized_access_exception('ua1000', 'mod_sequentialdocuments');
+        }
+
+        $document = $this->dao->get_entity($id);
+        if ($document === false) {
+            throw new inexistent_entity_exception('uedocument', 'mod_sequentialdocuments');
         }
 
         return $this->get_document_html_by_document_instance(
-							$this->dao->get_entity($id),
+							$document,
 							$userid,
 							$versionmanager,
 							$feedbackmanager,
@@ -224,7 +228,7 @@ class document_manager extends manager {
 
 
         if ($document->get_instanceid() != $this->instanceid) {
-            throw new unauthorized_access_exception(1000, 'mod_sequentialdocuments');
+            throw new unauthorized_access_exception('uainstance', 'mod_sequentialdocuments');
         }
 
         if (!sequentialdocuments_has_document_read_rights($this->instanceid, $userid)) {

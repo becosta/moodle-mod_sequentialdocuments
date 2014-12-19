@@ -166,6 +166,7 @@ $string['sendreminders'] = 'Send Sequential Documents reminders';
 
 // Errors.
 $string['error'] = 'Error';
+$string['unknownerror'] = 'Unknown error';
 $string['pagenotfound'] = 'Page not found';
 $string['missingcmorid'] = 'You must specify a course_module ID or an instance ID';
 $string['missinginstanceaccess'] = 'You don\'t have access to this '.$string['modulename'].' instance';
@@ -189,3 +190,20 @@ $string['missingfeedbackcreationrights'] = 'You don\'t have permissions to post 
 $string['missingfeedbackeditionrights'] = 'You don\'t have permissions to edit feedback';
 $string['missingfeedbacksuppressionrights'] = 'You don\'t have suppression rights on this feedback';
 $string['missingfeedbacklockingrights'] = 'You don\'t have locking rights on this feedback';
+
+// unauthorized_access_exception.php
+$string['uainstance'] = $string['missinginstanceaccess'];
+$string['ua1000'] = $string['missingdocumentaccess'];
+$string['ua1001'] = $string['missingdocumentsuppressionrights'];
+$string['ua1002'] = $string['missingversionsuppressionrights'];
+$string['ua1003'] = $string['missingfeedbacksuppressionrights'];
+$string['ua1004'] = $string['missingdocumentlockingrights'];
+$string['ua1005'] = $string['missingversionlockingrights'];
+$string['ua1006'] = $string['missingfeedbacklockingrights'];
+
+// inexistent_entity_exception.php
+$string['uedocument'] = 'This document doesn\'t exist';
+$string['ueversion'] = 'This version doesn\'t exist';
+$string['uefeedback'] = 'This feedback doesn\'t exist';
+
+

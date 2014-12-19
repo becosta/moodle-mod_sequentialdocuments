@@ -26,6 +26,8 @@
 require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
 require_once(dirname(__FILE__).'/lib.php');
 require_once(dirname(__FILE__).'/locallib.php');
+include_once __DIR__.'/classes/model/exception/unauthorized_access_exception.php';
+include_once __DIR__.'/classes/model/exception/inexistent_entity_exception.php';
 
 global $COURSE, $DB, $PAGE, $USER;
 
@@ -112,14 +114,22 @@ else {
 include_once __DIR__.'/classes/controller/sequentialdocuments_controller.php';
 $controller = new sequentialdocuments_controller($sequentialdocuments, $cm, (int)$USER->id);
 
-if (is_callable(array($controller, $action))) {
-    if (sequentialdocuments_is_instance_member($sequentialdocuments->id, (int)$USER->id)) {
-        $controller->$action($params);
+try {
+
+    if (is_callable(array($controller, $action))) {
+        if (sequentialdocuments_is_instance_member($sequentialdocuments->id, (int)$USER->id)) {
+            $controller->$action($params);
+        } else {
+            $controller->action_error(get_string('missinginstanceaccess', 'mod_sequentialdocuments'));
+        }
     } else {
-        $controller->action_error(get_string('missinginstanceaccess', 'mod_sequentialdocuments'));
+        $controller->action_unknown($params);
     }
-} else {
-    $controller->action_unknown($params);
+
+} catch (inexistent_entity_exception $e) {
+    $controller->action_error($e->getMessage());
+} catch (unauthorized_access_exception $e) {
+    $controller->action_error($e->getMessage());
 }
 
 

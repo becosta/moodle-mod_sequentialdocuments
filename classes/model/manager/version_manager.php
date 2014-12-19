@@ -82,7 +82,7 @@ class version_manager extends manager {
         if (!($version instanceof version)) {
             throw new InvalidArgumentException();
         } else if ($version->get_instanceid() != $this->instanceid) {
-            throw new unauthorized_access_exception(1000, 'mod_sequencialdocuments');
+            throw new unauthorized_access_exception('uainstance', 'mod_sequentialdocuments');
         }
 
         $vars = get_object_vars($data);
@@ -106,11 +106,11 @@ class version_manager extends manager {
         if (!($version instanceof version)) {
             throw new InvalidArgumentException();
         } else if (!$version->get_instanceid() == $this->instanceid) {
-            throw new unauthorized_access_exception(1000, 'mod_sequencialdocuments');
+            throw new unauthorized_access_exception('uainstance', 'mod_sequentialdocuments');
         }
 
         if (!sequentialdocuments_has_version_suppression_rights($this->instanceid, $userid)) {
-            throw new unauthorized_access_exception(1002, 'mod_sequentialdocuments');
+            throw new unauthorized_access_exception('ua1002', 'mod_sequentialdocuments');
         }
 
         if ($this->is_last_version($documentmanager, $version)) {
@@ -130,7 +130,7 @@ class version_manager extends manager {
     public function lock(version $version, $userid, $ignoreaccesscontrol = false) {
 
         if (!$ignoreaccesscontrol && !sequentialdocuments_has_lock_version_rights($this->instanceid, $userid)) {
-            throw new unauthorized_access_exception(1005, 'mod_sequentialdocuments');
+            throw new unauthorized_access_exception('ua1005', 'mod_sequentialdocuments');
         }
 
         $version->set_locked(true);
@@ -140,7 +140,7 @@ class version_manager extends manager {
     public function unlock(version $version, $userid) {
 
         if (!sequentialdocuments_has_lock_version_rights($this->instanceid, $userid)) {
-            throw new unauthorized_access_exception(1005, 'mod_sequentialdocuments');
+            throw new unauthorized_access_exception('ua1005', 'mod_sequentialdocuments');
         }
 
         $version->set_locked(false);
@@ -178,7 +178,7 @@ class version_manager extends manager {
 
         if (!sequentialdocuments_has_document_suppression_rights($this->instanceid, $userid) ||
             !sequentialdocuments_has_version_suppression_rights($this->instanceid, $userid)) {
-            throw new unauthorized_access_exception(1002, 'mod_sequentialdocuments');
+            throw new unauthorized_access_exception('ua1002', 'mod_sequentialdocuments');
         }
 
         $reminderdao = new reminder_dao();
@@ -213,8 +213,13 @@ class version_manager extends manager {
             return '';
         }
 
+        $version = $this->dao->get_entity($id);
+        if ($version === false) {
+            throw new inexistent_entity_exception('ueversion', 'mod_sequentialdocuments');
+        }
+
         return $this->get_version_html_by_version_instance(
-							$this->dao->get_entity($id),
+							$version,
 							$userid,
 							$documentmanager,
 							$feedbackmanager,
@@ -234,7 +239,7 @@ class version_manager extends manager {
         }
 
         if ($version->get_instanceid() != $this->instanceid) {
-            throw new unauthorized_access_exception(1000, 'mod_sequentialdocuments');
+            throw new unauthorized_access_exception('uainstance', 'mod_sequentialdocuments');
         }
 
         if (!sequentialdocuments_has_version_read_rights($this->instanceid, $userid)) {
