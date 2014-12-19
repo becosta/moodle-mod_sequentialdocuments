@@ -76,7 +76,7 @@ class document extends entity {
                 '<p class="sqds-description">'.
                     '<strong>'.
                         get_string('documentdescription', 'mod_sequentialdocuments').
-                    '</strong> '.$this->description.
+                    '</strong> '.$this->get_description().
                 '</p>';
     }
 
@@ -124,9 +124,6 @@ class document extends entity {
     }
 
     public function set_description($description) {
-        if (!is_string($description)) {
-            throw new InvalidArgumentException();
-        }
         $this->description = $description;
     }
 

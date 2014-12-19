@@ -239,6 +239,7 @@ class sequentialdocuments_controller {
                 function($formdata, $view) {
                     $formdata->instanceid = $this->instanceid;
                     $formdata->authorid = $this->userid;
+                    $formdata->description = $formdata->description['text'];
                     $id = $this->documentmanager->create_document($formdata, $this->versionmanager);
                     $this->interactionmanager->track_action_add_document($this->instanceid, (int)$this->userid, $id);
                     $this->action_view_document(array('documentid' => $id));
@@ -254,7 +255,12 @@ class sequentialdocuments_controller {
 
         $documentid = $this->get_numeric_id('documentid', $params);
         $document = $this->documentdao->get_entity($documentid);
-        $data = array('title' => $document->get_title(), 'description' => $document->get_description());
+        $data = array(
+            'title' => $document->get_title(),
+            'description' => array(
+                'text' => $document->get_description()
+            ),
+        );
 
         $this->form_based_action(
                 'add_document_form',
@@ -263,6 +269,7 @@ class sequentialdocuments_controller {
                 function($formdata, $view) use ($documentid) {
 
                     $formdata->instanceid = $this->instanceid;
+                    $formdata->description = $formdata->description['text'];
 
                     try {
                         $this->documentmanager->update_document($documentid, $formdata);
@@ -684,6 +691,7 @@ class sequentialdocuments_controller {
                 null,
                 function($formdata, $view) use ($versionid) {
                     $formdata->instanceid = $this->instanceid;
+                    $formdata->content = $formdata->content['text'];
 
                     if (isset($formdata->version) && $formdata->version != 0) {
                         $formdata->versionid = $formdata->version;
@@ -718,7 +726,7 @@ class sequentialdocuments_controller {
         $feedbackid = $this->get_numeric_id('feedbackid', $params);
         $feedback = $this->feedbackmanager->get_feedback_by_id($feedbackid);
         $content = $feedback->get_content();
-        $data = array('content' => $content);
+        $data = array('content' => array('text' => $content));
 
         $onload =   function($form) use ($feedback) {
                         $entry = new stdClass();
@@ -741,6 +749,7 @@ class sequentialdocuments_controller {
 
         $onsubmit = function($formdata, $view) use ($feedbackid) {
                         $formdata->instanceid = $this->instanceid;
+                        $formdata->content = $formdata->content['text'];
 
                         try {
                             $this->feedbackmanager->update_feedback($feedbackid, $formdata);

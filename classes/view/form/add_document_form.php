@@ -45,11 +45,13 @@ class add_document_form extends moodleform {
         );
         $form->setDefault('title', $this->_customdata['title']);
 
-        $form->addElement(
-                'textarea', 'description', get_string('adfdescription', 'mod_sequentialdocuments'), 'rows="20" cols="65"'
+        $form->addElement('editor', 'description', get_string('adfdescription', 'mod_sequentialdocuments'));
+        $form->setType('description', PARAM_RAW);
+        $form->addRule(
+                'description',
+                get_string('adfrequired', 'mod_sequentialdocuments'),
+                'required', null, 'server'
         );
-        $form->setType('description', PARAM_TEXT);
-        $form->addRule('description', 'This field is required', 'required', null, 'server');
         $form->setDefault('description', $this->_customdata['description']);
 
         $this->add_action_buttons();

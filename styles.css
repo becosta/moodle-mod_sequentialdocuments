@@ -32,10 +32,15 @@
     box-shadow: inset 0px 0px 30px -20px rgba(0,0,0,0.75);
 }
 
-.sqds-description {
+/*.sqds-description {
     clear: both;
     margin: 1.5em;
     margin-top: 2.5em;
+}*/
+
+/*.sqds-document p,*/
+.sqds-description p {
+    display: inline;
 }
 
 .sqds-document .sqds-top-left,
