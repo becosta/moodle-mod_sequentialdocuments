@@ -288,7 +288,8 @@ class version_manager extends manager {
                         '</a> ';
             }
 
-        } else if (!$version->is_locked()) {
+        }
+        if (!$version->is_locked()) {
 
             if (sequentialdocuments_has_feedback_creation_rights($this->instanceid, $userid)) {
                 $links .=
