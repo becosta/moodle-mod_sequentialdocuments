@@ -88,6 +88,8 @@ class history_interaction_visitor implements interaction_visitor {
 
 class interaction_manager extends manager {
 
+    const ENTITY_NAME = 'interaction';
+
     protected $added_documentdao;
     protected $added_versiondao;
     protected $added_feedbackdao;

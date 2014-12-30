@@ -33,6 +33,11 @@ abstract class manager {
     protected $dao = null;
 
     public function __construct(array $data = null) {
+
+        if (!defined('static::ENTITY_NAME')) {
+            throw new Exception('Constant ENTITY_NAME is not defined on subclass '.get_class($this));
+        }
+
         if ($data !== null) {
             $this->hydrate($data);
         }
@@ -50,6 +55,35 @@ abstract class manager {
                 $this->$setter($value);
             }
         }
+    }
+
+    public function save_entity_draft_area_file($entityid, $contextid, $attachments) {
+        file_save_draft_area_files(
+                            $attachments,
+                            $contextid,
+                            'mod_sequentialdocuments',
+                            static::ENTITY_NAME,
+                            $entityid,
+                            array('subdirs' => 0, 'maxbytes' => 0, 'maxfiles' => 50)
+        );
+    }
+
+    public function get_entity_draft_area($entityid, $contextid) {
+        $entry = new stdClass();
+        $entry->id = null;
+
+        $draftitemid = file_get_submitted_draft_itemid('attachments');
+        file_prepare_draft_area(
+                            $draftitemid,
+                            $contextid,
+                            'mod_sequentialdocuments',
+                            static::ENTITY_NAME,
+                            $entityid,
+                            array('subdirs' => 0, 'maxbytes' => 0, 'maxfiles' => 50)
+        );
+        $entry->attachments = $draftitemid;
+
+        return $entry;
     }
 
     public function get_entities_by_instanceid($instanceid) {

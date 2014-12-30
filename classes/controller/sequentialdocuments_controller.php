@@ -373,8 +373,6 @@ class sequentialdocuments_controller {
         $this->form_based_action(
                 'add_version_form',
                 'view.php?id='.$this->courseid.'&action=add_version&documentid='.$documentid,
-                //array('instanceid' => $this->instanceid),
-                //null,
                 $data,
                 function($formdata, $view) use ($documentid) {
                     $formdata->instanceid = $this->instanceid;
@@ -385,16 +383,13 @@ class sequentialdocuments_controller {
                     }
 
                     $id = $this->versionmanager->
-                            create_version($formdata, $this->documentmanager, $this->feedbackmanager);
+                            create_version(
+                                    $formdata,
+                                    $this->contextid,
+                                    $this->documentmanager,
+                                    $this->feedbackmanager
+                            );
 
-                    file_save_draft_area_files(
-                                        $formdata->attachments,
-                                        $this->contextid,
-                                        'mod_sequentialdocuments',
-                                        'version',
-                                        $id,
-                                        array('subdirs' => 0, 'maxbytes' => 0, 'maxfiles' => 50)
-                    );
                     $this->interactionmanager->
                             track_action_add_version($this->instanceid, (int)$this->userid, $id);
 
@@ -471,16 +466,7 @@ class sequentialdocuments_controller {
                     }
 
                     try {
-                        $this->versionmanager->update_version($versionid, $formdata);
-
-                        file_save_draft_area_files(
-                                        $formdata->attachments,
-                                        $this->contextid,
-                                        'mod_sequentialdocuments',
-                                        'version',
-                                        $versionid,
-                                        array('subdirs' => 0, 'maxbytes' => 0, 'maxfiles' => 50)
-                        );
+                        $this->versionmanager->update_version($versionid, $formdata, $this->contextid);
 
                         $reminderdao = new reminder_dao();
                         $reminder = $reminderdao->get_entity_where(array('versionid' => $versionid));
@@ -510,6 +496,13 @@ class sequentialdocuments_controller {
                     } catch (InvalidArgumentException $e) {
                         $this->action_error(get_string('invaliddocumentid', 'mod_sequentialdocuments'));
                     }
+                },
+                function($form) use ($versionid) {
+                    $form->set_data(
+                            $this->versionmanager->get_entity_draft_area(
+                                    $versionid, $this->contextid
+                            )
+                    );
                 }
         );
     }
@@ -595,16 +588,10 @@ class sequentialdocuments_controller {
                         $formdata->versionid = $versionid;
                     }
 
-                    $id = $this->feedbackmanager->create_feedback($formdata, $this->versionmanager);
-
-                    file_save_draft_area_files(
-                                        $formdata->attachments,
-                                        $this->contextid,
-                                        'mod_sequentialdocuments',
-                                        'feedback',
-                                        $id,
-                                        array('subdirs' => 0, 'maxbytes' => 0, 'maxfiles' => 50)
+                    $id = $this->feedbackmanager->create_feedback(
+                            $formdata, $this->contextid, $this->versionmanager
                     );
+
                     $this->interactionmanager->
                             track_action_add_feedback($this->instanceid, (int)$this->userid, $id);
 
@@ -625,21 +612,11 @@ class sequentialdocuments_controller {
         $data = array('content' => array('text' => $content));
 
         $onload =   function($form) use ($feedback) {
-                        $entry = new stdClass();
-                        $entry->id = null;
-
-                        $draftitemid = file_get_submitted_draft_itemid('attachments');
-                        file_prepare_draft_area(
-                                            $draftitemid,
-                                            $this->contextid,
-                                            'mod_sequentialdocuments',
-                                            'feedback',
-                                            $feedback->get_id(),
-                                            array('subdirs' => 0, 'maxbytes' => 0, 'maxfiles' => 50)
+                        $form->set_data(
+                                $this->feedbackmanager->get_entity_draft_area(
+                                        $feedback->get_id(), $this->contextid
+                                )
                         );
-
-                        $entry->attachments = $draftitemid;
-                        $form->set_data($entry);
                     }
         ;
 
@@ -648,16 +625,7 @@ class sequentialdocuments_controller {
                         $formdata->content = $formdata->content['text'];
 
                         try {
-                            $this->feedbackmanager->update_feedback($feedbackid, $formdata);
-
-                            file_save_draft_area_files(
-                                        $formdata->attachments,
-                                        $this->contextid,
-                                        'mod_sequentialdocuments',
-                                        'feedback',
-                                        $feedbackid,
-                                        array('subdirs' => 0, 'maxbytes' => 0, 'maxfiles' => 50)
-                            );
+                            $this->feedbackmanager->update_feedback($feedbackid, $formdata, $this->contextid);
 
                             $this->action_view_feedback(array('feedbackid' => $feedbackid));
 

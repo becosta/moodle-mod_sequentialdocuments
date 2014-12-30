@@ -34,13 +34,19 @@ include_once __DIR__.'/../../../locallib.php';
 
 class version_manager extends manager {
 
+    const ENTITY_NAME = 'version';
+
     public function __construct(array $data = null) {
         parent::__construct($data);
         $this->dao = new version_dao();
     }
 
-    public function create_version($data, document_manager $documentmanager, feedback_manager $feedbackmanager) {
-        global $DB, $USER;
+    public function create_version(
+                                    $data,
+                                    $contextid,
+                                    document_manager $documentmanager,
+                                    feedback_manager $feedbackmanager) {
+        global $USER;
 
         $timestamp = time();
         $data->creationtime = $timestamp;
@@ -61,6 +67,8 @@ class version_manager extends manager {
         $versionid = $this->dao->insert($version);
         $documentmanager->set_new_document_version($data->documentid, $versionid);
 
+        $this->save_entity_draft_area_file($versionid, $contextid, $data->attachments);
+
         return $versionid;
     }
 
@@ -74,7 +82,7 @@ class version_manager extends manager {
         return $this->dao->insert($version);
     }
 
-    public function update_version($versionid, stdClass $data) {
+    public function update_version($versionid, stdClass $data, $contextid) {
 
         global $DB;
         $version = $this->dao->get_entity($versionid);
@@ -93,6 +101,8 @@ class version_manager extends manager {
             }
         }
         $this->dao->update($version);
+
+        $this->save_entity_draft_area_file($versionid, $contextid, $data->attachments);
     }
 
     public function delete_version(

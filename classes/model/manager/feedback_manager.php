@@ -31,13 +31,16 @@ include_once __DIR__.'/../../../locallib.php';
 
 class feedback_manager extends manager {
 
+    const ENTITY_NAME = 'feedback';
+
     public function __construct(array $data = null) {
         parent::__construct($data);
         $this->dao = new feedback_dao();
     }
 
-    public function create_feedback(stdClass $data, version_manager $versionmanager) {
+    public function create_feedback(stdClass $data, $contextid, version_manager $versionmanager) {
         global $DB;
+
         $data->creationtime = time();
         $data->feedbackindice =
                 $DB->count_records(
@@ -46,11 +49,13 @@ class feedback_manager extends manager {
                 ) + 1
         ;
         $feedback = $this->get_entity_instance_from_stdClass('feedback', $data);
-        return $this->dao->insert($feedback);
+
+        $id = $this->dao->insert($feedback);
+        $this->save_entity_draft_area_file($id, $contextid, $data->attachments);
+        return $id;
     }
 
-    public function update_feedback($feedbackid, stdClass $data) {
-        global $DB;
+    public function update_feedback($feedbackid, stdClass $data, $contextid) {
         $feedback = $this->dao->get_entity($feedbackid);
 
         if (!($feedback instanceof feedback)) {
@@ -67,6 +72,8 @@ class feedback_manager extends manager {
             }
         }
         $this->dao->update($feedback);
+
+        $this->save_entity_draft_area_file($feedbackid, $contextid, $data->attachments);
     }
 
     public function lock_feedbacks_by_version(version $version, $userid, $ignoreaccesscontrol = false) {

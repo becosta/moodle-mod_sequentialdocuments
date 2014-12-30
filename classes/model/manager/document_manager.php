@@ -37,6 +37,8 @@ include_once __DIR__.'/../../controller/sequentialdocuments_controller.php';
 
 class document_manager extends manager {
 
+    const ENTITY_NAME = 'document';
+
     public function __construct(array $data = null) {
         parent::__construct($data);
         $this->dao = new document_dao();
