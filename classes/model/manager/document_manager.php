@@ -288,7 +288,9 @@ class document_manager extends manager {
                 $links .=
                     '<a href="'.
                         get_delete_document_url($documentid, $this->instanceid).
-                        '">'.get_string('documentdeletelink', 'mod_sequentialdocuments').
+                        '" onclick="return confirm(\''.get_string('documentdeleteconfirmation', 'mod_sequentialdocuments').
+                        '\');">'.
+                        get_string('documentdeletelink', 'mod_sequentialdocuments').
                     '</a>';
             }
         }

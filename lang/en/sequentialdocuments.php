@@ -54,6 +54,7 @@ $string['documenteditlink'] = 'Edit';
 $string['documentdeletelink'] = 'Delete';
 $string['documentlocklink'] = 'Lock this document';
 $string['documentunlocklink'] = 'Unlock this document';
+$string['documentdeleteconfirmation'] = 'This document and all the versions and feedbacks associated with it will be permanently deleted.\nDo you really want to continue?';
 
 // Version objects html.
 $string['versionlink'] = 'Version: ';
@@ -65,12 +66,14 @@ $string['versiondeletelink'] = $string['documentdeletelink'];
 $string['versionpostfeedbacklink'] = 'Post feedback';
 $string['versionlocklink'] = 'Lock this version';
 $string['versionunlocklink'] = 'Unlock this version';
+$string['versiondeleteconfirmation'] = 'This version and all the feedbacks associated with it will be permanently deleted.\nDo you really want to continue?';
 
 // Feedback
 $string['feedbackattachments'] = 'Attachments: ';
 $string['feedbackeditlink'] = $string['documenteditlink'];
 $string['feedbackdeletelink'] = $string['documentdeletelink'];
 $string['feedbackcreateversionfromthis'] = 'Create new version from this feedback';
+$string['feedbackdeleteconfirmation'] = 'This feedback will be permanently deleted.\nDo you really want to continue?';
 
 // Feedback objects html.
 $string['feedbacksubmitted'] = $string['versionsubmitted'];

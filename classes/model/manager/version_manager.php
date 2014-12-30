@@ -321,9 +321,11 @@ class version_manager extends manager {
 
             if (sequentialdocuments_has_version_suppression_rights($this->instanceid, $userid)) {
                 $links .=
-                        '<a href="'.get_delete_version_url($versionid, $instanceid).'">'.
-                            get_string('versiondeletelink', 'mod_sequentialdocuments').
-                        '</a>';
+                    '<a href="'.get_delete_version_url($versionid, $instanceid).
+                        '" onclick="return confirm(\''.
+                        get_string('versiondeleteconfirmation', 'mod_sequentialdocuments').'\');">'.
+                        get_string('versiondeletelink', 'mod_sequentialdocuments').
+                    '</a>';
             }
         } else {
 

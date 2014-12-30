@@ -230,11 +230,13 @@ class feedback_manager extends manager {
                     '</a> ';
             }
             if (sequentialdocuments_has_feedback_suppression_rights($this->instanceid, $userid)) {
-                    $links .=
-                        '<a href="'.
-                            get_delete_feedback_url($feedback->get_id(), $this->instanceid).
-                            '">'.get_string('feedbackdeletelink', 'mod_sequentialdocuments').
-                        '</a>';
+                $links .=
+                    '<a href="'.
+                        get_delete_feedback_url($feedback->get_id(), $this->instanceid).
+                        '" onclick="return confirm(\''.
+                        get_string('feedbackdeleteconfirmation', 'mod_sequentialdocuments').'\');">'.
+                        get_string('feedbackdeletelink', 'mod_sequentialdocuments').
+                    '</a>';
             }
         }
 
