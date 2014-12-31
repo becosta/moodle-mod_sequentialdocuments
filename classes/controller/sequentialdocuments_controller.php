@@ -160,18 +160,20 @@ class sequentialdocuments_controller {
             $this->action_error(get_string('missingpageaccess', 'mod_sequentialdocuments'));
         }
 
+        $onsubmit = function($formdata, $view) {
+                        $formdata->id = $formdata->accessid;
+                        $formdata->instanceid = $this->instanceid;
+                        sequentialdocuments_update_current_access_rights($this->instanceid, (array)$formdata);
+                        $this->action_index();
+                    };
+
         $data = sequentialdocuments_get_current_access_rights($this->instanceid);
         $data['accessid'] = $data['id'];
         $this->form_based_action(
                 'access_rights_config_form',
                 'view.php?id='.$this->courseid.'&action=edit_access',
                 $data,
-                function($formdata, $view) {
-                    $formdata->id = $formdata->accessid;
-                    $formdata->instanceid = $this->instanceid;
-                    sequentialdocuments_update_current_access_rights($this->instanceid, (array)$formdata);
-                    $this->action_index();
-                }
+                $onsubmit
         );
     }
 
@@ -237,18 +239,20 @@ class sequentialdocuments_controller {
             $this->action_error(get_string('missingdocumentcreationrights', 'mod_sequentialdocuments'));
         }
 
+        $onsubmit = function($formdata, $view) {
+                        $formdata->instanceid = $this->instanceid;
+                        $formdata->authorid = $this->userid;
+                        $formdata->description = $formdata->description['text'];
+                        $id = $this->documentmanager->create_document($formdata, $this->versionmanager);
+                        $this->interactionmanager->track_action_add_document($this->instanceid, (int)$this->userid, $id);
+                        $this->action_view_document(array('documentid' => $id));
+                    };
+
         $this->form_based_action(
                 'add_document_form',
                 'view.php?id='.$this->courseid.'&action=add_document',
                 null,
-                function($formdata, $view) {
-                    $formdata->instanceid = $this->instanceid;
-                    $formdata->authorid = $this->userid;
-                    $formdata->description = $formdata->description['text'];
-                    $id = $this->documentmanager->create_document($formdata, $this->versionmanager);
-                    $this->interactionmanager->track_action_add_document($this->instanceid, (int)$this->userid, $id);
-                    $this->action_view_document(array('documentid' => $id));
-                }
+                $onsubmit
         );
     }
 
@@ -267,23 +271,24 @@ class sequentialdocuments_controller {
             ),
         );
 
+        $onsubmit = function($formdata, $view) use ($documentid) {
+                        $formdata->instanceid = $this->instanceid;
+                        $formdata->description = $formdata->description['text'];
+
+                        try {
+                            $this->documentmanager->update_document($documentid, $formdata);
+                            $this->action_view_document(array('documentid' => $documentid));
+
+                        } catch (InvalidArgumentException $e) {
+                            $this->action_error(get_string('invaliddocumentid', 'mod_sequentialdocuments'));
+                        }
+                    };
+
         $this->form_based_action(
                 'add_document_form',
                 'view.php?id='.$this->courseid.'&action=update_document&documentid='.$documentid,
                 $data,
-                function($formdata, $view) use ($documentid) {
-
-                    $formdata->instanceid = $this->instanceid;
-                    $formdata->description = $formdata->description['text'];
-
-                    try {
-                        $this->documentmanager->update_document($documentid, $formdata);
-                        $this->action_view_document(array('documentid' => $documentid));
-
-                    } catch (InvalidArgumentException $e) {
-                        $this->action_error(get_string('invaliddocumentid', 'mod_sequentialdocuments'));
-                    }
-                }
+                $onsubmit
         );
     }
 
@@ -375,37 +380,40 @@ class sequentialdocuments_controller {
             'postneeded' => 0,
             'duetime' => 0,
         );
+
+        $onsubmit = function($formdata, $view) use ($documentid) {
+                        $formdata->instanceid = $this->instanceid;
+                        $formdata->documentid = $documentid;
+
+                        if (!isset($formdata->duetime) || $formdata->duetime == 0) {
+                            $formdata->duetime = -1;
+                        }
+
+                        $id = $this->versionmanager->
+                                create_version(
+                                        $formdata,
+                                        $this->contextid,
+                                        $this->documentmanager,
+                                        $this->feedbackmanager
+                                );
+
+                        $this->interactionmanager->
+                                track_action_add_version($this->instanceid, (int)$this->userid, $id);
+
+                        if ($formdata->duetime != -1) {
+                            $formdata->versionid = $id;
+                            $formdata->senderid = $this->userid;
+                            $this->remindermanager->create_reminder($formdata);
+                        }
+
+                        $this->action_view_document(array('documentid' => $documentid));
+                    };
+
         $this->form_based_action(
                 'add_version_form',
                 'view.php?id='.$this->courseid.'&action=add_version&documentid='.$documentid,
                 $data,
-                function($formdata, $view) use ($documentid) {
-                    $formdata->instanceid = $this->instanceid;
-                    $formdata->documentid = $documentid;
-
-                    if (!isset($formdata->duetime) || $formdata->duetime == 0) {
-                        $formdata->duetime = -1;
-                    }
-
-                    $id = $this->versionmanager->
-                            create_version(
-                                    $formdata,
-                                    $this->contextid,
-                                    $this->documentmanager,
-                                    $this->feedbackmanager
-                            );
-
-                    $this->interactionmanager->
-                            track_action_add_version($this->instanceid, (int)$this->userid, $id);
-
-                    if ($formdata->duetime != -1) {
-                        $formdata->versionid = $id;
-                        $formdata->senderid = $this->userid;                        
-                        $this->remindermanager->create_reminder($formdata);
-                    }
-
-                    $this->action_view_document(array('documentid' => $documentid));
-                }
+                $onsubmit
         );
     }
 
@@ -429,6 +437,46 @@ class sequentialdocuments_controller {
             $duedate = 0;
         }
 
+        $onsubmit = function($formdata, $view) use ($versionid, $isuser) {
+                        $formdata->instanceid = $this->instanceid;
+                        if (!isset($formdata->duetime) || $formdata->duetime == 0) {
+                            $formdata->duetime = -1;
+                        }
+                        if ($isuser && $formdata->duetime != -1) {
+                            $formdata->duevalidated = true;
+                        }
+
+                        try {
+                            $this->versionmanager->update_version($versionid, $formdata, $this->contextid);
+
+                            if (!$isuser && isset($formdata->duetime) && $formdata->duetime != 0) {
+
+                                $reminder = $this->remindermanager->get_reminder_by_version_id($versionid);
+
+                                if ($reminder == false) {
+                                    $formdata->instanceid = $this->instanceid;
+                                    $formdata->versionid = $versionid;
+                                    $formdata->senderid = $this->userid;
+                                    $reminder = $this->remindermanager->create_reminder($formdata);
+                                }
+                                $this->remindermanager->update_reminder_by_instance($reminder, $formdata);
+                            }
+
+                            $this->action_view_version(array('versionid' => $versionid));
+
+                        } catch (InvalidArgumentException $e) {
+                            $this->action_error(get_string('invaliddocumentid', 'mod_sequentialdocuments'));
+                        }
+                    };
+
+        $onload =   function($form) use ($versionid) {
+                        $form->set_data(
+                                $this->versionmanager->get_entity_draft_area(
+                                        $versionid, $this->contextid
+                                )
+                        );
+                    };
+
         $data = $this->remindermanager->prepare_form_data(
                 $this->remindermanager->get_reminder_by_version_id($versionid)
         );
@@ -439,44 +487,8 @@ class sequentialdocuments_controller {
                 'add_version_form',
                 'view.php?id='.$this->courseid.'&action=update_version&versionid='.$versionid,
                 $data,
-                function($formdata, $view) use ($versionid, $isuser) {
-                    $formdata->instanceid = $this->instanceid;
-                    if (!isset($formdata->duetime) || $formdata->duetime == 0) {
-                        $formdata->duetime = -1;
-                    }
-                    if ($isuser && $formdata->duetime != -1) {
-                        $formdata->duevalidated = true;
-                    }
-
-                    try {
-                        $this->versionmanager->update_version($versionid, $formdata, $this->contextid);
-
-                        if (!$isuser && isset($formdata->duetime) && $formdata->duetime != 0) {
-
-                            $reminder = $this->remindermanager->get_reminder_by_version_id($versionid);
-
-                            if ($reminder == false) {
-                                $formdata->instanceid = $this->instanceid;
-                                $formdata->versionid = $versionid;
-                                $formdata->senderid = $this->userid;
-                                $reminder = $this->remindermanager->create_reminder($formdata);
-                            }
-                            $this->remindermanager->update_reminder_by_instance($reminder, $formdata);
-                        }
-
-                        $this->action_view_version(array('versionid' => $versionid));
-
-                    } catch (InvalidArgumentException $e) {
-                        $this->action_error(get_string('invaliddocumentid', 'mod_sequentialdocuments'));
-                    }
-                },
-                function($form) use ($versionid) {
-                    $form->set_data(
-                            $this->versionmanager->get_entity_draft_area(
-                                    $versionid, $this->contextid
-                            )
-                    );
-                }
+                $onsubmit,
+                $onload
         );
     }
 
@@ -547,29 +559,31 @@ class sequentialdocuments_controller {
 
         $versionid = $this->get_numeric_id('versionid', $params);
 
+        $onsubmit = function($formdata, $view) use ($versionid) {
+                        $formdata->instanceid = $this->instanceid;
+                        $formdata->content = $formdata->content['text'];
+
+                        if (isset($formdata->version) && $formdata->version != 0) {
+                            $formdata->versionid = $formdata->version;
+                        } else {
+                            $formdata->versionid = $versionid;
+                        }
+
+                        $id = $this->feedbackmanager->create_feedback(
+                                $formdata, $this->contextid, $this->versionmanager
+                        );
+
+                        $this->interactionmanager->
+                                track_action_add_feedback($this->instanceid, (int)$this->userid, $id);
+
+                        $this->action_view_feedback(array('feedbackid' => $id));
+                    };
+
         $this->form_based_action(
                 'add_feedback_form',
                 'view.php?id='.$this->courseid.'&action=add_feedback&versionid='.$versionid,
                 null,
-                function($formdata, $view) use ($versionid) {
-                    $formdata->instanceid = $this->instanceid;
-                    $formdata->content = $formdata->content['text'];
-
-                    if (isset($formdata->version) && $formdata->version != 0) {
-                        $formdata->versionid = $formdata->version;
-                    } else {
-                        $formdata->versionid = $versionid;
-                    }
-
-                    $id = $this->feedbackmanager->create_feedback(
-                            $formdata, $this->contextid, $this->versionmanager
-                    );
-
-                    $this->interactionmanager->
-                            track_action_add_feedback($this->instanceid, (int)$this->userid, $id);
-
-                    $this->action_view_feedback(array('feedbackid' => $id));
-                }
+                $onsubmit
         );
     }
 
