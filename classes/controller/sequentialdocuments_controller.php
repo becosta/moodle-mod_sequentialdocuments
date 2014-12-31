@@ -29,6 +29,7 @@ include_once __DIR__.'/../model/manager/interaction_manager.php';
 include_once __DIR__.'/../model/manager/document_manager.php';
 include_once __DIR__.'/../model/manager/version_manager.php';
 include_once __DIR__.'/../model/manager/feedback_manager.php';
+include_once __DIR__.'/../model/manager/reminder_manager.php';
 include_once __DIR__.'/../model/dao/document_dao.php';
 include_once __DIR__.'/../model/dao/version_dao.php';
 include_once __DIR__.'/../model/dao/feedback_dao.php';
@@ -66,6 +67,9 @@ class sequentialdocuments_controller {
 
     /** @var feedbackmanager Feedback entities manager */
     protected $feedbackmanager = null;
+    
+    /** @var remindermanager Reminder entities manager */
+    protected $remindermanager = null;
 
     /** @var documentdao Document entities data access object */
     protected $documentdao = null;
@@ -97,6 +101,7 @@ class sequentialdocuments_controller {
         $this->documentmanager = new document_manager(array('instanceid' => $this->instanceid));
         $this->versionmanager = new version_manager(array('instanceid' => $this->instanceid));
         $this->feedbackmanager = new feedback_manager(array('instanceid' => $this->instanceid));
+        $this->remindermanager = new reminder_manager(array('instanceid' => $this->instanceid));
 
         $this->documentdao = new document_dao();
         $this->versiondao = new version_dao();
@@ -394,24 +399,9 @@ class sequentialdocuments_controller {
                             track_action_add_version($this->instanceid, (int)$this->userid, $id);
 
                     if ($formdata->duetime != -1) {
-                        $reminder = new reminder(
-                                array(
-                                    'id' => 0,
-                                    'instanceid' => $formdata->instanceid,
-                                    'versionid' => $id,
-                                    'senderid' => $this->userid,
-                                    'dueday' => $formdata->dueday,
-                                    'oneday' => $formdata->oneday,
-                                    'oneweek' => $formdata->oneweek,
-                                    'twoweeks' => $formdata->twoweeks,
-                                    'onemonth' => $formdata->onemonth,
-                                    'postneeded' => $formdata->postneeded,
-                                    'duetime' => $formdata->duetime,
-                                )
-                        );
-                        $dao = new reminder_dao();
-                        $reminder->set_id($dao->insert($reminder));
-                        $dao->update($reminder);
+                        $formdata->versionid = $id;
+                        $formdata->senderid = $this->userid;                        
+                        $this->remindermanager->create_reminder($formdata);
                     }
 
                     $this->action_view_document(array('documentid' => $documentid));
@@ -439,18 +429,11 @@ class sequentialdocuments_controller {
             $duedate = 0;
         }
 
-        $data = array('instanceid' => $this->instanceid, 'duetime' => $duedate);
-        $reminderdao = new reminder_dao();
-        $reminder = $reminderdao->get_entity_where(array('versionid' => $versionid));
-        if ($reminder != false) {
-            $data['dueday'] = $reminder->get_dueday();
-            $data['oneday'] = $reminder->get_oneday();
-            $data['oneweek'] = $reminder->get_oneweek();
-            $data['twoweeks'] = $reminder->get_twoweeks();
-            $data['onemonth'] = $reminder->get_onemonth();
-            $data['postneeded'] = $reminder->get_postneeded();
-            $data['duetime'] = $reminder->get_duetime();
-        }
+        $data = $this->remindermanager->prepare_form_data(
+                $this->remindermanager->get_reminder_by_version_id($versionid)
+        );
+        $data['instanceid'] = $this->instanceid;
+        $data['duetime'] = $duedate;
 
         $this->form_based_action(
                 'add_version_form',
@@ -458,7 +441,7 @@ class sequentialdocuments_controller {
                 $data,
                 function($formdata, $view) use ($versionid, $isuser) {
                     $formdata->instanceid = $this->instanceid;
-                    if ($formdata->duetime == 0) {
+                    if (!isset($formdata->duetime) || $formdata->duetime == 0) {
                         $formdata->duetime = -1;
                     }
                     if ($isuser && $formdata->duetime != -1) {
@@ -468,27 +451,17 @@ class sequentialdocuments_controller {
                     try {
                         $this->versionmanager->update_version($versionid, $formdata, $this->contextid);
 
-                        $reminderdao = new reminder_dao();
-                        $reminder = $reminderdao->get_entity_where(array('versionid' => $versionid));
-                        if (!$isuser && $reminder != false) {
-                            $reminderdao->delete($reminder);
-                        }
-
                         if (!$isuser && isset($formdata->duetime) && $formdata->duetime != 0) {
+
+                            $reminder = $this->remindermanager->get_reminder_by_version_id($versionid);
+
                             if ($reminder == false) {
-                                $reminder = new reminder();
-                                $reminder->set_instanceid($this->instanceid);
-                                $reminder->set_versionid($versionid);
+                                $formdata->instanceid = $this->instanceid;
+                                $formdata->versionid = $versionid;
+                                $formdata->senderid = $this->userid;
+                                $reminder = $this->remindermanager->create_reminder($formdata);
                             }
-                            $reminder->set_senderid($this->userid);
-                            $reminder->set_dueday($formdata->dueday);
-                            $reminder->set_oneday($formdata->oneday);
-                            $reminder->set_oneweek($formdata->oneweek);
-                            $reminder->set_twoweeks($formdata->twoweeks);
-                            $reminder->set_onemonth($formdata->onemonth);
-                            $reminder->set_postneeded($formdata->postneeded);
-                            $reminder->set_duetime($formdata->duetime);
-                            $reminderdao->insert($reminder);
+                            $this->remindermanager->update_reminder_by_instance($reminder, $formdata);
                         }
 
                         $this->action_view_version(array('versionid' => $versionid));
