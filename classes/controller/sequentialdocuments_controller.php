@@ -662,6 +662,13 @@ class sequentialdocuments_controller {
             $view = new form_view(array('instanceid' => $this->instanceid, 'form' => $form));
         }
 
+        if ($oncancellcallback === null) {
+            $oncancellcallback =    function() {
+                                        $this->action_index();
+                                        return;
+                                    };
+        }
+
         $callback = null;
         $displayform = false;
 
