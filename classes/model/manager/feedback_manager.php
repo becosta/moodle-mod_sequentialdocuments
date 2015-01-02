@@ -216,12 +216,16 @@ class feedback_manager extends manager {
                             get_string('feedbackattachments', 'mod_sequentialdocuments').
                         '</strong>'.$filelist;
 
-            // TODO : implement the version creation from feedback function.
             $version = $versionmanager->get_version($feedback->get_versionid());
             if (!$version->is_locked() &&
                     $versionmanager->is_last_version($documentmanager, $version) &&
                     sequentialdocuments_has_version_creation_rights($this->instanceid, $userid)) {
-                $filelist .=    '<br /><br /><a href="#">'.
+
+                $filelist .=    '<br /><br /><a href="'.
+                                    get_version_from_feedback_url(
+                                            $version->get_documentid(), $feedback->get_id(), $this->instanceid
+                                    ).
+                                '">'.
                                     get_string('feedbackcreateversionfromthis', 'mod_sequentialdocuments').
                                 '</a>';
             }

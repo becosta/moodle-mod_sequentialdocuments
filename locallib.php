@@ -409,6 +409,11 @@ function get_add_feedback_url($versionid, $instanceid) {
     return get_plugin_base_url().'/view.php?s='.$instanceid.'&action=add_feedback&versionid='.$versionid;
 }
 
+function get_version_from_feedback_url($documentid, $feedbackid, $instanceid) {
+    return get_plugin_base_url().'/view.php?s='.$instanceid.
+            '&action=version_from_feedback&documentid='.$documentid.'&feedbackid='.$feedbackid;
+}
+
 function get_view_entity_url($entityclassname, $entityid, $instanceid) {
     return get_plugin_base_url().'/view.php?s='.$instanceid.
             '&action=view_'.$entityclassname.'&'.$entityclassname.'id='.$entityid;

@@ -587,6 +587,21 @@ class sequentialdocuments_controller {
         );
     }
 
+    public function action_version_from_feedback(array $params = null) {
+
+        if(!sequentialdocuments_has_feedback_creation_rights($this->instanceid, $this->userid)) {
+            $this->action_error(get_string('missingfeedbackcreationrights', 'mod_sequentialdocuments'));
+        }
+
+        $documentid = $this->get_numeric_id('documentid', $params);
+        $feedbackid = $this->get_numeric_id('feedbackid', $params);
+
+        $this->versionmanager->create_from_feedback(
+                $documentid, $feedbackid, $this->contextid, $this->documentmanager, $this->feedbackmanager
+        );
+        $this->action_view_document(array('documentid' => $documentid));
+    }
+
     public function action_update_feedback(array $params = null) {
 
         if (!sequentialdocuments_has_feedback_edit_rights($this->instanceid, $this->userid)) {

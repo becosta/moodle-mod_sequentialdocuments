@@ -82,6 +82,28 @@ class version_manager extends manager {
         return $this->dao->insert($version);
     }
 
+    public function create_from_feedback(
+                                            $documentid,
+                                            $feedbackid,
+                                            $contextid,
+                                            document_manager $documentmanager,
+                                            feedback_manager $feedbackmanager) {
+        global $USER;
+
+
+        $data = new stdClass();
+        $data->instanceid = $this->instanceid;
+        $data->documentid = $documentid;
+        $data->creationtime = time();
+        $data->duetime = -1;
+        $data->duevalidated = 0;
+        $data->locked = 0;
+        $data->attachments =
+                $feedbackmanager->get_entity_draft_area($feedbackid, $contextid)->attachments;
+
+        return $this->create_version($data, $contextid, $documentmanager, $feedbackmanager);
+    }
+
     public function update_version($versionid, stdClass $data, $contextid) {
 
         global $DB;
