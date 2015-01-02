@@ -154,8 +154,10 @@ class version_manager extends manager {
         // TODO : call reminder_manager.
         $reminderdao = new reminder_dao();
         $reminders = $reminderdao->get_all_entities_where(array('versionid' => $versionid));
-        foreach ($reminders as $reminder) {
-            $reminderdao->delete($reminder);
+        if ($reminders !== false) {
+            foreach ($reminders as $reminder) {
+                $reminderdao->delete($reminder);
+            }
         }
     }
 
@@ -216,7 +218,7 @@ class version_manager extends manager {
         $reminderdao = new reminder_dao();
         $versions = $this->dao->get_all_entities_where(array('documentid' => $documentid));
         if ($versions !== false) {
-            foreach($versions as $version) {
+            foreach ($versions as $version) {
                 // TODO : call reminder_manager.
                 $reminders = $reminderdao->get_all_entities_where(array('versionid' => $version->get_id()));
                 if ($reminders) {
@@ -293,22 +295,24 @@ class version_manager extends manager {
         $fs = get_file_storage();
         $files = $fs->get_area_files($contextid, 'mod_sequentialdocuments', 'version', $version->get_id());
 
-        foreach ($files as $file) {
-            $filename = $file->get_filename();
+        if ($files !== false) {
+            foreach ($files as $file) {
+                $filename = $file->get_filename();
 
-            if ($filename == '.') {
-                continue;
+                if ($filename == '.') {
+                    continue;
+                }
+
+                $url = moodle_url::make_pluginfile_url(
+                                        $file->get_contextid(),
+                                        $file->get_component(),
+                                        $file->get_filearea(),
+                                        $file->get_itemid(),
+                                        $file->get_filepath(),
+                                        $filename
+                );
+                $filelist .= '<a href="'.$url.'">'.$filename.'</a><br />';
             }
-
-            $url = moodle_url::make_pluginfile_url(
-                                    $file->get_contextid(),
-                                    $file->get_component(),
-                                    $file->get_filearea(),
-                                    $file->get_itemid(),
-                                    $file->get_filepath(),
-                                    $filename
-            );
-            $filelist .= '<a href="'.$url.'">'.$filename.'</a><br />';
         }
 
         $links = '';

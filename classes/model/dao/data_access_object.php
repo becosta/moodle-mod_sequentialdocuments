@@ -43,7 +43,7 @@ abstract class data_access_object {
         }
     }
 
-    protected function hydrate() {
+    protected function hydrate(array $data) {
         foreach ($data as $property => $value) {
             $setter = 'set_'.$property;
             if (is_callable(array($this, $setter))) {

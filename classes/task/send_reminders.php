@@ -42,113 +42,115 @@ class send_reminders extends \core\task\scheduled_task {
         $reminders = $reminderdao->get_all_entities();
 
         $now = time();
-        foreach ($reminders as $reminder) {
+        if ($reminders !== false) {
+            foreach ($reminders as $reminder) {
 
-            $version = $versiondao->get_entity($reminder->get_versionid());
-            if ($version->get_duevalidated()) {
-                continue;
-            }
-
-            $duetime = $reminder->get_duetime();
-
-            if ($now > $duetime) {
-
-                $lastpost = $reminder->get_lastpost();
-                $count = $reminder->get_postcount();
-                if ($count < $reminder->get_postneeded() &&
-                        ($lastpost == -1 || $this->is_older_than_a_week($lastpost))) {
-
-                    $this->send_message(
-                                $reminder,
-                                get_string('versionduelatesubject', 'mod_sequentialdocuments'),
-                                $this->get_postdueday_message($reminder)
-                    );
-                    $reminder->set_postcount($count + 1);
-                    $reminder->set_lastpost($now);
+                $version = $versiondao->get_entity($reminder->get_versionid());
+                if ($version->get_duevalidated()) {
+                    continue;
                 }
 
-            } else {
+                $duetime = $reminder->get_duetime();
 
-                // TODO: refactor this.
-                // Yes, the following code(-smell) *does* work.
-                $messagesent = false;
-                $diff = ~floor(($now - $duetime) / 86400);
-                switch (true) {
+                if ($now > $duetime) {
 
-                    case ($diff == 0):
-                        if ($reminder->get_duedaysent()) {
-                            $messagesent = true;
+                    $lastpost = $reminder->get_lastpost();
+                    $count = $reminder->get_postcount();
+                    if ($count < $reminder->get_postneeded() &&
+                            ($lastpost == -1 || $this->is_older_than_a_week($lastpost))) {
 
-                        } else if (!$messagesent && $reminder->get_dueday() && !$reminder->get_duedaysent()) {
-                            $this->send_message(
-                                        $reminder,
-                                        get_string('versionduesubject', 'mod_sequentialdocuments'),
-                                        $this->get_dueday_message($reminder)
-                            );
-                            $messagesent = true;
-                        }
-                        $reminder->set_duedaysent(true);
+                        $this->send_message(
+                                    $reminder,
+                                    get_string('versionduelatesubject', 'mod_sequentialdocuments'),
+                                    $this->get_postdueday_message($reminder)
+                        );
+                        $reminder->set_postcount($count + 1);
+                        $reminder->set_lastpost($now);
+                    }
 
-                    case ($diff <= 1):
-                        if ($reminder->get_onedaysent()) {
-                            $messagesent = true;
+                } else {
 
-                        } else if (!$messagesent && $reminder->get_oneday() && !$reminder->get_onedaysent()) {
-                            $this->send_message(
-                                        $reminder,
-                                        get_string('versionduesubject', 'mod_sequentialdocuments'),
-                                        $this->get_oneday_message($reminder)
-                            );
-                            $messagesent = true;
-                        }
-                        $reminder->set_onedaysent(true);
+                    // TODO: refactor this.
+                    // Yes, the following code(-smell) *does* work.
+                    $messagesent = false;
+                    $diff = ~floor(($now - $duetime) / 86400);
+                    switch (true) {
 
-                    case ($diff <= 7):
-                        if ($reminder->get_oneweeksent()) {
-                            $messagesent = true;
+                        case ($diff == 0):
+                            if ($reminder->get_duedaysent()) {
+                                $messagesent = true;
 
-                        } else if (!$messagesent && $reminder->get_oneweek() && !$reminder->get_oneweeksent()) {
-                            $this->send_message(
-                                        $reminder,
-                                        get_string('versionduesubject', 'mod_sequentialdocuments'),
-                                        $this->get_oneweek_message($reminder)
-                            );
-                            $messagesent = true;
-                        }
-                        $reminder->set_oneweeksent(true);
+                            } else if (!$messagesent && $reminder->get_dueday() && !$reminder->get_duedaysent()) {
+                                $this->send_message(
+                                            $reminder,
+                                            get_string('versionduesubject', 'mod_sequentialdocuments'),
+                                            $this->get_dueday_message($reminder)
+                                );
+                                $messagesent = true;
+                            }
+                            $reminder->set_duedaysent(true);
 
-                    case ($diff <= 14):
-                        if ($reminder->get_twoweekssent()) {
-                            $messagesent = true;
+                        case ($diff <= 1):
+                            if ($reminder->get_onedaysent()) {
+                                $messagesent = true;
 
-                        } else if (!$messagesent && $reminder->get_twoweeks() && !$reminder->get_twoweekssent()) {
-                            $this->send_message(
-                                        $reminder,
-                                        get_string('versionduesubject', 'mod_sequentialdocuments'),
-                                        $this->get_twoweeks_message($reminder)
-                            );
-                            $messagesent = true;
-                        }
-                        $reminder->set_twoweekssent(true);
+                            } else if (!$messagesent && $reminder->get_oneday() && !$reminder->get_onedaysent()) {
+                                $this->send_message(
+                                            $reminder,
+                                            get_string('versionduesubject', 'mod_sequentialdocuments'),
+                                            $this->get_oneday_message($reminder)
+                                );
+                                $messagesent = true;
+                            }
+                            $reminder->set_onedaysent(true);
 
-                    case ($diff <= 31):
-                        if ($reminder->get_onemonthsent()) {
-                            $messagesent = true;
+                        case ($diff <= 7):
+                            if ($reminder->get_oneweeksent()) {
+                                $messagesent = true;
 
-                        } else if (!$messagesent && $reminder->get_onemonth() && !$reminder->get_onemonthsent()) {
-                            $this->send_message(
-                                        $reminder,
-                                        get_string('versionduesubject', 'mod_sequentialdocuments'),
-                                        $this->get_onemonth_message($reminder)
-                            );
-                            $messagesent = true;
-                        }
-                        $reminder->set_onemonthsent(true);
-                        break;
+                            } else if (!$messagesent && $reminder->get_oneweek() && !$reminder->get_oneweeksent()) {
+                                $this->send_message(
+                                            $reminder,
+                                            get_string('versionduesubject', 'mod_sequentialdocuments'),
+                                            $this->get_oneweek_message($reminder)
+                                );
+                                $messagesent = true;
+                            }
+                            $reminder->set_oneweeksent(true);
+
+                        case ($diff <= 14):
+                            if ($reminder->get_twoweekssent()) {
+                                $messagesent = true;
+
+                            } else if (!$messagesent && $reminder->get_twoweeks() && !$reminder->get_twoweekssent()) {
+                                $this->send_message(
+                                            $reminder,
+                                            get_string('versionduesubject', 'mod_sequentialdocuments'),
+                                            $this->get_twoweeks_message($reminder)
+                                );
+                                $messagesent = true;
+                            }
+                            $reminder->set_twoweekssent(true);
+
+                        case ($diff <= 31):
+                            if ($reminder->get_onemonthsent()) {
+                                $messagesent = true;
+
+                            } else if (!$messagesent && $reminder->get_onemonth() && !$reminder->get_onemonthsent()) {
+                                $this->send_message(
+                                            $reminder,
+                                            get_string('versionduesubject', 'mod_sequentialdocuments'),
+                                            $this->get_onemonth_message($reminder)
+                                );
+                                $messagesent = true;
+                            }
+                            $reminder->set_onemonthsent(true);
+                            break;
+                    }
                 }
-            }
 
-            $reminderdao->update($reminder);
+                $reminderdao->update($reminder);
+            }
         }
     }
 
@@ -166,9 +168,11 @@ class send_reminders extends \core\task\scheduled_task {
 
 
         $students = sequentialdocuments_get_instance_students($reminder->get_instanceid());
-        foreach ($students as $student) {
-            $eventdata->userto = $student;
-            message_send($eventdata);
+        if ($students !== false) {
+            foreach ($students as $student) {
+                $eventdata->userto = $student;
+                message_send($eventdata);
+            }
         }
     }
 

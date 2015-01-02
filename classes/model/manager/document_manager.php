@@ -126,9 +126,11 @@ class document_manager extends manager {
         $document->set_locked(true);
 
         $versions = $versionmanager->get_versions_by_documentid($documentid);
-        foreach ($versions as $version) {
-            $versionmanager->lock($version, $userid);
-            $feedbackmanager->lock_feedbacks_by_version($version, $userid);
+        if ($versions !== false) {
+            foreach ($versions as $version) {
+                $versionmanager->lock($version, $userid);
+                $feedbackmanager->lock_feedbacks_by_version($version, $userid);
+            }
         }
 
         $this->dao->update($document);
@@ -248,10 +250,12 @@ class document_manager extends manager {
                 '<div id="sqds-document-content-'.$documentid.
                 '" class="sqds-document-content" '.$lastversionattr.'>';
         $versions = $versionmanager->get_versions_by_documentid($documentid);
-        foreach ($versions as $version) {
-            $html .= $versionmanager->get_version_html_by_version_instance(
-                                        $version, $userid, $this, $feedbackmanager, $contextid
-            );
+        if ($versions !== false) {
+            foreach ($versions as $version) {
+                $html .= $versionmanager->get_version_html_by_version_instance(
+                                            $version, $userid, $this, $feedbackmanager, $contextid
+                );
+            }
         }
         $html .= '</div>';
 

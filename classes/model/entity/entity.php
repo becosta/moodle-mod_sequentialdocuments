@@ -84,8 +84,8 @@ abstract class entity {
         $vars = $this->to_public_array();
         $o = new stdClass();
 
-        if ($vars !== NULL) {
-            foreach($vars as $property => $value) {
+        if ($vars !== null) {
+            foreach ($vars as $property => $value) {
               $o->$property = $value;
             }
         }
